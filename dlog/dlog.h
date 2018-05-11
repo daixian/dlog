@@ -129,4 +129,28 @@ extern "C" DLOG_EXPORT void __stdcall LogE(const char * strFormat, ...);
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT void __stdcall LogFATAL(const char * strFormat, ...);
 
-extern "C" DLOG_EXPORT void __stdcall LogTest(int i);
+#pragma region 内存缓存日志相关
+
+///-------------------------------------------------------------------------------------------------
+/// <summary> 设置内存log是否使能. </summary>
+///
+/// <remarks> Dx, 2018/5/11. </remarks>
+///
+/// <param name="enable"> 设置为false之后Log函数会直接返回不作任何操作. </param>
+///-------------------------------------------------------------------------------------------------
+extern "C" DLOG_EXPORT void __stdcall dlog_memory_log_enable(bool enable);
+
+///-------------------------------------------------------------------------------------------------
+/// <summary> 提取一条内存日志. </summary>
+///
+/// <remarks> Dx, 2018/5/11. </remarks>
+///
+/// <param name="buff">   [in,out] 缓存buffer. </param>
+/// <param name="offset"> The offset. </param>
+/// <param name="count">  Number of. </param>
+///
+/// <returns> 提取出的日志长度，如果为0表示没有提出日志来. </returns>
+///-------------------------------------------------------------------------------------------------
+extern "C" DLOG_EXPORT int __stdcall dlog_get_memlog(char* buff, int offset, int count);
+
+#pragma endregion
