@@ -5,6 +5,7 @@
 
 #include "Common/GLogHelper.h"
 #include "Common/Debug.h"
+#include "Common/MemoryLog.h"
 
 using namespace dxlib;
 
@@ -188,12 +189,20 @@ extern "C" DLOG_EXPORT void __stdcall LogFATAL(const char * strFormat, ...)
     va_end(arg_ptr);
 }
 
-extern "C" DLOG_EXPORT void __stdcall LogTest(int i)
+DLOG_EXPORT void dlog_memory_log_enable(bool enable)
 {
-    if (inst == NULL)//如果还没有初始化过，那么就调用默认构造
-    {
-        dlog_init();
-    }
+    Debug::GetInst()->isLogMemory = enable;
+}
 
-    LOG(INFO) << "测试日志" << i;
+DLOG_EXPORT int dlog_get_memlog(char * buff, int offset, int count)
+{
+    std::string msg;
+    int copyLen = 0;
+    if (MemoryLog::GetInst()->getLog(msg))
+    {
+        copyLen = msg.size() < count ? msg.size() : count;
+        msg.copy(buff, copyLen);
+    }
+    buff[copyLen] = 0;
+    return copyLen;
 }

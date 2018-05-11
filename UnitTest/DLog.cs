@@ -72,6 +72,16 @@ namespace xuexue
         public static extern void LogE(string strFormat);
 
         [DllImport("dlog")]
-        public static extern void LogTest(int i);
+        public static extern void dlog_memory_log_enable(bool enable);
+
+        /// <summary>
+        /// 提取内存中的日志
+        /// </summary>
+        /// <param name="buff"></param>
+        /// <param name="offset"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        [DllImport("dlog")]
+        public static extern int dlog_get_memlog(StringBuilder buff, int offset, int count);
     }
 }
