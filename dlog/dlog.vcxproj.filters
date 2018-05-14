@@ -27,18 +27,6 @@
     <ClInclude Include="dlog.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="glog\logging.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="glog\raw_logging.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="glog\stl_logging.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="glog\vlog_is_on.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Common\GLogHelper.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -49,9 +37,6 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="glog\log_severity.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Common\MemoryLog.h">

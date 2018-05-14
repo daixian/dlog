@@ -1,0 +1,203 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{EC3402B0-EA21-3D0F-B08F-8B4138269AA0}</ProjectGuid>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <Keyword>Win32Proj</Keyword>
+    <Platform>x64</Platform>
+    <ProjectName>ALL_BUILD</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\work\dlog\sdk\glog\CMakeLists.txt">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule D:/work/dlog/sdk/glog/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+D:\soft\cmake-3.10.0-rc4-win64-x64\bin\cmake.exe -HD:/work/dlog/sdk/glog -BD:/work/dlog/sdk/glogBuild64 --check-stamp-file D:/work/dlog/sdk/glogBuild64/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:/work/dlog/sdk/glog/CMakeLists.txt;D:\work\dlog\sdk\glog\CMakeLists.txt;D:\work\dlog\sdk\glogBuild64\CMakeFiles\3.10.0-rc4\CMakeSystem.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeSystemSpecificInitialize.cmake;D:\work\dlog\sdk\glogBuild64\CMakeFiles\3.10.0-rc4\CMakeCCompiler.cmake;D:\work\dlog\sdk\glogBuild64\CMakeFiles\3.10.0-rc4\CMakeCXXCompiler.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeSystemSpecificInformation.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeGenericSystem.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\Platform\Windows.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\Platform\WindowsPaths.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeCInformation.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeLanguageInformation.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\Platform\Windows-MSVC-C.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\Platform\Windows-MSVC.cmake;D:\work\dlog\sdk\glogBuild64\CMakeFiles\3.10.0-rc4\CMakeRCCompiler.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeRCInformation.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeCommonLanguageInclude.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeCXXInformation.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeLanguageInformation.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\Compiler\MSVC-CXX.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\Compiler\CMakeCommonCompilerMacros.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\Platform\Windows-MSVC-CXX.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\Platform\Windows-MSVC.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeCommonLanguageInclude.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckCSourceCompiles.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckCXXCompilerFlag.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckCXXSourceCompiles.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeCheckCompilerFlagCommonPatterns.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckCXXSourceCompiles.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckCXXSourceRuns.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckFunctionExists.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckIncludeFile.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckIncludeFileCXX.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckLibraryExists.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckStructHasMember.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckCSourceCompiles.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckCXXSourceCompiles.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckSymbolExists.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckTypeSize.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckIncludeFile.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckIncludeFileCXX.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakePackageConfigHelpers.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\WriteBasicConfigVersionFile.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakePushCheckState.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CPack.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CPackComponent.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Templates\CPackConfig.cmake.in;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Templates\CPackConfig.cmake.in;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CTest.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CTestUseLaunchers.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CTestTargets.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\DartConfiguration.tcl.in;D:\work\dlog\sdk\glog\cmake\DetermineGflagsNamespace.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\GNUInstallDirs.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\FindThreads.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckLibraryExists.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckSymbolExists.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckIncludeFile.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\FindPackageHandleStandardArgs.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\FindPackageMessage.cmake;D:\work\dlog\sdk\glog\src\config.h.cmake.in;D:\work\dlog\sdk\glog\src\glog\logging.h.in;D:\work\dlog\sdk\glog\src\glog\raw_logging.h.in;D:\work\dlog\sdk\glog\src\glog\stl_logging.h.in;D:\work\dlog\sdk\glog\src\glog\vlog_is_on.h.in;D:\work\dlog\sdk\glog\glog-config.cmake.in;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\BasicConfigVersion-SameMajorVersion.cmake.in;D:\work\dlog\sdk\glog\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\work\dlog\sdk\glogBuild64\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule D:/work/dlog/sdk/glog/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+D:\soft\cmake-3.10.0-rc4-win64-x64\bin\cmake.exe -HD:/work/dlog/sdk/glog -BD:/work/dlog/sdk/glogBuild64 --check-stamp-file D:/work/dlog/sdk/glogBuild64/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:/work/dlog/sdk/glog/CMakeLists.txt;D:\work\dlog\sdk\glog\CMakeLists.txt;D:\work\dlog\sdk\glogBuild64\CMakeFiles\3.10.0-rc4\CMakeSystem.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeSystemSpecificInitialize.cmake;D:\work\dlog\sdk\glogBuild64\CMakeFiles\3.10.0-rc4\CMakeCCompiler.cmake;D:\work\dlog\sdk\glogBuild64\CMakeFiles\3.10.0-rc4\CMakeCXXCompiler.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeSystemSpecificInformation.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeGenericSystem.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\Platform\Windows.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\Platform\WindowsPaths.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeCInformation.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeLanguageInformation.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\Platform\Windows-MSVC-C.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\Platform\Windows-MSVC.cmake;D:\work\dlog\sdk\glogBuild64\CMakeFiles\3.10.0-rc4\CMakeRCCompiler.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeRCInformation.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeCommonLanguageInclude.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeCXXInformation.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeLanguageInformation.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\Compiler\MSVC-CXX.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\Compiler\CMakeCommonCompilerMacros.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\Platform\Windows-MSVC-CXX.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\Platform\Windows-MSVC.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeCommonLanguageInclude.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckCSourceCompiles.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckCXXCompilerFlag.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckCXXSourceCompiles.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeCheckCompilerFlagCommonPatterns.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckCXXSourceCompiles.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckCXXSourceRuns.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckFunctionExists.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckIncludeFile.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckIncludeFileCXX.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckLibraryExists.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckStructHasMember.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckCSourceCompiles.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckCXXSourceCompiles.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckSymbolExists.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckTypeSize.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckIncludeFile.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckIncludeFileCXX.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakePackageConfigHelpers.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\WriteBasicConfigVersionFile.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakePushCheckState.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CPack.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CPackComponent.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Templates\CPackConfig.cmake.in;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Templates\CPackConfig.cmake.in;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CTest.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CTestUseLaunchers.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CTestTargets.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\DartConfiguration.tcl.in;D:\work\dlog\sdk\glog\cmake\DetermineGflagsNamespace.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\GNUInstallDirs.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\FindThreads.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckLibraryExists.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckSymbolExists.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckIncludeFile.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\FindPackageHandleStandardArgs.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\FindPackageMessage.cmake;D:\work\dlog\sdk\glog\src\config.h.cmake.in;D:\work\dlog\sdk\glog\src\glog\logging.h.in;D:\work\dlog\sdk\glog\src\glog\raw_logging.h.in;D:\work\dlog\sdk\glog\src\glog\stl_logging.h.in;D:\work\dlog\sdk\glog\src\glog\vlog_is_on.h.in;D:\work\dlog\sdk\glog\glog-config.cmake.in;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\BasicConfigVersion-SameMajorVersion.cmake.in;D:\work\dlog\sdk\glog\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\work\dlog\sdk\glogBuild64\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule D:/work/dlog/sdk/glog/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+D:\soft\cmake-3.10.0-rc4-win64-x64\bin\cmake.exe -HD:/work/dlog/sdk/glog -BD:/work/dlog/sdk/glogBuild64 --check-stamp-file D:/work/dlog/sdk/glogBuild64/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:/work/dlog/sdk/glog/CMakeLists.txt;D:\work\dlog\sdk\glog\CMakeLists.txt;D:\work\dlog\sdk\glogBuild64\CMakeFiles\3.10.0-rc4\CMakeSystem.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeSystemSpecificInitialize.cmake;D:\work\dlog\sdk\glogBuild64\CMakeFiles\3.10.0-rc4\CMakeCCompiler.cmake;D:\work\dlog\sdk\glogBuild64\CMakeFiles\3.10.0-rc4\CMakeCXXCompiler.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeSystemSpecificInformation.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeGenericSystem.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\Platform\Windows.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\Platform\WindowsPaths.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeCInformation.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeLanguageInformation.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\Platform\Windows-MSVC-C.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\Platform\Windows-MSVC.cmake;D:\work\dlog\sdk\glogBuild64\CMakeFiles\3.10.0-rc4\CMakeRCCompiler.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeRCInformation.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeCommonLanguageInclude.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeCXXInformation.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeLanguageInformation.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\Compiler\MSVC-CXX.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\Compiler\CMakeCommonCompilerMacros.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\Platform\Windows-MSVC-CXX.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\Platform\Windows-MSVC.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeCommonLanguageInclude.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckCSourceCompiles.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckCXXCompilerFlag.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckCXXSourceCompiles.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeCheckCompilerFlagCommonPatterns.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckCXXSourceCompiles.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckCXXSourceRuns.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckFunctionExists.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckIncludeFile.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckIncludeFileCXX.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckLibraryExists.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckStructHasMember.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckCSourceCompiles.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckCXXSourceCompiles.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckSymbolExists.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckTypeSize.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckIncludeFile.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckIncludeFileCXX.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakePackageConfigHelpers.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\WriteBasicConfigVersionFile.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakePushCheckState.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CPack.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CPackComponent.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Templates\CPackConfig.cmake.in;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Templates\CPackConfig.cmake.in;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CTest.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CTestUseLaunchers.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CTestTargets.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\DartConfiguration.tcl.in;D:\work\dlog\sdk\glog\cmake\DetermineGflagsNamespace.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\GNUInstallDirs.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\FindThreads.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckLibraryExists.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckSymbolExists.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckIncludeFile.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\FindPackageHandleStandardArgs.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\FindPackageMessage.cmake;D:\work\dlog\sdk\glog\src\config.h.cmake.in;D:\work\dlog\sdk\glog\src\glog\logging.h.in;D:\work\dlog\sdk\glog\src\glog\raw_logging.h.in;D:\work\dlog\sdk\glog\src\glog\stl_logging.h.in;D:\work\dlog\sdk\glog\src\glog\vlog_is_on.h.in;D:\work\dlog\sdk\glog\glog-config.cmake.in;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\BasicConfigVersion-SameMajorVersion.cmake.in;D:\work\dlog\sdk\glog\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\work\dlog\sdk\glogBuild64\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule D:/work/dlog/sdk/glog/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+D:\soft\cmake-3.10.0-rc4-win64-x64\bin\cmake.exe -HD:/work/dlog/sdk/glog -BD:/work/dlog/sdk/glogBuild64 --check-stamp-file D:/work/dlog/sdk/glogBuild64/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:/work/dlog/sdk/glog/CMakeLists.txt;D:\work\dlog\sdk\glog\CMakeLists.txt;D:\work\dlog\sdk\glogBuild64\CMakeFiles\3.10.0-rc4\CMakeSystem.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeSystemSpecificInitialize.cmake;D:\work\dlog\sdk\glogBuild64\CMakeFiles\3.10.0-rc4\CMakeCCompiler.cmake;D:\work\dlog\sdk\glogBuild64\CMakeFiles\3.10.0-rc4\CMakeCXXCompiler.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeSystemSpecificInformation.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeGenericSystem.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\Platform\Windows.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\Platform\WindowsPaths.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeCInformation.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeLanguageInformation.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\Platform\Windows-MSVC-C.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\Platform\Windows-MSVC.cmake;D:\work\dlog\sdk\glogBuild64\CMakeFiles\3.10.0-rc4\CMakeRCCompiler.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeRCInformation.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeCommonLanguageInclude.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeCXXInformation.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeLanguageInformation.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\Compiler\MSVC-CXX.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\Compiler\CMakeCommonCompilerMacros.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\Platform\Windows-MSVC-CXX.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\Platform\Windows-MSVC.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeCommonLanguageInclude.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckCSourceCompiles.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckCXXCompilerFlag.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckCXXSourceCompiles.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakeCheckCompilerFlagCommonPatterns.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckCXXSourceCompiles.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckCXXSourceRuns.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckFunctionExists.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckIncludeFile.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckIncludeFileCXX.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckLibraryExists.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckStructHasMember.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckCSourceCompiles.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckCXXSourceCompiles.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckSymbolExists.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckTypeSize.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckIncludeFile.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckIncludeFileCXX.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakePackageConfigHelpers.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\WriteBasicConfigVersionFile.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CMakePushCheckState.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CPack.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CPackComponent.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Templates\CPackConfig.cmake.in;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Templates\CPackConfig.cmake.in;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CTest.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CTestUseLaunchers.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CTestTargets.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\DartConfiguration.tcl.in;D:\work\dlog\sdk\glog\cmake\DetermineGflagsNamespace.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\GNUInstallDirs.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\FindThreads.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckLibraryExists.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckSymbolExists.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\CheckIncludeFile.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\FindPackageHandleStandardArgs.cmake;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\FindPackageMessage.cmake;D:\work\dlog\sdk\glog\src\config.h.cmake.in;D:\work\dlog\sdk\glog\src\glog\logging.h.in;D:\work\dlog\sdk\glog\src\glog\raw_logging.h.in;D:\work\dlog\sdk\glog\src\glog\stl_logging.h.in;D:\work\dlog\sdk\glog\src\glog\vlog_is_on.h.in;D:\work\dlog\sdk\glog\glog-config.cmake.in;D:\soft\cmake-3.10.0-rc4-win64-x64\share\cmake-3.10\Modules\BasicConfigVersion-SameMajorVersion.cmake.in;D:\work\dlog\sdk\glog\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\work\dlog\sdk\glogBuild64\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="D:\work\dlog\sdk\glogBuild64\ZERO_CHECK.vcxproj">
+      <Project>{E782D0B5-8ED3-36B9-A82A-849173DDFE6B}</Project>
+      <Name>ZERO_CHECK</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\work\dlog\sdk\glogBuild64\demangle_unittest.vcxproj">
+      <Project>{421A2B17-FC49-3B5A-8520-545B8F6B9B8F}</Project>
+      <Name>demangle_unittest</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\work\dlog\sdk\glogBuild64\glog.vcxproj">
+      <Project>{8D914F35-D6A1-35BB-9347-87109B700EC3}</Project>
+      <Name>glog</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\work\dlog\sdk\glogBuild64\logging_unittest.vcxproj">
+      <Project>{DF4E8768-074A-342C-8086-5F1398DEDAC7}</Project>
+      <Name>logging_unittest</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\work\dlog\sdk\glogBuild64\signalhandler_unittest.vcxproj">
+      <Project>{E5FBB6CD-F410-309E-827D-5F7A94F3A3EC}</Project>
+      <Name>signalhandler_unittest</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\work\dlog\sdk\glogBuild64\stacktrace_unittest.vcxproj">
+      <Project>{4718A00D-8783-382F-AC8B-3914F649AA6A}</Project>
+      <Name>stacktrace_unittest</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\work\dlog\sdk\glogBuild64\stl_logging_unittest.vcxproj">
+      <Project>{DD9FFD18-C346-31B0-84A4-62089733E6DA}</Project>
+      <Name>stl_logging_unittest</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\work\dlog\sdk\glogBuild64\symbolize_unittest.vcxproj">
+      <Project>{027CBC2D-C546-35B3-8F95-751A69032227}</Project>
+      <Name>symbolize_unittest</Name>
+    </ProjectReference>
+    <ProjectReference Include="D:\work\dlog\sdk\glogBuild64\utilities_unittest.vcxproj">
+      <Project>{CBC0B631-9808-325F-BB5A-A1D8685AEA0D}</Project>
+      <Name>utilities_unittest</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

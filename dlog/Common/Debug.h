@@ -6,7 +6,7 @@
 #include <string>
 #include <deque>
 #include <sstream>
-#include "../glog/logging.h"
+#include "glog/logging.h"
 
 namespace dxlib
 {
