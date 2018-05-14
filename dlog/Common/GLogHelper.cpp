@@ -6,7 +6,7 @@
 #include <experimental\filesystem>
 
 #ifdef _DEBUG
-#pragma comment(lib, "glog.lib")
+#pragma comment(lib, "glogd.lib")
 #elif NDEBUG
 #pragma comment(lib, "glog.lib")
 #endif // _DEBUG

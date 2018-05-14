@@ -36,3 +36,5 @@ x64/Release/Microsoft\.VisualStudio\.QualityTools\.UnitTestFramework\.dll
 x64/Release/UnitTest\.dll
 
 x64/Release/UnitTest\.pdb
+
+sdk/glogBuild64/glog\.dir/

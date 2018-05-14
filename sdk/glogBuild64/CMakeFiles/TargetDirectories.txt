@@ -1,0 +1,17 @@
+D:/work/dlog/sdk/glogBuild64/CMakeFiles/Nightly.dir
+D:/work/dlog/sdk/glogBuild64/CMakeFiles/Experimental.dir
+D:/work/dlog/sdk/glogBuild64/CMakeFiles/Continuous.dir
+D:/work/dlog/sdk/glogBuild64/CMakeFiles/stl_logging_unittest.dir
+D:/work/dlog/sdk/glogBuild64/CMakeFiles/NightlyMemoryCheck.dir
+D:/work/dlog/sdk/glogBuild64/CMakeFiles/glog.dir
+D:/work/dlog/sdk/glogBuild64/CMakeFiles/logging_unittest.dir
+D:/work/dlog/sdk/glogBuild64/CMakeFiles/signalhandler_unittest.dir
+D:/work/dlog/sdk/glogBuild64/CMakeFiles/symbolize_unittest.dir
+D:/work/dlog/sdk/glogBuild64/CMakeFiles/demangle_unittest.dir
+D:/work/dlog/sdk/glogBuild64/CMakeFiles/stacktrace_unittest.dir
+D:/work/dlog/sdk/glogBuild64/CMakeFiles/utilities_unittest.dir
+D:/work/dlog/sdk/glogBuild64/CMakeFiles/PACKAGE.dir
+D:/work/dlog/sdk/glogBuild64/CMakeFiles/RUN_TESTS.dir
+D:/work/dlog/sdk/glogBuild64/CMakeFiles/INSTALL.dir
+D:/work/dlog/sdk/glogBuild64/CMakeFiles/ALL_BUILD.dir
+D:/work/dlog/sdk/glogBuild64/CMakeFiles/ZERO_CHECK.dir
