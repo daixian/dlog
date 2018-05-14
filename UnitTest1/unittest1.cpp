@@ -38,7 +38,6 @@ namespace UnitTest1
                     Assert::Fail();//检测数量是否一致
                 }
 
-           
             }
 
  

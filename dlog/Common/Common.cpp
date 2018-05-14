@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <string>
 #include <locale.h>
 #include "Common.h"
@@ -17,7 +17,9 @@ string ws2s(const wstring& ws)
     size_t _Dsize = 2 * ws.size() + 1;
     char *_Dest = new char[_Dsize];
     memset(_Dest, 0, _Dsize);
-    wcstombs(_Dest, _Source, _Dsize);
+    //wcstombs(_Dest, _Source, _Dsize);
+    size_t res = 0;
+    wcstombs_s(&res, _Dest, _Dsize, _Source, _Dsize);//换了个安全函数，未测
     string result = _Dest;
     delete[]_Dest;
 
@@ -43,7 +45,9 @@ wstring s2ws(const string& s)
     size_t _Dsize = s.size() + 1;
     wchar_t *_Dest = new wchar_t[_Dsize];
     wmemset(_Dest, 0, _Dsize);
-    mbstowcs(_Dest, _Source, _Dsize);
+    //mbstowcs(_Dest, _Source, _Dsize);
+    size_t res = 0;
+    mbstowcs_s(&res, _Dest, _Dsize, _Source, _Dsize);//换了个安全函数，未测
     wstring result = _Dest;
     delete[]_Dest;
 
@@ -68,7 +72,7 @@ std::string byte2str(const void* data, int length)
     for (int i = 0; i < length; i++)
     {
         char b[8];
-        sprintf(b, "%02X ", pChar[i]);
+        sprintf_s(b, 8, "%02X ", pChar[i]);
         msg.append(b);
     }
     return msg;

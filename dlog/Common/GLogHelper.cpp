@@ -6,9 +6,9 @@
 #include <experimental\filesystem>
 
 #ifdef _DEBUG
-#pragma comment(lib, "glogMDD.lib")
+#pragma comment(lib, "glog.lib")
 #elif NDEBUG
-#pragma comment(lib, "glogMT.lib")
+#pragma comment(lib, "glog.lib")
 #endif // _DEBUG
 
 //配置输出日志的目录：
@@ -19,7 +19,6 @@
 #define CSIDL_APPDATA 0x001a        // <user name>\Application Data
 
 using std::experimental::filesystem::path;
-
 
 //将信息输出到单独的文件和 LOG(ERROR)  windowd平台好像不行
 void GLogHelper::SignalHandle(const char* data, int size)
@@ -84,8 +83,8 @@ std::string GLogHelper::isExistsAndCreat(std::string sDir)
 //GLOG配置：
 GLogHelper::GLogHelper(char* program, char* logDir)
 {
-    //if (!dirExists(LOGDIR))
-    //    system("mkdir log"); //创建文件夹
+    programName = program;//记录程序名
+
     google::InitGoogleLogging(program);
 
     //std::wstring path = getMyDirectory();//path = L"D:\\Work\\F3DSys\\F3DSystem"
@@ -93,7 +92,7 @@ GLogHelper::GLogHelper(char* program, char* logDir)
 
     //这个函数不能用，由于管理员模式，路径不是当前文件夹
     BOOL bRet = SHGetSpecialFolderPath(NULL, szPath, CSIDL_APPDATA, FALSE);//L"C:\\Users\\f3d\\AppData\\Roaming"
- 
+
     logDirPath.clear();
     path dir = path(logDir);
 
@@ -118,6 +117,8 @@ GLogHelper::GLogHelper(char* program, char* logDir)
 
     FLAGS_log_dir = logDirPath;// 设置日志文件路径
 
+    //google::SetLogFilenameExtension("91_");     //设置文件名扩展，如平台？或其它需要区分的信息(这一句实际并不是文件的扩展名)
+
     //FLAGS_log_dir = "log";// 设置日志文件路径 "./log"
     //google::SetLogDestination(google::GLOG_INFO, "./log/info");// 设置某个级别的日志的缓存文件路径
 
@@ -130,7 +131,6 @@ GLogHelper::GLogHelper(char* program, char* logDir)
     FLAGS_max_log_size = 50;// 当日志文件达到多少时，进行文件分割，以M为单位
     FLAGS_stop_logging_if_full_disk = false; // 当磁盘已满时,停止输出日志文件
 
-   //google::SetLogFilenameExtension("91_");     //设置文件名扩展，如平台？或其它需要区分的信息
     google::InstallFailureSignalHandler();      //捕捉 core dumped
     google::InstallFailureWriter(SignalHandle);    //默认捕捉 SIGSEGV 信号信息输出会输出到 stderr，可以通过下面的方法自定义输出>方式：
 
@@ -146,10 +146,9 @@ GLogHelper::~GLogHelper()
 {
     try {
         google::FlushLogFiles(google::GLOG_INFO);
-        google::ShutdownGoogleLogging(); 
+        google::ShutdownGoogleLogging();
     }
-    catch(std::string *caught)
+    catch (std::string *caught)
     {
     }
-  
 }
