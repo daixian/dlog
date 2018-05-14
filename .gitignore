@@ -38,3 +38,9 @@ x64/Release/UnitTest\.dll
 x64/Release/UnitTest\.pdb
 
 sdk/glogBuild64/glog\.dir/
+
+x64/Release/
+
+sdk/glogBuild64/Debug/
+
+sdk/glogBuild64/Release/
