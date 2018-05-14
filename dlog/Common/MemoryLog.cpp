@@ -36,7 +36,7 @@ namespace dxlib
         return _memLogQueue.try_dequeue(msg);
     }
 
-    int MemoryLog::count()
+    size_t MemoryLog::count()
     {
         return _memLogQueue.size_approx();
     }

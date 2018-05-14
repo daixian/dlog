@@ -45,13 +45,13 @@ namespace dxlib
         bool getLog(std::string &msg);
 
         ///-------------------------------------------------------------------------------------------------
-        /// <summary> Gets the count. </summary>
+        /// <summary> 当前内存中缓存的日志条数. </summary>
         ///
         /// <remarks> Dx, 2018/5/11. </remarks>
         ///
         /// <returns> An int. </returns>
         ///-------------------------------------------------------------------------------------------------
-        int count();
+        size_t count();
 
         
         /// <summary> Queue of memory logs. </summary>

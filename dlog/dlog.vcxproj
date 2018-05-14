@@ -44,12 +44,12 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>$(ProjectDir)\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(ProjectDir)\lib;D:\SDK\glog\glog-master_BUILD\Debug;$(LibraryPath)</LibraryPath>
     <IncludePath>$(ProjectDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>$(ProjectDir)\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(ProjectDir)\lib;D:\SDK\glog\glog-master_BUILD\Release;$(LibraryPath)</LibraryPath>
     <IncludePath>$(ProjectDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

@@ -6,11 +6,15 @@
 #include "Common/GLogHelper.h"
 #include "Common/Debug.h"
 #include "Common/MemoryLog.h"
+#include <mutex>
 
 using namespace dxlib;
 
+//互斥锁，用于初始化和关闭的时候
+std::mutex mt;
+
 //全局对象，用于在dll释放的时候自动析构
-GLogHelper * inst = NULL;
+static GLogHelper* volatile inst = NULL;
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary> 模块初始化. </summary>
@@ -24,13 +28,24 @@ GLogHelper * inst = NULL;
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT int __stdcall dlog_init(char* logDir, char* program)
 {
+    mt.lock();
     if (inst == NULL)
     {
         inst = new GLogHelper(program, logDir);
+        mt.unlock();
         return 0;
     }
-
-    return 1;
+    else
+    {
+        if (inst->programName.compare(program) != 0 &&//如果两次设置的程序名不一致，那么才删除
+            strcmp(program, "dlog") != 0)//同时第二次设置的这个程序名不能等于默认名字
+        {
+            delete inst;
+            inst = new GLogHelper(program, logDir);
+        }
+        mt.unlock();
+        return 1;
+    }
 }
 
 ///-------------------------------------------------------------------------------------------------
@@ -42,12 +57,15 @@ extern "C" DLOG_EXPORT int __stdcall dlog_init(char* logDir, char* program)
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT int __stdcall dlog_close()
 {
+    mt.lock();
     if (inst != NULL)
     {
         delete inst;
         inst = NULL;
+        mt.unlock();
         return 0;
     }
+    mt.unlock();
     return 1;
 }
 
@@ -62,7 +80,7 @@ extern "C" DLOG_EXPORT void __stdcall dlog_get_log_dir(char* result)
 {
     if (inst != NULL)
     {
-        inst->logDirPath.copy(result, FLAGS_log_dir.size(), 0);
+        inst->logDirPath.copy(result, inst->logDirPath.size());
     }
 }
 
@@ -189,11 +207,32 @@ extern "C" DLOG_EXPORT void __stdcall LogFATAL(const char * strFormat, ...)
     va_end(arg_ptr);
 }
 
+#pragma region memory log
+
+///-------------------------------------------------------------------------------------------------
+/// <summary> 设置内存log是否使能. </summary>
+///
+/// <remarks> Dx, 2018/5/11. </remarks>
+///
+/// <param name="enable"> 设置为false之后Log函数会直接返回不作任何操作. </param>
+///-------------------------------------------------------------------------------------------------
 DLOG_EXPORT void dlog_memory_log_enable(bool enable)
 {
     Debug::GetInst()->isLogMemory = enable;
 }
 
+
+///-------------------------------------------------------------------------------------------------
+/// <summary> 提取一条内存日志. </summary>
+///
+/// <remarks> Dx, 2018/5/11. </remarks>
+///
+/// <param name="buff">   [in,out] 缓存buffer. </param>
+/// <param name="offset"> The offset. </param>
+/// <param name="count">  Number of. </param>
+///
+/// <returns> 提取出的日志长度，如果为0表示没有提出日志来. </returns>
+///-------------------------------------------------------------------------------------------------
 DLOG_EXPORT int dlog_get_memlog(char * buff, int offset, int count)
 {
     std::string msg;
@@ -206,3 +245,5 @@ DLOG_EXPORT int dlog_get_memlog(char * buff, int offset, int count)
     buff[copyLen] = 0;
     return copyLen;
 }
+
+#pragma endregion

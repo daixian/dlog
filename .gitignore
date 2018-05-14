@@ -26,3 +26,13 @@ x64/Release/UnitTest1\.lib
 x64/Release/UnitTest1\.pdb
 
 x64/Debug/
+
+x64/Release/log/
+
+x64/Release/zh-Hans/
+
+x64/Release/Microsoft\.VisualStudio\.QualityTools\.UnitTestFramework\.dll
+
+x64/Release/UnitTest\.dll
+
+x64/Release/UnitTest\.pdb
