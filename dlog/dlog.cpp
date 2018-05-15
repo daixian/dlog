@@ -221,7 +221,6 @@ DLOG_EXPORT void dlog_memory_log_enable(bool enable)
     Debug::GetInst()->isLogMemory = enable;
 }
 
-
 ///-------------------------------------------------------------------------------------------------
 /// <summary> 提取一条内存日志. </summary>
 ///
