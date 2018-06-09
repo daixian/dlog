@@ -44,3 +44,9 @@ x64/Release/
 sdk/glogBuild64/Debug/
 
 sdk/glogBuild64/Release/
+
+WindowsFormsApp1/bin/
+
+WindowsFormsApp1/obj/
+
+Dll1/x64/
