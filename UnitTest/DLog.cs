@@ -17,7 +17,7 @@ namespace xuexue
         /// <returns> 如果之前未被初始化返回0，否则返回1. </returns>
         ///-------------------------------------------------------------------------------------------------
         [DllImport("dlog")]
-        public static extern int dlog_init(string logDir = "\\log", string program = "dlog");
+        public static extern int dlog_init(string logDir = "\\log", string program = "dlog", bool isForceInit = true);
 
         ///-------------------------------------------------------------------------------------------------
         /// <summary> 关闭模块. </summary>
