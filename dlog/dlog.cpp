@@ -1,4 +1,4 @@
-// dlog.cpp : ���� DLL Ӧ�ó���ĵ���������
+﻿// dlog.cpp : 定义 DLL 应用程序的导出函数。
 //
 
 #include "dlog.h"
@@ -10,23 +10,28 @@
 
 using namespace dxlib;
 
-//�����������ڳ�ʼ���͹رյ�ʱ��
+//互斥锁，用于初始化和关闭的时候
 std::mutex mt;
 
-//ȫ�ֶ���������dll�ͷŵ�ʱ���Զ�����
+//全局对象，用于在dll释放的时候自动析构
 static GLogHelper* volatile inst = NULL;
 
 ///-------------------------------------------------------------------------------------------------
-/// <summary> ģ���ʼ��. </summary>
+/// <summary>
+/// 模块初始化,日志文件夹路径可以使用绝对目录也可以使用相对目录,
+/// 如果使用相对目录,那么程序会将它理解为相对模块目录,路径例如 char* logDir = "\\log",char* program = "dlog".
+/// isForceInit如果为false，那么就可以不强制初始化模块，理论上整个程序都共用一个日志.
+/// </summary>
 ///
 /// <remarks> Dx, 2018/4/22. </remarks>
 ///
-/// <param name="program"> [in]������. </param>
-/// <param name="logDir">  [in]��־�ļ���·���������ģ��Ŀ¼��. </param>
+/// <param name="logDir">      [in]日志文件夹路径名（相对模块目录）. </param>
+/// <param name="program">     [in]程序名. </param>
+/// <param name="isForceInit"> (Optional) 如果为false，那么就可以不强制初始化模块，理论上整个程序都共用一个日志. </param>
 ///
-/// <returns> ���֮ǰδ����ʼ������0�����򷵻�1. </returns>
+/// <returns> 如果之前未被初始化返回0,否则返回1,如果已经初始化，不用再初始化那么就返回2. </returns>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT int __stdcall dlog_init(char* logDir, char* program)
+extern "C" DLOG_EXPORT int __stdcall dlog_init(char* logDir, char* program, bool isForceInit)
 {
     mt.lock();
     if (inst == NULL)
@@ -37,8 +42,12 @@ extern "C" DLOG_EXPORT int __stdcall dlog_init(char* logDir, char* program)
     }
     else
     {
-        if (inst->programName.compare(program) != 0 &&//����������õĳ�������һ�£���ô��ɾ��
-            strcmp(program, "dlog") != 0)//ͬʱ�ڶ������õ�������������ܵ���Ĭ������
+        if (!isForceInit)
+        {
+            return 2;
+        }
+        if (inst->programName.compare(program) != 0 &&//如果两次设置的程序名不一致，那么才删除
+            strcmp(program, "dlog") != 0)//同时第二次设置的这个程序名不能等于默认名字
         {
             delete inst;
             inst = new GLogHelper(program, logDir);
@@ -49,7 +58,7 @@ extern "C" DLOG_EXPORT int __stdcall dlog_init(char* logDir, char* program)
 }
 
 ///-------------------------------------------------------------------------------------------------
-/// <summary> �ر�ģ��. </summary>
+/// <summary> 关闭模块. </summary>
 ///
 /// <remarks> Dx, 2018/4/22. </remarks>
 ///
@@ -70,7 +79,7 @@ extern "C" DLOG_EXPORT int __stdcall dlog_close()
 }
 
 ///-------------------------------------------------------------------------------------------------
-/// <summary> �õ���ǰ���õ���־Ŀ¼. </summary>
+/// <summary> 得到当前设置的日志目录. </summary>
 ///
 /// <remarks> Dx, 2018/4/22. </remarks>
 ///
@@ -85,11 +94,11 @@ extern "C" DLOG_EXPORT void __stdcall dlog_get_log_dir(char* result)
 }
 
 ///-------------------------------------------------------------------------------------------------
-/// <summary> ��������logʹ��. </summary>
+/// <summary> 设置整个log使能. </summary>
 ///
 /// <remarks> Dx, 2018/4/23. </remarks>
 ///
-/// <param name="enable"> ����Ϊfalse֮��Log������ֱ�ӷ��ز����κβ���. </param>
+/// <param name="enable"> 设置为false之后Log函数会直接返回不作任何操作. </param>
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT void __stdcall dlog_enable(bool enable)
 {
@@ -98,17 +107,17 @@ extern "C" DLOG_EXPORT void __stdcall dlog_enable(bool enable)
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary>
-/// ���ô��ڵ���ĳһ����־���������̨. ������DLOG_INFO,DLOG_WARNING,DLOG_ERROR,
+/// 设置大于等于某一级日志输出到控制台. 参数有DLOG_INFO,DLOG_WARNING,DLOG_ERROR,
 /// DLOG_FATAL.
 /// </summary>
 ///
 /// <remarks> Dx, 2018/4/23. </remarks>
 ///
-/// <param name="LogSeverity"> ���ڵ�����һ������־�������������̨. </param>
+/// <param name="LogSeverity"> 大于等于这一级的日志都会输出到控制台. </param>
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT void __stdcall dlog_FLAGS_stderrthreshold(int LogSeverity)
 {
-    FLAGS_stderrthreshold = LogSeverity; // ����־������ڵ��ڴ˼���ʱ���Զ�������־�������׼����(�ն˴���)��
+    FLAGS_stderrthreshold = LogSeverity; // 当日志级别大于等于此级别时，自动将此日志输出到标准错误(终端窗口)中
 }
 
 ///-------------------------------------------------------------------------------------------------
@@ -124,7 +133,7 @@ extern "C" DLOG_EXPORT void __stdcall dlog_FLAGS_stderrthreshold(int LogSeverity
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT void __stdcall LogI(const char * strFormat, ...)
 {
-    if (inst == NULL)//�����û�г�ʼ��������ô�͵���Ĭ�Ϲ���
+    if (inst == NULL)//如果还没有初始化过，那么就调用默认构造
     {
         dlog_init();
     }
@@ -148,7 +157,7 @@ extern "C" DLOG_EXPORT void __stdcall LogI(const char * strFormat, ...)
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT void __stdcall LogW(const char * strFormat, ...)
 {
-    if (inst == NULL)//�����û�г�ʼ��������ô�͵���Ĭ�Ϲ���
+    if (inst == NULL)//如果还没有初始化过，那么就调用默认构造
     {
         dlog_init();
     }
@@ -172,7 +181,7 @@ extern "C" DLOG_EXPORT void __stdcall LogW(const char * strFormat, ...)
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT void __stdcall LogE(const char * strFormat, ...)
 {
-    if (inst == NULL)//�����û�г�ʼ��������ô�͵���Ĭ�Ϲ���
+    if (inst == NULL)//如果还没有初始化过，那么就调用默认构造
     {
         dlog_init();
     }
@@ -196,7 +205,7 @@ extern "C" DLOG_EXPORT void __stdcall LogE(const char * strFormat, ...)
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT void __stdcall LogFATAL(const char * strFormat, ...)
 {
-    if (inst == NULL)//�����û�г�ʼ��������ô�͵���Ĭ�Ϲ���
+    if (inst == NULL)//如果还没有初始化过，那么就调用默认构造
     {
         dlog_init();
     }
@@ -210,11 +219,11 @@ extern "C" DLOG_EXPORT void __stdcall LogFATAL(const char * strFormat, ...)
 #pragma region memory log
 
 ///-------------------------------------------------------------------------------------------------
-/// <summary> �����ڴ�log�Ƿ�ʹ��. </summary>
+/// <summary> 设置内存log是否使能. </summary>
 ///
 /// <remarks> Dx, 2018/5/11. </remarks>
 ///
-/// <param name="enable"> ����Ϊfalse֮��Log������ֱ�ӷ��ز����κβ���. </param>
+/// <param name="enable"> 设置为false之后Log函数会直接返回不作任何操作. </param>
 ///-------------------------------------------------------------------------------------------------
 DLOG_EXPORT void dlog_memory_log_enable(bool enable)
 {
@@ -222,15 +231,15 @@ DLOG_EXPORT void dlog_memory_log_enable(bool enable)
 }
 
 ///-------------------------------------------------------------------------------------------------
-/// <summary> ��ȡһ���ڴ���־. </summary>
+/// <summary> 提取一条内存日志. </summary>
 ///
 /// <remarks> Dx, 2018/5/11. </remarks>
 ///
-/// <param name="buff">   [in,out] ����buffer. </param>
+/// <param name="buff">   [in,out] 缓存buffer. </param>
 /// <param name="offset"> The offset. </param>
 /// <param name="count">  Number of. </param>
 ///
-/// <returns> ��ȡ������־���ȣ����Ϊ0��ʾû�������־��. </returns>
+/// <returns> 提取出的日志长度，如果为0表示没有提出日志来. </returns>
 ///-------------------------------------------------------------------------------------------------
 DLOG_EXPORT int dlog_get_memlog(char * buff, int offset, int count)
 {
