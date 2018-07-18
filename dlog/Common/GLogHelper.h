@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "glog/logging.h"
 #include "glog/raw_logging.h"
@@ -9,33 +9,33 @@ class GLogHelper
 {
 public:
     ///-------------------------------------------------------------------------------------------------
-    /// <summary> ¹¹Ôì£¬Í¬Ê±½øĞĞglogÅäÖÃ. </summary>
+    /// <summary> æ„é€ ï¼ŒåŒæ—¶è¿›è¡Œglogé…ç½®. </summary>
     ///
     /// <remarks> Dx, 2018/4/22. </remarks>
     ///
-    /// <param name="program"> [in]³ÌĞòÃû. </param>
-    /// <param name="logDir">  [in]ÈÕÖ¾ÎÄ¼ş¼ĞÂ·¾¶Ãû£¨Ïà¶ÔÄ£¿éÄ¿Â¼£©. </param>
+    /// <param name="program"> [in]ç¨‹åºå. </param>
+    /// <param name="logDir">  [in]æ—¥å¿—æ–‡ä»¶å¤¹è·¯å¾„åï¼ˆç›¸å¯¹æ¨¡å—ç›®å½•ï¼‰. </param>
     ///-------------------------------------------------------------------------------------------------
     GLogHelper(char* program, char* logDir = "\\log");
-    //GLOGÄÚ´æÇåÀí£º
+    //GLOGå†…å­˜æ¸…ç†ï¼š
     ~GLogHelper();
 
-    //´íÎó»Øµ÷£º£¨Î´ÄÜÓÃ£©½«ĞÅÏ¢Êä³öµ½µ¥¶ÀµÄÎÄ¼şºÍ LOG(ERROR)
+    //é”™è¯¯å›è°ƒï¼šï¼ˆæœªèƒ½ç”¨ï¼‰å°†ä¿¡æ¯è¾“å‡ºåˆ°å•ç‹¬çš„æ–‡ä»¶å’Œ LOG(ERROR)
     void static SignalHandle(const char* data, int size);
 
  
     bool static dirExists(const std::string& dirName_in);
     bool static dirExists(const std::wstring& dirName_in);
 
-    //µÃµ½Ä£¿éÄ¿Â¼Ä©Î²²»´øĞ±¸Ü"D:\\Work\\F3DSys\\F3DSystem"
+    //å¾—åˆ°æ¨¡å—ç›®å½•æœ«å°¾ä¸å¸¦æ–œæ "D:\\Work\\F3DSys\\F3DSystem"
     std::string static getAppDir();
 
     std::string static isExistsAndCreat(std::string sDir);
     std::string static isExistsAndCreat(std::wstring dirPath);
 
-    //ÈÕÖ¾ÎÄ¼ş¼ĞµÄ¼ÇÂ¼(¾ø¶ÔÂ·¾¶) 
+    //æ—¥å¿—æ–‡ä»¶å¤¹çš„è®°å½•(ç»å¯¹è·¯å¾„) 
     std::string logDirPath;
 
-    //ÈÕÖ¾³ÌĞòÃûµÄ¼ÇÂ¼(glogÖĞÃ»ÓĞapiÀ´¼ÇÂ¼£¬ËùÒÔÒª×Ô¼º¼ÇÂ¼)
+    //æ—¥å¿—ç¨‹åºåçš„è®°å½•(glogä¸­æ²¡æœ‰apiæ¥è®°å½•ï¼Œæ‰€ä»¥è¦è‡ªå·±è®°å½•)
     std::string programName;
 };

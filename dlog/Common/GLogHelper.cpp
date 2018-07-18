@@ -1,4 +1,4 @@
-#include <stdlib.h>
+ï»¿#include <stdlib.h>
 #include "GLogHelper.h"
 #include <io.h>
 #include <windows.h>
@@ -11,16 +11,16 @@
 #pragma comment(lib, "glog.lib")
 #endif // _DEBUG
 
-//ÅäÖÃÊä³öÈÕÖ¾µÄÄ¿Â¼£º
+//é…ç½®è¾“å‡ºæ—¥å¿—çš„ç›®å½•ï¼š
 //#define LOGDIR "log"
 //#define MKDIR "mkdir -p " LOGDIR
-//#define MKDIR_WIN "mkdir " LOGDIR //windowsµÄ²»ĞèÒª-pÃüÁî
+//#define MKDIR_WIN "mkdir " LOGDIR //windowsçš„ä¸éœ€è¦-på‘½ä»¤
 
 #define CSIDL_APPDATA 0x001a        // <user name>\Application Data
 
 using std::experimental::filesystem::path;
 
-//½«ĞÅÏ¢Êä³öµ½µ¥¶ÀµÄÎÄ¼şºÍ LOG(ERROR)  windowdÆ½Ì¨ºÃÏñ²»ĞĞ
+//å°†ä¿¡æ¯è¾“å‡ºåˆ°å•ç‹¬çš„æ–‡ä»¶å’Œ LOG(ERROR)  windowdå¹³å°å¥½åƒä¸è¡Œ
 void GLogHelper::SignalHandle(const char* data, int size)
 {
     std::string str = std::string(data, size);
@@ -30,8 +30,8 @@ void GLogHelper::SignalHandle(const char* data, int size)
     fs.close();
     */
     LOG(ERROR) << str;
-    //Ò²¿ÉÒÔÖ±½ÓÔÚÕâÀï·¢ËÍÓÊ¼ş»ò¶ÌĞÅÍ¨Öª£¬²»¹ıÕâ¸ö·½·¨ÊÇ±»»Øµ÷¶à´ÎµÄ£¨Ã¿´Î»Øµ÷Ö»Êä³öÒ»ĞĞ´íÎóĞÅÏ¢£¬ËùÒÔÈçÉÏÃæµÄ¼ÇÂ¼µ½ÎÄ¼ş£¬Ò²ĞèÒª>ÒÔ×·¼ÓÄ£Ê½·½¿É£©£¬ËùÒÔÕâÀï·¢ÓÊ¼ş»ò¶ÌĞÅ²»ÊÇºÜÊÊºÏ£¬²»¹ıµ¹ÊÇ¿ÉÒÔµ÷ÓÃÒ»¸ö SHELL »ò PYTHON ½Å±¾£¬¶ø´Ë½Å±¾»áÏÈ sleep 3Ãë×óÓÒ£¬È»ºó½«´í
-    //ÎóĞÅÏ¢Í¨¹ıÓÊ¼ş»ò¶ÌĞÅ·¢ËÍ³öÈ¥£¬ÕâÑù¾Í²»ĞèÒª¼à¿Ø½Å±¾¶¨Ê±¸ßÆµÂÊÖ´ĞĞ£¬ÀË·ÑĞ§ÂÊÁË¡£
+    //ä¹Ÿå¯ä»¥ç›´æ¥åœ¨è¿™é‡Œå‘é€é‚®ä»¶æˆ–çŸ­ä¿¡é€šçŸ¥ï¼Œä¸è¿‡è¿™ä¸ªæ–¹æ³•æ˜¯è¢«å›è°ƒå¤šæ¬¡çš„ï¼ˆæ¯æ¬¡å›è°ƒåªè¾“å‡ºä¸€è¡Œé”™è¯¯ä¿¡æ¯ï¼Œæ‰€ä»¥å¦‚ä¸Šé¢çš„è®°å½•åˆ°æ–‡ä»¶ï¼Œä¹Ÿéœ€è¦>ä»¥è¿½åŠ æ¨¡å¼æ–¹å¯ï¼‰ï¼Œæ‰€ä»¥è¿™é‡Œå‘é‚®ä»¶æˆ–çŸ­ä¿¡ä¸æ˜¯å¾ˆé€‚åˆï¼Œä¸è¿‡å€’æ˜¯å¯ä»¥è°ƒç”¨ä¸€ä¸ª SHELL æˆ– PYTHON è„šæœ¬ï¼Œè€Œæ­¤è„šæœ¬ä¼šå…ˆ sleep 3ç§’å·¦å³ï¼Œç„¶åå°†é”™
+    //è¯¯ä¿¡æ¯é€šè¿‡é‚®ä»¶æˆ–çŸ­ä¿¡å‘é€å‡ºå»ï¼Œè¿™æ ·å°±ä¸éœ€è¦ç›‘æ§è„šæœ¬å®šæ—¶é«˜é¢‘ç‡æ‰§è¡Œï¼Œæµªè´¹æ•ˆç‡äº†ã€‚
 }
 
 bool GLogHelper::dirExists(const std::string& dirName_in)
@@ -62,35 +62,35 @@ std::string GLogHelper::getAppDir()
 std::string GLogHelper::isExistsAndCreat(std::wstring dirPath)
 {
     std::string sDir = ws2s(dirPath);
-    if (!dirExists(sDir))//Èç¹ûÎÄ¼ş¼ĞÂ·¾¶²»´æÔÚ
+    if (!dirExists(sDir))//å¦‚æœæ–‡ä»¶å¤¹è·¯å¾„ä¸å­˜åœ¨
     {
-        std::string cmd = std::string("mkdir \"") + sDir + std::string("\"");//Õâ¸öÃüÁî¿ÉÒÔ´´½¨Ò»´®ÎÄ¼ş¼Ğ
-        system(cmd.c_str()); //´´½¨ÎÄ¼ş¼Ğ
+        std::string cmd = std::string("mkdir \"") + sDir + std::string("\"");//è¿™ä¸ªå‘½ä»¤å¯ä»¥åˆ›å»ºä¸€ä¸²æ–‡ä»¶å¤¹
+        system(cmd.c_str()); //åˆ›å»ºæ–‡ä»¶å¤¹
     }
     return sDir;
 }
 
 std::string GLogHelper::isExistsAndCreat(std::string sDir)
 {
-    if (!dirExists(sDir))//Èç¹ûÎÄ¼ş¼ĞÂ·¾¶²»´æÔÚ
+    if (!dirExists(sDir))//å¦‚æœæ–‡ä»¶å¤¹è·¯å¾„ä¸å­˜åœ¨
     {
-        std::string cmd = std::string("mkdir \"") + sDir + std::string("\"");//Õâ¸öÃüÁî¿ÉÒÔ´´½¨Ò»´®ÎÄ¼ş¼Ğ
-        system(cmd.c_str()); //´´½¨ÎÄ¼ş¼Ğ
+        std::string cmd = std::string("mkdir \"") + sDir + std::string("\"");//è¿™ä¸ªå‘½ä»¤å¯ä»¥åˆ›å»ºä¸€ä¸²æ–‡ä»¶å¤¹
+        system(cmd.c_str()); //åˆ›å»ºæ–‡ä»¶å¤¹
     }
     return sDir;
 }
 
-//GLOGÅäÖÃ£º
+//GLOGé…ç½®ï¼š
 GLogHelper::GLogHelper(char* program, char* logDir)
 {
-    programName = program;//¼ÇÂ¼³ÌĞòÃû
+    programName = program;//è®°å½•ç¨‹åºå
 
     google::InitGoogleLogging(program);
 
     //std::wstring path = getMyDirectory();//path = L"D:\\Work\\F3DSys\\F3DSystem"
     wchar_t *szPath = new wchar_t[512];
 
-    //Õâ¸öº¯Êı²»ÄÜÓÃ£¬ÓÉÓÚ¹ÜÀíÔ±Ä£Ê½£¬Â·¾¶²»ÊÇµ±Ç°ÎÄ¼ş¼Ğ
+    //è¿™ä¸ªå‡½æ•°ä¸èƒ½ç”¨ï¼Œç”±äºç®¡ç†å‘˜æ¨¡å¼ï¼Œè·¯å¾„ä¸æ˜¯å½“å‰æ–‡ä»¶å¤¹
     BOOL bRet = SHGetSpecialFolderPath(NULL, szPath, CSIDL_APPDATA, FALSE);//L"C:\\Users\\f3d\\AppData\\Roaming"
 
     logDirPath.clear();
@@ -109,30 +109,30 @@ GLogHelper::GLogHelper(char* program, char* logDir)
         }
         logDirPath.append(logDir);
     }
-    if (!dirExists(logDirPath))//Èç¹ûÎÄ¼ş¼ĞÂ·¾¶²»´æÔÚ
+    if (!dirExists(logDirPath))//å¦‚æœæ–‡ä»¶å¤¹è·¯å¾„ä¸å­˜åœ¨
     {
         std::string cmd = std::string("mkdir \"") + logDirPath + std::string("\"");
-        system(cmd.c_str()); //´´½¨ÎÄ¼ş¼Ğ
+        system(cmd.c_str()); //åˆ›å»ºæ–‡ä»¶å¤¹
     }
 
-    FLAGS_log_dir = logDirPath;// ÉèÖÃÈÕÖ¾ÎÄ¼şÂ·¾¶
+    FLAGS_log_dir = logDirPath;// è®¾ç½®æ—¥å¿—æ–‡ä»¶è·¯å¾„
 
-    //google::SetLogFilenameExtension("91_");     //ÉèÖÃÎÄ¼şÃûÀ©Õ¹£¬ÈçÆ½Ì¨£¿»òÆäËüĞèÒªÇø·ÖµÄĞÅÏ¢(ÕâÒ»¾äÊµ¼Ê²¢²»ÊÇÎÄ¼şµÄÀ©Õ¹Ãû)
+    //google::SetLogFilenameExtension("91_");     //è®¾ç½®æ–‡ä»¶åæ‰©å±•ï¼Œå¦‚å¹³å°ï¼Ÿæˆ–å…¶å®ƒéœ€è¦åŒºåˆ†çš„ä¿¡æ¯(è¿™ä¸€å¥å®é™…å¹¶ä¸æ˜¯æ–‡ä»¶çš„æ‰©å±•å)
 
-    //FLAGS_log_dir = "log";// ÉèÖÃÈÕÖ¾ÎÄ¼şÂ·¾¶ "./log"
-    //google::SetLogDestination(google::GLOG_INFO, "./log/info");// ÉèÖÃÄ³¸ö¼¶±ğµÄÈÕÖ¾µÄ»º´æÎÄ¼şÂ·¾¶
+    //FLAGS_log_dir = "log";// è®¾ç½®æ—¥å¿—æ–‡ä»¶è·¯å¾„ "./log"
+    //google::SetLogDestination(google::GLOG_INFO, "./log/info");// è®¾ç½®æŸä¸ªçº§åˆ«çš„æ—¥å¿—çš„ç¼“å­˜æ–‡ä»¶è·¯å¾„
 
-    //FLAGS_stderrthreshold = google::GLOG_WARNING; // µ±ÈÕÖ¾¼¶±ğ´óÓÚµÈÓÚ´Ë¼¶±ğÊ±£¬×Ô¶¯½«´ËÈÕÖ¾Êä³öµ½±ê×¼´íÎóÖĞ
-    FLAGS_stderrthreshold = google::GLOG_INFO; // µ±ÈÕÖ¾¼¶±ğ´óÓÚµÈÓÚ´Ë¼¶±ğÊ±£¬×Ô¶¯½«´ËÈÕÖ¾Êä³öµ½±ê×¼´íÎó(ÖÕ¶Ë´°¿Ú)ÖĞ
+    //FLAGS_stderrthreshold = google::GLOG_WARNING; // å½“æ—¥å¿—çº§åˆ«å¤§äºç­‰äºæ­¤çº§åˆ«æ—¶ï¼Œè‡ªåŠ¨å°†æ­¤æ—¥å¿—è¾“å‡ºåˆ°æ ‡å‡†é”™è¯¯ä¸­
+    FLAGS_stderrthreshold = google::GLOG_INFO; // å½“æ—¥å¿—çº§åˆ«å¤§äºç­‰äºæ­¤çº§åˆ«æ—¶ï¼Œè‡ªåŠ¨å°†æ­¤æ—¥å¿—è¾“å‡ºåˆ°æ ‡å‡†é”™è¯¯(ç»ˆç«¯çª—å£)ä¸­
 
-    FLAGS_logbuflevel = google::GLOG_INFO;//µ±Ğ¡ÓÚµÈÓÚ»á»º´æ,µ±ÈÕÖ¾¼¶±ğ´óÓÚ´Ë¼¶±ğÊ±»áÂíÉÏÊä³ö£¬¶ø²»»º´æ
-    FLAGS_colorlogtostderr = true;//ÉèÖÃ²ÊÉ«¿ØÖÆÌ¨Êä³ö
-    FLAGS_logbufsecs = 1;  // »º´æ×î¾Ã³¤Ê±¼äÎª¶à¾Ã
-    FLAGS_max_log_size = 50;// µ±ÈÕÖ¾ÎÄ¼ş´ïµ½¶àÉÙÊ±£¬½øĞĞÎÄ¼ş·Ö¸î£¬ÒÔMÎªµ¥Î»
-    FLAGS_stop_logging_if_full_disk = false; // µ±´ÅÅÌÒÑÂúÊ±,Í£Ö¹Êä³öÈÕÖ¾ÎÄ¼ş
+    FLAGS_logbuflevel = google::GLOG_INFO;//å½“å°äºç­‰äºä¼šç¼“å­˜,å½“æ—¥å¿—çº§åˆ«å¤§äºæ­¤çº§åˆ«æ—¶ä¼šé©¬ä¸Šè¾“å‡ºï¼Œè€Œä¸ç¼“å­˜
+    FLAGS_colorlogtostderr = true;//è®¾ç½®å½©è‰²æ§åˆ¶å°è¾“å‡º
+    FLAGS_logbufsecs = 1;  // ç¼“å­˜æœ€ä¹…é•¿æ—¶é—´ä¸ºå¤šä¹…
+    FLAGS_max_log_size = 50;// å½“æ—¥å¿—æ–‡ä»¶è¾¾åˆ°å¤šå°‘æ—¶ï¼Œè¿›è¡Œæ–‡ä»¶åˆ†å‰²ï¼Œä»¥Mä¸ºå•ä½
+    FLAGS_stop_logging_if_full_disk = false; // å½“ç£ç›˜å·²æ»¡æ—¶,åœæ­¢è¾“å‡ºæ—¥å¿—æ–‡ä»¶
 
-    google::InstallFailureSignalHandler();      //²¶×½ core dumped
-    google::InstallFailureWriter(SignalHandle);    //Ä¬ÈÏ²¶×½ SIGSEGV ĞÅºÅĞÅÏ¢Êä³ö»áÊä³öµ½ stderr£¬¿ÉÒÔÍ¨¹ıÏÂÃæµÄ·½·¨×Ô¶¨ÒåÊä³ö>·½Ê½£º
+    google::InstallFailureSignalHandler();      //æ•æ‰ core dumped
+    google::InstallFailureWriter(SignalHandle);    //é»˜è®¤æ•æ‰ SIGSEGV ä¿¡å·ä¿¡æ¯è¾“å‡ºä¼šè¾“å‡ºåˆ° stderrï¼Œå¯ä»¥é€šè¿‡ä¸‹é¢çš„æ–¹æ³•è‡ªå®šä¹‰è¾“å‡º>æ–¹å¼ï¼š
 
     std::wstring wsPath(szPath);
 
@@ -141,7 +141,7 @@ GLogHelper::GLogHelper(char* program, char* logDir)
     delete[]szPath;
 }
 
-//GLOGÄÚ´æÇåÀí£º
+//GLOGå†…å­˜æ¸…ç†ï¼š
 GLogHelper::~GLogHelper()
 {
     try {

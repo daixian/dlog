@@ -1,8 +1,8 @@
-#pragma once
+ï»¿#pragma once
 #include "Debug.h"
 #include "MemoryLog.h"
 
-//Ò»ÌõÈÕÖ¾µÄ³¤¶È
+//ä¸€æ¡æ—¥å¿—çš„é•¿åº¦
 #define DEBUG_LOG_BUFF_SIZE 128
 
 namespace dxlib
@@ -11,10 +11,10 @@ namespace dxlib
 
     void Debug::LogI(const char * strFormat, ...)
     {
-        if (m_pInstance == NULL) { Debug::GetInst(); }//Èç¹ûµ¥Àı¶ÔÏó»¹Î´¹¹ÔìÄÇÃ´¾ÍÏÈ¹¹ÔìÒ»´Î
-        if (!m_pInstance->isLogI) { return; }	//Èç¹û¿ØÖÆÊÇ²»Êä³öµÍÓÅÏÈ¼¶ÈÕÖ¾)
-        if (!m_pInstance->isLog) { return; }	//Èç¹û¿ØÖÆÊÇ²»Êä³öÈÕÖ¾
-        if (NULL == strFormat) { return; }//Èç¹ûÊäÈë²ÎÊıÎª¿Õ
+        if (m_pInstance == NULL) { Debug::GetInst(); }//å¦‚æœå•ä¾‹å¯¹è±¡è¿˜æœªæ„é€ é‚£ä¹ˆå°±å…ˆæ„é€ ä¸€æ¬¡
+        if (!m_pInstance->isLogI) { return; }	//å¦‚æœæ§åˆ¶æ˜¯ä¸è¾“å‡ºä½ä¼˜å…ˆçº§æ—¥å¿—)
+        if (!m_pInstance->isLog) { return; }	//å¦‚æœæ§åˆ¶æ˜¯ä¸è¾“å‡ºæ—¥å¿—
+        if (NULL == strFormat) { return; }//å¦‚æœè¾“å…¥å‚æ•°ä¸ºç©º
 
         va_list arg_ptr = NULL;
         va_start(arg_ptr, strFormat);
@@ -37,9 +37,9 @@ namespace dxlib
 
     void Debug::LogW(const char * strFormat, ...)
     {
-        if (m_pInstance == NULL) { Debug::GetInst(); }//Èç¹ûµ¥Àı¶ÔÏó»¹Î´¹¹ÔìÄÇÃ´¾ÍÏÈ¹¹ÔìÒ»´Î
-        if (!m_pInstance->isLog) { return; }	//Èç¹û¿ØÖÆÊÇ²»Êä³öÈÕÖ¾
-        if (NULL == strFormat) { return; }//Èç¹ûÊäÈë²ÎÊıÎª¿Õ
+        if (m_pInstance == NULL) { Debug::GetInst(); }//å¦‚æœå•ä¾‹å¯¹è±¡è¿˜æœªæ„é€ é‚£ä¹ˆå°±å…ˆæ„é€ ä¸€æ¬¡
+        if (!m_pInstance->isLog) { return; }	//å¦‚æœæ§åˆ¶æ˜¯ä¸è¾“å‡ºæ—¥å¿—
+        if (NULL == strFormat) { return; }//å¦‚æœè¾“å…¥å‚æ•°ä¸ºç©º
 
         va_list arg_ptr = NULL;
         va_start(arg_ptr, strFormat);
@@ -62,9 +62,9 @@ namespace dxlib
 
     void Debug::LogE(const char * strFormat, ...)
     {
-        if (m_pInstance == NULL) { Debug::GetInst(); }//Èç¹ûµ¥Àı¶ÔÏó»¹Î´¹¹ÔìÄÇÃ´¾ÍÏÈ¹¹ÔìÒ»´Î
-        if (!m_pInstance->isLog) { return; }	//Èç¹û¿ØÖÆÊÇ²»Êä³öÈÕÖ¾
-        if (NULL == strFormat) { return; }//Èç¹ûÊäÈë²ÎÊıÎª¿Õ
+        if (m_pInstance == NULL) { Debug::GetInst(); }//å¦‚æœå•ä¾‹å¯¹è±¡è¿˜æœªæ„é€ é‚£ä¹ˆå°±å…ˆæ„é€ ä¸€æ¬¡
+        if (!m_pInstance->isLog) { return; }	//å¦‚æœæ§åˆ¶æ˜¯ä¸è¾“å‡ºæ—¥å¿—
+        if (NULL == strFormat) { return; }//å¦‚æœè¾“å…¥å‚æ•°ä¸ºç©º
 
         va_list arg_ptr = NULL;
         va_start(arg_ptr, strFormat);
@@ -88,9 +88,9 @@ namespace dxlib
 
     void Debug::LogFATAL(const char * strFormat, ...)
     {
-        if (m_pInstance == NULL) { Debug::GetInst(); }//Èç¹ûµ¥Àı¶ÔÏó»¹Î´¹¹ÔìÄÇÃ´¾ÍÏÈ¹¹ÔìÒ»´Î
-        if (!m_pInstance->isLog) { return; }	//Èç¹û¿ØÖÆÊÇ²»Êä³öÈÕÖ¾
-        if (NULL == strFormat) { return; }//Èç¹ûÊäÈë²ÎÊıÎª¿Õ
+        if (m_pInstance == NULL) { Debug::GetInst(); }//å¦‚æœå•ä¾‹å¯¹è±¡è¿˜æœªæ„é€ é‚£ä¹ˆå°±å…ˆæ„é€ ä¸€æ¬¡
+        if (!m_pInstance->isLog) { return; }	//å¦‚æœæ§åˆ¶æ˜¯ä¸è¾“å‡ºæ—¥å¿—
+        if (NULL == strFormat) { return; }//å¦‚æœè¾“å…¥å‚æ•°ä¸ºç©º
 
         va_list arg_ptr = NULL;
         va_start(arg_ptr, strFormat);
@@ -114,10 +114,10 @@ namespace dxlib
 
     void Debug::LogI_va(const char * strFormat, va_list &arg_ptr)
     {
-        if (m_pInstance == NULL) { Debug::GetInst(); }//Èç¹ûµ¥Àı¶ÔÏó»¹Î´¹¹ÔìÄÇÃ´¾ÍÏÈ¹¹ÔìÒ»´Î
-        if (!m_pInstance->isLogI) { return; }	//Èç¹û¿ØÖÆÊÇ²»Êä³öµÍÓÅÏÈ¼¶ÈÕÖ¾)
-        if (!m_pInstance->isLog) { return; }	//Èç¹û¿ØÖÆÊÇ²»Êä³öÈÕÖ¾
-        if (NULL == strFormat) { return; }//Èç¹ûÊäÈë²ÎÊıÎª¿Õ
+        if (m_pInstance == NULL) { Debug::GetInst(); }//å¦‚æœå•ä¾‹å¯¹è±¡è¿˜æœªæ„é€ é‚£ä¹ˆå°±å…ˆæ„é€ ä¸€æ¬¡
+        if (!m_pInstance->isLogI) { return; }	//å¦‚æœæ§åˆ¶æ˜¯ä¸è¾“å‡ºä½ä¼˜å…ˆçº§æ—¥å¿—)
+        if (!m_pInstance->isLog) { return; }	//å¦‚æœæ§åˆ¶æ˜¯ä¸è¾“å‡ºæ—¥å¿—
+        if (NULL == strFormat) { return; }//å¦‚æœè¾“å…¥å‚æ•°ä¸ºç©º
 
         std::vector<char> buf(DEBUG_LOG_BUFF_SIZE);
         int ret;
@@ -136,9 +136,9 @@ namespace dxlib
 
     void Debug::LogW_va(const char * strFormat, va_list &arg_ptr)
     {
-        if (m_pInstance == NULL) { Debug::GetInst(); }//Èç¹ûµ¥Àı¶ÔÏó»¹Î´¹¹ÔìÄÇÃ´¾ÍÏÈ¹¹ÔìÒ»´Î
-        if (!m_pInstance->isLog) { return; }	//Èç¹û¿ØÖÆÊÇ²»Êä³öÈÕÖ¾
-        if (NULL == strFormat) { return; }//Èç¹ûÊäÈë²ÎÊıÎª¿Õ
+        if (m_pInstance == NULL) { Debug::GetInst(); }//å¦‚æœå•ä¾‹å¯¹è±¡è¿˜æœªæ„é€ é‚£ä¹ˆå°±å…ˆæ„é€ ä¸€æ¬¡
+        if (!m_pInstance->isLog) { return; }	//å¦‚æœæ§åˆ¶æ˜¯ä¸è¾“å‡ºæ—¥å¿—
+        if (NULL == strFormat) { return; }//å¦‚æœè¾“å…¥å‚æ•°ä¸ºç©º
 
         std::vector<char> buf(DEBUG_LOG_BUFF_SIZE);
         int ret;
@@ -157,9 +157,9 @@ namespace dxlib
 
     void Debug::LogE_va(const char * strFormat, va_list &arg_ptr)
     {
-        if (m_pInstance == NULL) { Debug::GetInst(); }//Èç¹ûµ¥Àı¶ÔÏó»¹Î´¹¹ÔìÄÇÃ´¾ÍÏÈ¹¹ÔìÒ»´Î
-        if (!m_pInstance->isLog) { return; }	//Èç¹û¿ØÖÆÊÇ²»Êä³öÈÕÖ¾
-        if (NULL == strFormat) { return; }//Èç¹ûÊäÈë²ÎÊıÎª¿Õ
+        if (m_pInstance == NULL) { Debug::GetInst(); }//å¦‚æœå•ä¾‹å¯¹è±¡è¿˜æœªæ„é€ é‚£ä¹ˆå°±å…ˆæ„é€ ä¸€æ¬¡
+        if (!m_pInstance->isLog) { return; }	//å¦‚æœæ§åˆ¶æ˜¯ä¸è¾“å‡ºæ—¥å¿—
+        if (NULL == strFormat) { return; }//å¦‚æœè¾“å…¥å‚æ•°ä¸ºç©º
 
         std::vector<char> buf(DEBUG_LOG_BUFF_SIZE);
         int ret;
@@ -178,9 +178,9 @@ namespace dxlib
 
     void Debug::LogFATAL_va(const char * strFormat, va_list &arg_ptr)
     {
-        if (m_pInstance == NULL) { Debug::GetInst(); }//Èç¹ûµ¥Àı¶ÔÏó»¹Î´¹¹ÔìÄÇÃ´¾ÍÏÈ¹¹ÔìÒ»´Î
-        if (!m_pInstance->isLog) { return; }	//Èç¹û¿ØÖÆÊÇ²»Êä³öÈÕÖ¾
-        if (NULL == strFormat) { return; }//Èç¹ûÊäÈë²ÎÊıÎª¿Õ
+        if (m_pInstance == NULL) { Debug::GetInst(); }//å¦‚æœå•ä¾‹å¯¹è±¡è¿˜æœªæ„é€ é‚£ä¹ˆå°±å…ˆæ„é€ ä¸€æ¬¡
+        if (!m_pInstance->isLog) { return; }	//å¦‚æœæ§åˆ¶æ˜¯ä¸è¾“å‡ºæ—¥å¿—
+        if (NULL == strFormat) { return; }//å¦‚æœè¾“å…¥å‚æ•°ä¸ºç©º
 
         std::vector<char> buf(DEBUG_LOG_BUFF_SIZE);
         int ret;

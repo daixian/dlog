@@ -1,4 +1,4 @@
-#include "MemoryLog.h"
+ï»¿#include "MemoryLog.h"
 
 using namespace std;
 
@@ -12,7 +12,7 @@ namespace dxlib
 
     MemoryLog * MemoryLog::GetInst()
     {
-        if (m_pInstance == NULL)  //ÅĞ¶ÏÊÇ·ñµÚÒ»´Îµ÷ÓÃ
+        if (m_pInstance == NULL)  //åˆ¤æ–­æ˜¯å¦ç¬¬ä¸€æ¬¡è°ƒç”¨
             m_pInstance = new MemoryLog();
         return m_pInstance;
     }
@@ -23,7 +23,7 @@ namespace dxlib
 
     void MemoryLog::addLog(char * msg)
     {
-        if (_memLogQueue.size_approx() > 1024 * 1024 / 5)//Èç¹ûËüÊµÔÚÊÇÌ«³¤ÁË£¬´ó¸ÅÕ¼ÓÃÁË20M
+        if (_memLogQueue.size_approx() > 1024 * 1024 / 5)//å¦‚æœå®ƒå®åœ¨æ˜¯å¤ªé•¿äº†ï¼Œå¤§æ¦‚å ç”¨äº†20M
         {
             string first;
             _memLogQueue.try_dequeue(first);
