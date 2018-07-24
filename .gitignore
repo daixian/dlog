@@ -50,3 +50,9 @@ WindowsFormsApp1/bin/
 WindowsFormsApp1/obj/
 
 Dll1/x64/
+
+Release/
+
+sdk/glogBuild32/\.vs/
+
+sdk/glogBuild32/CMakeFiles/

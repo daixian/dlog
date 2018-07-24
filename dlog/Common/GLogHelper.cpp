@@ -81,7 +81,7 @@ std::string GLogHelper::isExistsAndCreat(std::string sDir)
 }
 
 //GLOG配置：
-GLogHelper::GLogHelper(char* program, char* logDir)
+GLogHelper::GLogHelper(const char* program,const char* logDir)
 {
     programName = program;//记录程序名
 

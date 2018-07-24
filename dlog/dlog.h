@@ -42,7 +42,7 @@ namespace dlog
 ///
 /// <returns> 如果之前未被初始化返回0,否则返回1,如果已经初始化，不用再初始化那么就返回2. </returns>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT int __stdcall dlog_init(char* logDir = "\\log", char* program = "dlog", bool isForceInit = true);
+extern "C" DLOG_EXPORT int __stdcall dlog_init(const char* logDir = "\\log", const char* program = "dlog", bool isForceInit = true);
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary> 关闭模块. </summary>

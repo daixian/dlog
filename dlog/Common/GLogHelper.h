@@ -16,7 +16,7 @@ public:
     /// <param name="program"> [in]程序名. </param>
     /// <param name="logDir">  [in]日志文件夹路径名（相对模块目录）. </param>
     ///-------------------------------------------------------------------------------------------------
-    GLogHelper(char* program, char* logDir = "\\log");
+    GLogHelper(const char* program, const char* logDir = "\\log");
     //GLOG内存清理：
     ~GLogHelper();
 

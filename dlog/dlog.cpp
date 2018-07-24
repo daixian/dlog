@@ -31,7 +31,7 @@ static GLogHelper* volatile inst = NULL;
 ///
 /// <returns> 如果之前未被初始化返回0,否则返回1,如果已经初始化，不用再初始化那么就返回2. </returns>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT int __stdcall dlog_init(char* logDir, char* program, bool isForceInit)
+extern "C" DLOG_EXPORT int __stdcall dlog_init(const char* logDir, const char* program, bool isForceInit)
 {
     mt.lock();
     if (inst == NULL)
@@ -225,7 +225,7 @@ extern "C" DLOG_EXPORT void __stdcall LogFATAL(const char * strFormat, ...)
 ///
 /// <param name="enable"> 设置为false之后Log函数会直接返回不作任何操作. </param>
 ///-------------------------------------------------------------------------------------------------
-DLOG_EXPORT void dlog_memory_log_enable(bool enable)
+extern "C" DLOG_EXPORT void __stdcall dlog_memory_log_enable(bool enable)
 {
     Debug::GetInst()->isLogMemory = enable;
 }
@@ -241,7 +241,7 @@ DLOG_EXPORT void dlog_memory_log_enable(bool enable)
 ///
 /// <returns> 提取出的日志长度，如果为0表示没有提出日志来. </returns>
 ///-------------------------------------------------------------------------------------------------
-DLOG_EXPORT int dlog_get_memlog(char * buff, int offset, int count)
+extern "C" DLOG_EXPORT int __stdcall dlog_get_memlog(char* buff, int offset, int count)
 {
     std::string msg;
     int copyLen = 0;
