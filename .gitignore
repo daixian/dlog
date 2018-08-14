@@ -56,3 +56,5 @@ Release/
 sdk/glogBuild32/\.vs/
 
 sdk/glogBuild32/CMakeFiles/
+
+UnitTest1/Debug/
