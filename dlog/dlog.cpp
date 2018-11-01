@@ -1,12 +1,11 @@
 ﻿// dlog.cpp : 定义 DLL 应用程序的导出函数。
 //
-
+#include "stdafx.h"
 #include "dlog.h"
 
-#include "Common/GLogHelper.h"
-#include "Common/Debug.h"
-#include "Common/MemoryLog.h"
-#include <mutex>
+#include "./Common/GLogHelper.h"
+#include "./Common/Debug.h"
+#include "./Common/MemoryLog.h"
 
 using namespace dxlib;
 
@@ -34,21 +33,16 @@ static GLogHelper* volatile inst = NULL;
 extern "C" DLOG_EXPORT int __stdcall dlog_init(const char* logDir, const char* program, bool isForceInit)
 {
     mt.lock();
-    if (inst == NULL)
-    {
+    if (inst == NULL) {
         inst = new GLogHelper(program, logDir);
         mt.unlock();
         return 0;
-    }
-    else
-    {
-        if (!isForceInit)
-        {
+    } else {
+        if (!isForceInit) {
             return 2;
         }
         if (inst->programName.compare(program) != 0 &&//如果两次设置的程序名不一致，那么才删除
-            strcmp(program, "dlog") != 0)//同时第二次设置的这个程序名不能等于默认名字
-        {
+                strcmp(program, "dlog") != 0) { //同时第二次设置的这个程序名不能等于默认名字
             delete inst;
             inst = new GLogHelper(program, logDir);
         }
@@ -67,8 +61,7 @@ extern "C" DLOG_EXPORT int __stdcall dlog_init(const char* logDir, const char* p
 extern "C" DLOG_EXPORT int __stdcall dlog_close()
 {
     mt.lock();
-    if (inst != NULL)
-    {
+    if (inst != NULL) {
         delete inst;
         inst = NULL;
         mt.unlock();
@@ -87,8 +80,7 @@ extern "C" DLOG_EXPORT int __stdcall dlog_close()
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT void __stdcall dlog_get_log_dir(char* result)
 {
-    if (inst != NULL)
-    {
+    if (inst != NULL) {
         inst->logDirPath.copy(result, inst->logDirPath.size());
     }
 }
@@ -131,10 +123,9 @@ extern "C" DLOG_EXPORT void __stdcall dlog_FLAGS_stderrthreshold(int LogSeverity
 ///                          providing additional
 ///                          information. </param>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void __stdcall LogI(const char * strFormat, ...)
+extern "C" DLOG_EXPORT void __stdcall LogI(const char* strFormat, ...)
 {
-    if (inst == NULL)//如果还没有初始化过，那么就调用默认构造
-    {
+    if (inst == NULL) { //如果还没有初始化过，那么就调用默认构造
         dlog_init();
     }
 
@@ -155,10 +146,9 @@ extern "C" DLOG_EXPORT void __stdcall LogI(const char * strFormat, ...)
 ///                          providing additional
 ///                          information. </param>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void __stdcall LogW(const char * strFormat, ...)
+extern "C" DLOG_EXPORT void __stdcall LogW(const char* strFormat, ...)
 {
-    if (inst == NULL)//如果还没有初始化过，那么就调用默认构造
-    {
+    if (inst == NULL) { //如果还没有初始化过，那么就调用默认构造
         dlog_init();
     }
 
@@ -179,10 +169,9 @@ extern "C" DLOG_EXPORT void __stdcall LogW(const char * strFormat, ...)
 ///                          providing additional
 ///                          information. </param>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void __stdcall LogE(const char * strFormat, ...)
+extern "C" DLOG_EXPORT void __stdcall LogE(const char* strFormat, ...)
 {
-    if (inst == NULL)//如果还没有初始化过，那么就调用默认构造
-    {
+    if (inst == NULL) { //如果还没有初始化过，那么就调用默认构造
         dlog_init();
     }
 
@@ -203,10 +192,9 @@ extern "C" DLOG_EXPORT void __stdcall LogE(const char * strFormat, ...)
 ///                          providing additional
 ///                          information. </param>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void __stdcall LogFATAL(const char * strFormat, ...)
+extern "C" DLOG_EXPORT void __stdcall LogFATAL(const char* strFormat, ...)
 {
-    if (inst == NULL)//如果还没有初始化过，那么就调用默认构造
-    {
+    if (inst == NULL) { //如果还没有初始化过，那么就调用默认构造
         dlog_init();
     }
 
@@ -245,8 +233,7 @@ extern "C" DLOG_EXPORT int __stdcall dlog_get_memlog(char* buff, int offset, int
 {
     std::string msg;
     int copyLen = 0;
-    if (MemoryLog::GetInst()->getLog(msg))
-    {
+    if (MemoryLog::GetInst()->getLog(msg)) {
         copyLen = msg.size() < count ? msg.size() : count;
         msg.copy(buff, copyLen);
     }

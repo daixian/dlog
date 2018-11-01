@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "CppUnitTest.h"
 #include <iostream>
 #include "../dlog/dlog.h"
@@ -6,50 +6,40 @@
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace std;
 
-namespace UnitTest1
-{		
-	TEST_CLASS(UnitTest1)
-	{
-	public:
-		
-		TEST_METHOD(TestMethod_dlogCPP)
-        {           
-            dlog_init("D:\\ÁÙÊ±²âÊÔ\\log", "²âÊÔÈÕÖ¾");
+namespace UnitTest1 {
+
+    TEST_CLASS(UnitTest1)
+    {
+public:
+        TEST_METHOD(TestMethod_dlogCPP) {
+            dlog_init("D:\\ä¸´æ—¶æµ‹è¯•\\log", "æµ‹è¯•æ—¥å¿—");
             dlog_memory_log_enable(true);
 
-            //LogI´òÓ¡10WÌõ£¬Òì²½µÄ£¬Ö»Òª942ºÁÃë
-            //LogW´òÓ¡10WÌõ£¬Ò²Ö»Òª1ÃëµÄÑù×Ó
-            for (size_t i = 0; i < 100000; i++)
-            {
-                LogW("²âÊÔÈÕÖ¾%d !", i);
+            //LogIæ‰“å°10Wæ¡ï¼Œå¼‚æ­¥çš„ï¼Œåªè¦942æ¯«ç§’
+            //LogWæ‰“å°10Wæ¡ï¼Œä¹Ÿåªè¦1ç§’çš„æ ·å­
+            for (size_t i = 0; i < 100000; i++) {
+                LogW("æµ‹è¯•æ—¥å¿—%d !", i);
             }
 
             char msg[512];
             char msgCorr[512];
-            for (size_t i = 0; i < 100000; i++)
-            {
-                if (dlog_get_memlog(msg, 0, 512) > 0)
-                {
-                    sprintf(msgCorr, "²âÊÔÈÕÖ¾%d !", i);//ÕıÈ·µÄÏûÏ¢Ó¦¸ÃÊÇ
-                    Assert::IsTrue(strcmp(msg, msgCorr) == 0);//±È¶ÔÌáÈ¡µÄÏûÏ¢ÊÇ·ñÕıÈ·
-                }
-                else
-                {
-                    Assert::Fail();//¼ì²âÊıÁ¿ÊÇ·ñÒ»ÖÂ
+            for (size_t i = 0; i < 100000; i++) {
+                if (dlog_get_memlog(msg, 0, 512) > 0) {
+                    sprintf(msgCorr, "æµ‹è¯•æ—¥å¿—%d !", i);//æ­£ç¡®çš„æ¶ˆæ¯åº”è¯¥æ˜¯
+                    Assert::IsTrue(strcmp(msg, msgCorr) == 0);//æ¯”å¯¹æå–çš„æ¶ˆæ¯æ˜¯å¦æ­£ç¡®
+                } else {
+                    Assert::Fail();//æ£€æµ‹æ•°é‡æ˜¯å¦ä¸€è‡´
                 }
 
             }
-
- 
         }
 
         //TEST_METHOD(TestMethod2)
         //{
-        //    std::string sDir = "D:\\ÊµÑé";
+        //    std::string sDir = "D:\\å®éªŒ";
         //    std::string cmd = std::string("mkdir \"") + sDir + std::string("\"");
-        //    int res = system(cmd.c_str()); //´´½¨ÎÄ¼ş¼Ğ
+        //    int res = system(cmd.c_str()); //åˆ›å»ºæ–‡ä»¶å¤¹
 
         //}
-       
-	};
+    };
 }
