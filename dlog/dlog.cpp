@@ -16,6 +16,20 @@ std::mutex mt;
 static GLogHelper* volatile inst = NULL;
 
 ///-------------------------------------------------------------------------------------------------
+/// <summary> 去得到一个全局指针的值，如果c++的值和c#的值相等那么应该是共用log模块了. </summary>
+///
+/// <remarks> Dx, 2018/11/2. </remarks>
+///
+/// <returns>
+/// 直接返回全局的GLogHelper指针
+/// </returns>
+///-------------------------------------------------------------------------------------------------
+extern "C" DLOG_EXPORT void* __stdcall dlog_gh_ptr()
+{
+    return inst;
+}
+
+///-------------------------------------------------------------------------------------------------
 /// <summary>
 /// 模块初始化,日志文件夹路径可以使用绝对目录也可以使用相对目录,
 /// 如果使用相对目录,那么程序会将它理解为相对模块目录,路径例如 char* logDir = "\\log",char* program = "dlog".
@@ -28,7 +42,7 @@ static GLogHelper* volatile inst = NULL;
 /// <param name="program">     [in]程序名. </param>
 /// <param name="isForceInit"> (Optional) 如果为false，那么就可以不强制初始化模块，理论上整个程序都共用一个日志. </param>
 ///
-/// <returns> 如果之前未被初始化返回0,否则返回1,如果已经初始化，不用再初始化那么就返回2. </returns>
+/// <returns> 如果之前未被初始化返回0,否则返回2。如果已经初始化，不用再初始化那么就返回1. </returns>
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT int __stdcall dlog_init(const char* logDir, const char* program, bool isForceInit)
 {
@@ -36,10 +50,11 @@ extern "C" DLOG_EXPORT int __stdcall dlog_init(const char* logDir, const char* p
     if (inst == NULL) {
         inst = new GLogHelper(program, logDir);
         mt.unlock();
-        return 0;
+        return 0;//第一次初始化
     } else {
         if (!isForceInit) {
-            return 2;
+            mt.unlock();
+            return 1;//成功复用
         }
         if (inst->programName.compare(program) != 0 &&//如果两次设置的程序名不一致，那么才删除
                 strcmp(program, "dlog") != 0) { //同时第二次设置的这个程序名不能等于默认名字
@@ -47,7 +62,7 @@ extern "C" DLOG_EXPORT int __stdcall dlog_init(const char* logDir, const char* p
             inst = new GLogHelper(program, logDir);
         }
         mt.unlock();
-        return 1;
+        return 2;//强制重设了一次glog
     }
 }
 
