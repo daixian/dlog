@@ -15,7 +15,7 @@ string ws2s(const wstring& ws)
 
     const wchar_t* _Source = ws.c_str();
     size_t _Dsize = 2 * ws.size() + 1;
-    char *_Dest = new char[_Dsize];
+    char* _Dest = new char[_Dsize];
     memset(_Dest, 0, _Dsize);
     //wcstombs(_Dest, _Source, _Dsize);
     size_t res = 0;
@@ -43,7 +43,7 @@ wstring s2ws(const string& s)
 
     const char* _Source = s.c_str();
     size_t _Dsize = s.size() + 1;
-    wchar_t *_Dest = new wchar_t[_Dsize];
+    wchar_t* _Dest = new wchar_t[_Dsize];
     wmemset(_Dest, 0, _Dsize);
     //mbstowcs(_Dest, _Source, _Dsize);
     size_t res = 0;
@@ -69,8 +69,7 @@ std::string byte2str(const void* data, int length)
 {
     unsigned char* pChar = (unsigned char*)data;
     std::string msg;
-    for (int i = 0; i < length; i++)
-    {
+    for (int i = 0; i < length; i++) {
         char b[8];
         sprintf_s(b, 8, "%02X ", pChar[i]);
         msg.append(b);
@@ -92,9 +91,8 @@ std::wstring getAppDirectory()
 {
     std::wstring wstr;
     unsigned long size = GetCurrentDirectory(0, NULL);
-    wchar_t *path = new wchar_t[size];
-    if (GetCurrentDirectory(size, path) != 0)
-    {
+    wchar_t* path = new wchar_t[size];
+    if (GetCurrentDirectory(size, path) != 0) {
         wstr = path;
     }
     delete[] path;

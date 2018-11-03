@@ -22,7 +22,7 @@ namespace dxlib
         virtual ~MemoryLog();
 
         ///-------------------------------------------------------------------------------------------------
-        /// <summary> Adds a log. </summary>
+        /// <summary> 写入一条日志. </summary>
         ///
         /// <remarks> Dx, 2018/5/11. </remarks>
         ///
@@ -32,7 +32,7 @@ namespace dxlib
         void addLog(char* msg);
 
         ///-------------------------------------------------------------------------------------------------
-        /// <summary> Gets a log. </summary>
+        /// <summary> 获取一条日志. </summary>
         ///
         /// <remarks> Dx, 2018/5/11. </remarks>
         ///

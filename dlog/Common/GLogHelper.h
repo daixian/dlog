@@ -23,7 +23,7 @@ public:
     //错误回调：（未能用）将信息输出到单独的文件和 LOG(ERROR)
     void static SignalHandle(const char* data, int size);
 
- 
+
     bool static dirExists(const std::string& dirName_in);
     bool static dirExists(const std::wstring& dirName_in);
 
@@ -33,7 +33,7 @@ public:
     std::string static isExistsAndCreat(std::string sDir);
     std::string static isExistsAndCreat(std::wstring dirPath);
 
-    //日志文件夹的记录(绝对路径) 
+    //日志文件夹的记录(绝对路径)
     std::string logDirPath;
 
     //日志程序名的记录(glog中没有api来记录，所以要自己记录)

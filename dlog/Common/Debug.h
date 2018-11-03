@@ -8,8 +8,7 @@
 #include <sstream>
 #include "glog/logging.h"
 
-namespace dxlib
-{
+namespace dxlib {
     ///-------------------------------------------------------------------------------------------------
     /// <summary> 日志信息. </summary>
     ///
@@ -29,8 +28,8 @@ namespace dxlib
         ///
         /// <remarks> Dx, 2017/3/11. </remarks>
         ///-------------------------------------------------------------------------------------------------
-        Debug() :isLog(true), isLogI(true), isLogMemory(false)
-        { 
+        Debug() : isLog(true), isLogI(true), isLogMemory(false)
+        {
         }
 
         ///-------------------------------------------------------------------------------------------------
@@ -71,20 +70,23 @@ namespace dxlib
         /// <summary> 内存日志是否记录. </summary>
         bool isLogMemory;
 
-        static void LogI(const char * strFormat, ...);
-        static void LogI_va(const char * strFormat, va_list &arg_ptr);
+        /// <summary> 重置设置. </summary>
+        void Reset();
+
+        static void LogI(const char* strFormat, ...);
+        static void LogI_va(const char* strFormat, va_list& arg_ptr);
         //static void LogI(const wchar_t * strFormat, ...);
 
-        static void LogW(const char * strFormat, ...);
-        static void LogW_va(const char * strFormat, va_list &arg_ptr);
+        static void LogW(const char* strFormat, ...);
+        static void LogW_va(const char* strFormat, va_list& arg_ptr);
         //static void LogW(const wchar_t * strFormat, ...);
 
-        static void LogE(const char * strFormat, ...);
-        static void LogE_va(const char * strFormat, va_list &arg_ptr);
+        static void LogE(const char* strFormat, ...);
+        static void LogE_va(const char* strFormat, va_list& arg_ptr);
         //static void LogE(const wchar_t * strFormat, ...);
 
-        static void LogFATAL(const char * strFormat, ...);
-        static void LogFATAL_va(const char * strFormat, va_list &arg_ptr);
+        static void LogFATAL(const char* strFormat, ...);
+        static void LogFATAL_va(const char* strFormat, va_list& arg_ptr);
         //static void LogFATAL(const wchar_t * strFormat, ...);
 
     };

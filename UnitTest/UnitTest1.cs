@@ -16,6 +16,9 @@ namespace UnitTest
     public class UnitTest1
     {
 
+        /// <summary>
+        /// 测试内存日志
+        /// </summary>
         [TestMethod]
         public void TestMethodDLogMemlog()
         {
@@ -74,6 +77,9 @@ namespace UnitTest
 
         }
 
+        /// <summary>
+        /// 测试初始化和关闭
+        /// </summary>
         [TestMethod]
         public void TestMethodDLogInitClose()
         {
@@ -152,6 +158,9 @@ namespace UnitTest
             Assert.IsTrue(logfiles.Length == 300);
         }
 
+        /// <summary>
+        /// 测试多线程调用log
+        /// </summary>
         [TestMethod]
         public void TestMethodDLogMT()
         {
@@ -282,6 +291,40 @@ namespace UnitTest
             }
 
             DLog.dlog_close();
+        }
+
+
+        [DllImport("Dll1")]
+        public static extern int Fun1();
+
+        /// <summary>
+        /// cpp和c#部分融合使用
+        /// </summary>
+        [TestMethod]
+        public void TestMethodDLogCPPCSharp()
+        {
+            //测试50次
+            for (int i = 0; i < 50; i++)
+            {
+                DLog.dlog_close();
+                int res = Fun1();//先在cpp部分init,实际调用了一句 dlog_init("\\log", "MRSystem", false);
+                DLog.dlog_memory_log_enable(true);//使能内存日志(库默认不使能)
+                int res2 = DLog.dlog_init("\\log", "MRSystem", false);
+
+                DLog.LogI("这是第二条日志");
+                StringBuilder sb = new StringBuilder();
+
+                int success = DLog.dlog_get_memlog(sb, 0, 1024);
+                Assert.IsTrue(success == 14);//第一条内存日志应该提取成功
+
+                success = DLog.dlog_get_memlog(sb, 0, 1024);
+                Assert.IsTrue(success == 0);
+
+                int res3 = DLog.dlog_init("\\log", "MRSystem2", true);
+                Assert.IsTrue(res == 0);
+                Assert.IsTrue(res2 == 1);
+                Assert.IsTrue(res3 == 2);
+            }
         }
 
     }

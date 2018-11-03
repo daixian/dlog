@@ -62,8 +62,7 @@ std::string GLogHelper::getAppDir()
 std::string GLogHelper::isExistsAndCreat(std::wstring dirPath)
 {
     std::string sDir = ws2s(dirPath);
-    if (!dirExists(sDir))//如果文件夹路径不存在
-    {
+    if (!dirExists(sDir)) { //如果文件夹路径不存在
         std::string cmd = std::string("mkdir \"") + sDir + std::string("\"");//这个命令可以创建一串文件夹
         system(cmd.c_str()); //创建文件夹
     }
@@ -72,8 +71,7 @@ std::string GLogHelper::isExistsAndCreat(std::wstring dirPath)
 
 std::string GLogHelper::isExistsAndCreat(std::string sDir)
 {
-    if (!dirExists(sDir))//如果文件夹路径不存在
-    {
+    if (!dirExists(sDir)) { //如果文件夹路径不存在
         std::string cmd = std::string("mkdir \"") + sDir + std::string("\"");//这个命令可以创建一串文件夹
         system(cmd.c_str()); //创建文件夹
     }
@@ -81,14 +79,14 @@ std::string GLogHelper::isExistsAndCreat(std::string sDir)
 }
 
 //GLOG配置：
-GLogHelper::GLogHelper(const char* program,const char* logDir)
+GLogHelper::GLogHelper(const char* program, const char* logDir)
 {
     programName = program;//记录程序名
 
     google::InitGoogleLogging(program);
 
     //std::wstring path = getMyDirectory();//path = L"D:\\Work\\F3DSys\\F3DSystem"
-    wchar_t *szPath = new wchar_t[512];
+    wchar_t* szPath = new wchar_t[512];
 
     //这个函数不能用，由于管理员模式，路径不是当前文件夹
     BOOL bRet = SHGetSpecialFolderPath(NULL, szPath, CSIDL_APPDATA, FALSE);//L"C:\\Users\\f3d\\AppData\\Roaming"
@@ -96,21 +94,16 @@ GLogHelper::GLogHelper(const char* program,const char* logDir)
     logDirPath.clear();
     path dir = path(logDir);
 
-    if (dir.is_absolute())
-    {
+    if (dir.is_absolute()) {
         logDirPath = logDir;
-    }
-    else
-    {
+    } else {
         logDirPath = getModuleDir();
-        if (logDir[0] != '\\')
-        {
+        if (logDir[0] != '\\') {
             logDirPath.append("\\");
         }
         logDirPath.append(logDir);
     }
-    if (!dirExists(logDirPath))//如果文件夹路径不存在
-    {
+    if (!dirExists(logDirPath)) { //如果文件夹路径不存在
         std::string cmd = std::string("mkdir \"") + logDirPath + std::string("\"");
         system(cmd.c_str()); //创建文件夹
     }
@@ -147,8 +140,6 @@ GLogHelper::~GLogHelper()
     try {
         google::FlushLogFiles(google::GLOG_INFO);
         google::ShutdownGoogleLogging();
-    }
-    catch (std::string *caught)
-    {
+    } catch (std::string* caught) {
     }
 }

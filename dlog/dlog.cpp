@@ -52,10 +52,12 @@ extern "C" DLOG_EXPORT int __stdcall dlog_init(const char* logDir, const char* p
         mt.unlock();
         return 0;//第一次初始化
     } else {
+        //只要没有ForceInit那么都是会复用的
         if (!isForceInit) {
             mt.unlock();
             return 1;//成功复用
         }
+        //如果设置了强制初始化
         if (inst->programName.compare(program) != 0 &&//如果两次设置的程序名不一致，那么才删除
                 strcmp(program, "dlog") != 0) { //同时第二次设置的这个程序名不能等于默认名字
             delete inst;
@@ -76,6 +78,7 @@ extern "C" DLOG_EXPORT int __stdcall dlog_init(const char* logDir, const char* p
 extern "C" DLOG_EXPORT int __stdcall dlog_close()
 {
     mt.lock();
+    Debug::GetInst()->Reset();
     if (inst != NULL) {
         delete inst;
         inst = NULL;
@@ -234,23 +237,25 @@ extern "C" DLOG_EXPORT void __stdcall dlog_memory_log_enable(bool enable)
 }
 
 ///-------------------------------------------------------------------------------------------------
-/// <summary> 提取一条内存日志. </summary>
+/// <summary> 提取一条内存日志,注意是一条. </summary>
 ///
 /// <remarks> Dx, 2018/5/11. </remarks>
 ///
 /// <param name="buff">   [in,out] 缓存buffer. </param>
 /// <param name="offset"> The offset. </param>
-/// <param name="count">  Number of. </param>
+/// <param name="count">  缓存buffer的长度. </param>
 ///
-/// <returns> 提取出的日志长度，如果为0表示没有提出日志来. </returns>
+/// <returns> 提取出的日志char*的有效长度，如果为0表示没有提出日志来. </returns>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT int __stdcall dlog_get_memlog(char* buff, int offset, int count)
+extern "C" DLOG_EXPORT int __stdcall dlog_get_memlog(char* buff, int offset, int length)
 {
     std::string msg;
     int copyLen = 0;
     if (MemoryLog::GetInst()->getLog(msg)) {
-        copyLen = msg.size() < count ? msg.size() : count;
+        copyLen = msg.size() < length ? msg.size() : length;
         msg.copy(buff, copyLen);
+    } else {
+        return 0;
     }
     buff[copyLen] = 0;
     return copyLen;
