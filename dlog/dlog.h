@@ -150,7 +150,7 @@ extern "C" DLOG_EXPORT void __stdcall LogW(const char* strFormat, ...);
 extern "C" DLOG_EXPORT void __stdcall LogE(const char* strFormat, ...);
 
 ///-------------------------------------------------------------------------------------------------
-/// <summary> Logs a fatal. </summary>
+/// <summary> Logs a debug. </summary>
 ///
 /// <remarks> Dx, 2018/4/23. </remarks>
 ///
@@ -160,7 +160,7 @@ extern "C" DLOG_EXPORT void __stdcall LogE(const char* strFormat, ...);
 ///                          providing additional
 ///                          information. </param>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void __stdcall LogFATAL(const char* strFormat, ...);
+extern "C" DLOG_EXPORT void __stdcall LogD(const char* strFormat, ...);
 
 #pragma region 内存缓存日志相关
 

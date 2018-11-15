@@ -247,7 +247,7 @@ extern "C" DLOG_EXPORT void __stdcall LogE(const char* strFormat, ...)
 }
 
 ///-------------------------------------------------------------------------------------------------
-/// <summary> Logs a fatal. </summary>
+/// <summary> Logs a debug. </summary>
 ///
 /// <remarks> Dx                                                                                                                                                                                                                     , 2018/5/10. </remarks>
 ///
