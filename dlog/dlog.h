@@ -11,20 +11,10 @@
 #endif
 
 //LogSeverity define
+#define DLOG_Debug -1
 #define DLOG_INFO 0
 #define DLOG_WARNING 1
 #define DLOG_ERROR 2
-#define DLOG_FATAL 3
-
-namespace dlog {
-    enum LogSeverity
-    {
-        Log_INFO = 0,
-        Log_WARNING = 1,
-        Log_ERROR = 2,
-        Log_FATAL = 3
-    };
-}
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary>
@@ -69,6 +59,44 @@ extern "C" DLOG_EXPORT void __stdcall dlog_get_log_dir(char* result);
 /// <param name="enable"> 设置为false之后Log函数会直接返回不作任何操作. </param>
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT void __stdcall dlog_enable(bool enable);
+
+///-------------------------------------------------------------------------------------------------
+/// <summary> 设置Dlog的常规日志（非内存日志）门限,大于等于该优先级的日志都会工作. </summary>
+///
+/// <remarks> Dx, 2018/11/15. </remarks>
+///
+/// <param name="usualThr"> The usual thr. </param>
+///-------------------------------------------------------------------------------------------------
+extern "C" DLOG_EXPORT void __stdcall dlog_set_usual_thr(int usualThr);
+
+///-------------------------------------------------------------------------------------------------
+/// <summary>
+/// 得到Dlog的常规日志（非内存日志）门限,大于等于该优先级的日志都会工作.
+/// </summary>
+///
+/// <remarks> Dx, 2018/11/15. </remarks>
+///
+/// <returns> An int. </returns>
+///-------------------------------------------------------------------------------------------------
+extern "C" DLOG_EXPORT int __stdcall dlog_get_usual_thr();
+
+///-------------------------------------------------------------------------------------------------
+/// <summary> 设置Dlog的内存日志门限,大于等于该优先级的日志都会工作. </summary>
+///
+/// <remarks> Dx, 2018/11/15. </remarks>
+///
+/// <param name="usualThr"> The usual thr. </param>
+///-------------------------------------------------------------------------------------------------
+extern "C" DLOG_EXPORT void __stdcall dlog_set_memory_thr(int memoryThr);
+
+///-------------------------------------------------------------------------------------------------
+/// <summary> 得到Dlog的内存日志门限,大于等于该优先级的日志都会工作. </summary>
+///
+/// <remarks> Dx, 2018/11/15. </remarks>
+///
+/// <param name="usualThr"> The usual thr. </param>
+///-------------------------------------------------------------------------------------------------
+extern "C" DLOG_EXPORT int __stdcall dlog_get_memory_thr();
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary>

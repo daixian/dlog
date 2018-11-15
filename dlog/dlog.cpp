@@ -112,13 +112,60 @@ extern "C" DLOG_EXPORT void __stdcall dlog_get_log_dir(char* result)
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT void __stdcall dlog_enable(bool enable)
 {
-    Debug::GetInst()->isLog = enable;
+    Debug::GetInst()->isEnable = enable;
+}
+
+///-------------------------------------------------------------------------------------------------
+/// <summary> 设置Dlog的常规日志（非内存日志）门限,大于等于该优先级的日志都会工作. </summary>
+///
+/// <remarks> Dx, 2018/11/15. </remarks>
+///
+/// <param name="usualThr"> The usual thr. </param>
+///-------------------------------------------------------------------------------------------------
+extern "C" DLOG_EXPORT void __stdcall dlog_set_usual_thr(int usualThr)
+{
+    Debug::GetInst()->logUsualThr = usualThr;
+}
+
+///-------------------------------------------------------------------------------------------------
+/// <summary> 得到Dlog的常规日志（非内存日志）门限,大于等于该优先级的日志都会工作. </summary>
+///
+/// <remarks> Dx, 2018/11/15. </remarks>
+///
+/// <param name="usualThr"> The usual thr. </param>
+///-------------------------------------------------------------------------------------------------
+extern "C" DLOG_EXPORT int __stdcall dlog_get_usual_thr()
+{
+    return Debug::GetInst()->logUsualThr;
+}
+
+///-------------------------------------------------------------------------------------------------
+/// <summary> 设置Dlog的内存日志门限,大于等于该优先级的日志都会工作. </summary>
+///
+/// <remarks> Dx, 2018/11/15. </remarks>
+///
+/// <param name="usualThr"> The usual thr. </param>
+///-------------------------------------------------------------------------------------------------
+extern "C" DLOG_EXPORT void __stdcall dlog_set_memory_thr(int memoryThr)
+{
+    Debug::GetInst()->logMemoryThr = memoryThr;
+}
+
+///-------------------------------------------------------------------------------------------------
+/// <summary> 得到Dlog的内存日志门限,大于等于该优先级的日志都会工作. </summary>
+///
+/// <remarks> Dx, 2018/11/15. </remarks>
+///
+/// <param name="usualThr"> The usual thr. </param>
+///-------------------------------------------------------------------------------------------------
+extern "C" DLOG_EXPORT int __stdcall dlog_get_memory_thr()
+{
+    return Debug::GetInst()->logMemoryThr;
 }
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary>
-/// 设置大于等于某一级日志输出到控制台. 参数有DLOG_INFO,DLOG_WARNING,DLOG_ERROR,
-/// DLOG_FATAL.
+/// 设置大于等于某一级日志输出到控制台. 参数有DLOG_INFO,DLOG_WARNING,DLOG_ERROR
 /// </summary>
 ///
 /// <remarks> Dx, 2018/4/23. </remarks>
@@ -210,7 +257,7 @@ extern "C" DLOG_EXPORT void __stdcall LogE(const char* strFormat, ...)
 ///                          providing additional
 ///                          information. </param>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void __stdcall LogFATAL(const char* strFormat, ...)
+extern "C" DLOG_EXPORT void __stdcall LogD(const char* strFormat, ...)
 {
     if (inst == NULL) { //如果还没有初始化过，那么就调用默认构造
         dlog_init();
@@ -218,7 +265,7 @@ extern "C" DLOG_EXPORT void __stdcall LogFATAL(const char* strFormat, ...)
 
     va_list arg_ptr = NULL;
     va_start(arg_ptr, strFormat);
-    Debug::LogFATAL_va(strFormat, arg_ptr);
+    Debug::LogD_va(strFormat, arg_ptr);
     va_end(arg_ptr);
 }
 
@@ -229,11 +276,11 @@ extern "C" DLOG_EXPORT void __stdcall LogFATAL(const char* strFormat, ...)
 ///
 /// <remarks> Dx, 2018/5/11. </remarks>
 ///
-/// <param name="enable"> 设置为false之后Log函数会直接返回不作任何操作. </param>
+/// <param name="enable"> 设置为false之后内存日志函数会直接返回不作任何操作. </param>
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT void __stdcall dlog_memory_log_enable(bool enable)
 {
-    Debug::GetInst()->isLogMemory = enable;
+    Debug::GetInst()->isMemLogEnable = enable;
 }
 
 ///-------------------------------------------------------------------------------------------------
