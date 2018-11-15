@@ -9,8 +9,15 @@
 #include "glog/logging.h"
 
 namespace dxlib {
+
+    //几种优先级的定义
+#define LOG_THR_DEBUG -1
+#define LOG_THR_INFO 0
+#define LOG_THR_WARNING 1
+#define LOG_THR_ERROR 2
+
     ///-------------------------------------------------------------------------------------------------
-    /// <summary> 日志信息. </summary>
+    /// <summary> Debug日志系统. </summary>
     ///
     /// <remarks> Dx, 2016/11/24. </remarks>
     ///-------------------------------------------------------------------------------------------------
@@ -28,7 +35,7 @@ namespace dxlib {
         ///
         /// <remarks> Dx, 2017/3/11. </remarks>
         ///-------------------------------------------------------------------------------------------------
-        Debug() : isLog(true), isLogI(true), isLogMemory(false)
+        Debug(): isEnable(true), isMemLogEnable(false), logUsualThr(0), logMemoryThr(0)
         {
         }
 
@@ -39,10 +46,7 @@ namespace dxlib {
         ///-------------------------------------------------------------------------------------------------
         ~Debug()
         {
-            //for (auto &item : memLogPool)
-            //{
-            //    delete item;
-            //}
+            Reset();
         }
 
         ///-------------------------------------------------------------------------------------------------
@@ -61,17 +65,24 @@ namespace dxlib {
             return m_pInstance;
         }
 
-        /// <summary> 是否进行日志的记录. </summary>
-        bool isLog;
+        /// <summary> 是否进行整个日志系统的工作. </summary>
+        bool isEnable;
 
-        /// <summary> 低优先级的日志是否记录. </summary>
-        bool isLogI;
+        /// <summary> 是否内存日志系统的使能. </summary>
+        bool isMemLogEnable;
 
-        /// <summary> 内存日志是否记录. </summary>
-        bool isLogMemory;
+        /// <summary> 大于等于这个优先级的常规日志都会工作. </summary>
+        int logUsualThr;
 
-        /// <summary> 重置设置. </summary>
+        /// <summary> 大于等于这个级别的日志都会进入内存日志. </summary>
+        int logMemoryThr;
+
+        /// <summary> 重置设置回默认设置. </summary>
         void Reset();
+
+        static void LogD(const char* strFormat, ...);
+        static void LogD_va(const char* strFormat, va_list& arg_ptr);
+        //static void LogDEBUG(const wchar_t * strFormat, ...);
 
         static void LogI(const char* strFormat, ...);
         static void LogI_va(const char* strFormat, va_list& arg_ptr);
@@ -85,9 +96,7 @@ namespace dxlib {
         static void LogE_va(const char* strFormat, va_list& arg_ptr);
         //static void LogE(const wchar_t * strFormat, ...);
 
-        static void LogFATAL(const char* strFormat, ...);
-        static void LogFATAL_va(const char* strFormat, va_list& arg_ptr);
-        //static void LogFATAL(const wchar_t * strFormat, ...);
+
 
     };
 }

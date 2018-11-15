@@ -20,9 +20,9 @@ namespace dxlib {
     {
     }
 
-    void MemoryLog::addLog(char* msg)
+    void MemoryLog::addLog(std::string msg)
     {
-        if (_memLogQueue.size_approx() > 1024 * 1024 / 5) { //如果它实在是太长了，大概占用了20M
+        if (_memLogQueue.size_approx() > maxLen) { //如果它实在是太长了，大概占用了20M
             string first;
             _memLogQueue.try_dequeue(first);
         }
@@ -37,5 +37,14 @@ namespace dxlib {
     size_t MemoryLog::count()
     {
         return _memLogQueue.size_approx();
+    }
+
+    void MemoryLog::clear()
+    {
+        string first;
+        while (_memLogQueue.try_dequeue(first)) {
+
+        }
+
     }
 }

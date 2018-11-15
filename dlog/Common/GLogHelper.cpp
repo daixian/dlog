@@ -14,7 +14,6 @@
 //配置输出日志的目录：
 //#define LOGDIR "log"
 //#define MKDIR "mkdir -p " LOGDIR
-//#define MKDIR_WIN "mkdir " LOGDIR //windows的不需要-p命令
 
 #define CSIDL_APPDATA 0x001a        // <user name>\Application Data
 
@@ -140,6 +139,7 @@ GLogHelper::~GLogHelper()
     try {
         google::FlushLogFiles(google::GLOG_INFO);
         google::ShutdownGoogleLogging();
-    } catch (std::string* caught) {
+    } catch (const std::exception&) {
+
     }
 }

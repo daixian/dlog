@@ -50,6 +50,48 @@ namespace xuexue
         public static extern void dlog_enable(bool enable);
 
         ///-------------------------------------------------------------------------------------------------
+        /// <summary> 设置Dlog的常规日志（非内存日志）门限,大于等于该优先级的日志都会工作. </summary>
+        ///
+        /// <remarks> Dx, 2018/11/15. </remarks>
+        ///
+        /// <param name="usualThr"> The usual thr. </param>
+        ///-------------------------------------------------------------------------------------------------
+        [DllImport("dlog")]
+        public static extern void dlog_set_usual_thr(int usualThr);
+
+        ///-------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// 得到Dlog的常规日志（非内存日志）门限,大于等于该优先级的日志都会工作.
+        /// </summary>
+        ///
+        /// <remarks> Dx, 2018/11/15. </remarks>
+        ///
+        /// <returns> An int. </returns>
+        ///-------------------------------------------------------------------------------------------------
+        [DllImport("dlog")]
+        public static extern int   dlog_get_usual_thr();
+
+        ///-------------------------------------------------------------------------------------------------
+        /// <summary> 设置Dlog的内存日志门限,大于等于该优先级的日志都会工作. </summary>
+        ///
+        /// <remarks> Dx, 2018/11/15. </remarks>
+        ///
+        /// <param name="usualThr"> The usual thr. </param>
+        ///-------------------------------------------------------------------------------------------------
+        [DllImport("dlog")]
+        public static extern void dlog_set_memory_thr(int memoryThr);
+
+        ///-------------------------------------------------------------------------------------------------
+        /// <summary> 得到Dlog的内存日志门限,大于等于该优先级的日志都会工作. </summary>
+        ///
+        /// <remarks> Dx, 2018/11/15. </remarks>
+        ///
+        /// <param name="usualThr"> The usual thr. </param>
+        ///-------------------------------------------------------------------------------------------------
+        [DllImport("dlog")]
+        public static extern int dlog_get_memory_thr();
+
+        ///-------------------------------------------------------------------------------------------------
         /// <summary>
         /// 设置最高某一级日志输出到控制台，大于等于这一级别的日志都会输出到控制台，小于这一级别的日志不会输出到控制台.
         /// 参数有DLOG_INFO,DLOG_WARNING,DLOG_ERROR, DLOG_FATAL.
@@ -61,6 +103,9 @@ namespace xuexue
         ///-------------------------------------------------------------------------------------------------
         [DllImport("dlog")]
         public static extern void dlog_FLAGS_stderrthreshold(int LogSeverity);
+
+        [DllImport("dlog")]
+        public static extern void LogD(string strFormat);
 
         [DllImport("dlog")]
         public static extern void LogI(string strFormat);
