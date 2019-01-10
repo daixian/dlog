@@ -69,7 +69,7 @@ namespace xuexue
         /// <returns> An int. </returns>
         ///-------------------------------------------------------------------------------------------------
         [DllImport("dlog")]
-        public static extern int   dlog_get_usual_thr();
+        public static extern int dlog_get_usual_thr();
 
         ///-------------------------------------------------------------------------------------------------
         /// <summary> 设置Dlog的内存日志门限,大于等于该优先级的日志都会工作. </summary>
@@ -120,12 +120,12 @@ namespace xuexue
         public static extern void dlog_memory_log_enable(bool enable);
 
         /// <summary>
-        /// 提取内存中的日志
+        /// 提取内存中的日志，如果给的buffer过短那么就只能得到不完整的信息.
         /// </summary>
         /// <param name="buff"></param>
         /// <param name="offset"></param>
         /// <param name="count"></param>
-        /// <returns></returns>
+        /// <returns>写入buff的的消息长度</returns>
         [DllImport("dlog")]
         public static extern int dlog_get_memlog(StringBuilder buff, int offset, int count);
     }

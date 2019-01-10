@@ -290,7 +290,7 @@ extern "C" DLOG_EXPORT void __stdcall dlog_memory_log_enable(bool enable)
 ///
 /// <param name="buff">   [in,out] 缓存buffer. </param>
 /// <param name="offset"> The offset. </param>
-/// <param name="count">  缓存buffer的长度. </param>
+/// <param name="count">  缓存buffer的长度，如果给的buffer过小那么就没办法完整提取. </param>
 ///
 /// <returns> 提取出的日志char*的有效长度，如果为0表示没有提出日志来. </returns>
 ///-------------------------------------------------------------------------------------------------
@@ -299,7 +299,7 @@ extern "C" DLOG_EXPORT int __stdcall dlog_get_memlog(char* buff, int offset, int
     std::string msg;
     int copyLen = 0;
     if (MemoryLog::GetInst()->getLog(msg)) {
-        copyLen = msg.size() < length ? msg.size() : length;
+        copyLen = msg.size() < length ? msg.size() : length; //这里string的size是否就等于字节的size???
         msg.copy(buff, copyLen);
     } else {
         return 0;
