@@ -15,7 +15,7 @@
 
 namespace dxlib {
 
-    //几种优先级的定义,由于构造的时候门限被设为了0,所以默认没有使能DEBUG
+//几种优先级的定义,由于构造的时候门限被设为了0,所以默认没有使能DEBUG
 #define LOG_THR_DEBUG -1
 #define LOG_THR_INFO 0
 #define LOG_THR_WARNING 1

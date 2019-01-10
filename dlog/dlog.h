@@ -1,4 +1,6 @@
 ﻿#pragma once
+#ifndef _DLOG_H_
+#define _DLOG_H_
 
 #include <vector>
 #include <string>
@@ -10,7 +12,7 @@
 #define DLOG_EXPORT __declspec(dllimport)
 #endif
 
-//LogSeverity define
+//给用户使用的LogSeverity定义(用作某些函数的参数参考)
 #define DLOG_Debug -1
 #define DLOG_INFO 0
 #define DLOG_WARNING 1
@@ -187,3 +189,5 @@ extern "C" DLOG_EXPORT void __stdcall dlog_memory_log_enable(bool enable);
 extern "C" DLOG_EXPORT int __stdcall dlog_get_memlog(char* buff, int offset, int count);
 
 #pragma endregion
+
+#endif // !_DLOG_H_
