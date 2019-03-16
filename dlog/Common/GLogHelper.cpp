@@ -15,7 +15,7 @@
 //#define LOGDIR "log"
 //#define MKDIR "mkdir -p " LOGDIR
 
-#define CSIDL_APPDATA 0x001a        // <user name>\Application Data
+#define CSIDL_APPDATA 0x001a // <user name>\Application Data
 
 using std::experimental::filesystem::path;
 
@@ -38,9 +38,9 @@ bool GLogHelper::dirExists(const std::string& dirName_in)
     int ftyp = _access(dirName_in.c_str(), 0);
 
     if (0 == ftyp)
-        return true;   // this is a directory!
+        return true; // this is a directory!
     else
-        return false;    // this is not a directory!
+        return false; // this is not a directory!
 }
 
 bool GLogHelper::dirExists(const std::wstring& dirName_in)
@@ -48,9 +48,9 @@ bool GLogHelper::dirExists(const std::wstring& dirName_in)
     int ftyp = _access(ws2s(dirName_in).c_str(), 0);
 
     if (0 == ftyp)
-        return true;   // this is a directory!
+        return true; // this is a directory!
     else
-        return false;    // this is not a directory!
+        return false; // this is not a directory!
 }
 
 std::string GLogHelper::getAppDir()
@@ -61,18 +61,18 @@ std::string GLogHelper::getAppDir()
 std::string GLogHelper::isExistsAndCreat(std::wstring dirPath)
 {
     std::string sDir = ws2s(dirPath);
-    if (!dirExists(sDir)) { //如果文件夹路径不存在
-        std::string cmd = std::string("mkdir \"") + sDir + std::string("\"");//这个命令可以创建一串文件夹
-        system(cmd.c_str()); //创建文件夹
+    if (!dirExists(sDir)) {                                                   //如果文件夹路径不存在
+        std::string cmd = std::string("mkdir \"") + sDir + std::string("\""); //这个命令可以创建一串文件夹
+        system(cmd.c_str());                                                  //创建文件夹
     }
     return sDir;
 }
 
 std::string GLogHelper::isExistsAndCreat(std::string sDir)
 {
-    if (!dirExists(sDir)) { //如果文件夹路径不存在
-        std::string cmd = std::string("mkdir \"") + sDir + std::string("\"");//这个命令可以创建一串文件夹
-        system(cmd.c_str()); //创建文件夹
+    if (!dirExists(sDir)) {                                                   //如果文件夹路径不存在
+        std::string cmd = std::string("mkdir \"") + sDir + std::string("\""); //这个命令可以创建一串文件夹
+        system(cmd.c_str());                                                  //创建文件夹
     }
     return sDir;
 }
@@ -80,7 +80,7 @@ std::string GLogHelper::isExistsAndCreat(std::string sDir)
 //GLOG配置：
 GLogHelper::GLogHelper(const char* program, const char* logDir)
 {
-    programName = program;//记录程序名
+    programName = program; //记录程序名
 
     google::InitGoogleLogging(program);
 
@@ -88,14 +88,15 @@ GLogHelper::GLogHelper(const char* program, const char* logDir)
     wchar_t* szPath = new wchar_t[512];
 
     //这个函数不能用，由于管理员模式，路径不是当前文件夹
-    BOOL bRet = SHGetSpecialFolderPath(NULL, szPath, CSIDL_APPDATA, FALSE);//L"C:\\Users\\f3d\\AppData\\Roaming"
+    BOOL bRet = SHGetSpecialFolderPath(NULL, szPath, CSIDL_APPDATA, FALSE); //L"C:\\Users\\f3d\\AppData\\Roaming"
 
     logDirPath.clear();
     path dir = path(logDir);
 
     if (dir.is_absolute()) {
         logDirPath = logDir;
-    } else {
+    }
+    else {
         logDirPath = getModuleDir();
         if (logDir[0] != '\\') {
             logDirPath.append("\\");
@@ -107,7 +108,7 @@ GLogHelper::GLogHelper(const char* program, const char* logDir)
         system(cmd.c_str()); //创建文件夹
     }
 
-    FLAGS_log_dir = logDirPath;// 设置日志文件路径
+    FLAGS_log_dir = logDirPath; // 设置日志文件路径
 
     //google::SetLogFilenameExtension("91_");     //设置文件名扩展，如平台？或其它需要区分的信息(这一句实际并不是文件的扩展名)
 
@@ -117,20 +118,20 @@ GLogHelper::GLogHelper(const char* program, const char* logDir)
     //FLAGS_stderrthreshold = google::GLOG_WARNING; // 当日志级别大于等于此级别时，自动将此日志输出到标准错误中
     FLAGS_stderrthreshold = google::GLOG_INFO; // 当日志级别大于等于此级别时，自动将此日志输出到标准错误(终端窗口)中
 
-    FLAGS_logbuflevel = google::GLOG_INFO;//当小于等于会缓存,当日志级别大于此级别时会马上输出，而不缓存
-    FLAGS_colorlogtostderr = true;//设置彩色控制台输出
-    FLAGS_logbufsecs = 1;  // 缓存最久长时间为多久
-    FLAGS_max_log_size = 50;// 当日志文件达到多少时，进行文件分割，以M为单位
+    FLAGS_logbuflevel = google::GLOG_INFO;   //当小于等于会缓存,当日志级别大于此级别时会马上输出，而不缓存
+    FLAGS_colorlogtostderr = true;           //设置彩色控制台输出
+    FLAGS_logbufsecs = 1;                    // 缓存最久长时间为多久
+    FLAGS_max_log_size = 50;                 // 当日志文件达到多少时，进行文件分割，以M为单位
     FLAGS_stop_logging_if_full_disk = false; // 当磁盘已满时,停止输出日志文件
 
     google::InstallFailureSignalHandler();      //捕捉 core dumped
-    google::InstallFailureWriter(SignalHandle);    //默认捕捉 SIGSEGV 信号信息输出会输出到 stderr，可以通过下面的方法自定义输出>方式：
+    google::InstallFailureWriter(SignalHandle); //默认捕捉 SIGSEGV 信号信息输出会输出到 stderr，可以通过下面的方法自定义输出>方式：
 
     std::wstring wsPath(szPath);
 
     LOG(INFO) << "APPDATA_DiR=" << ws2s(wsPath);
     LOG(INFO) << "log_dir=" << FLAGS_log_dir;
-    delete[]szPath;
+    delete[] szPath;
 }
 
 //GLOG内存清理：
@@ -139,7 +140,7 @@ GLogHelper::~GLogHelper()
     try {
         google::FlushLogFiles(google::GLOG_INFO);
         google::ShutdownGoogleLogging();
-    } catch (const std::exception&) {
-
+    }
+    catch (const std::exception&) {
     }
 }

@@ -3,6 +3,5 @@
 
 namespace dxlib {
 
-    Debug* Debug::m_pInstance = NULL;
-
+Debug* Debug::m_pInstance = NULL;
 }

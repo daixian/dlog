@@ -2,9 +2,6 @@
 #ifndef _DLOG_H_
 #define _DLOG_H_
 
-#include <vector>
-#include <string>
-
 #if defined DLOG_EXPORTS
 #define DLOG_EXPORT __declspec(dllexport)
 #else

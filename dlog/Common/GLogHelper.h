@@ -7,7 +7,7 @@
 
 class GLogHelper
 {
-public:
+  public:
     ///-------------------------------------------------------------------------------------------------
     /// <summary> 构造，同时进行glog配置. </summary>
     ///
@@ -22,7 +22,6 @@ public:
 
     //错误回调：（未能用）将信息输出到单独的文件和 LOG(ERROR)
     void static SignalHandle(const char* data, int size);
-
 
     bool static dirExists(const std::string& dirName_in);
     bool static dirExists(const std::wstring& dirName_in);

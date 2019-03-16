@@ -19,9 +19,9 @@ string ws2s(const wstring& ws)
     memset(_Dest, 0, _Dsize);
     //wcstombs(_Dest, _Source, _Dsize);
     size_t res = 0;
-    wcstombs_s(&res, _Dest, _Dsize, _Source, _Dsize);//换了个安全函数，未测
+    wcstombs_s(&res, _Dest, _Dsize, _Source, _Dsize); //换了个安全函数，未测
     string result = _Dest;
-    delete[]_Dest;
+    delete[] _Dest;
 
     setlocale(LC_ALL, curLocale.c_str());
 
@@ -47,9 +47,9 @@ wstring s2ws(const string& s)
     wmemset(_Dest, 0, _Dsize);
     //mbstowcs(_Dest, _Source, _Dsize);
     size_t res = 0;
-    mbstowcs_s(&res, _Dest, _Dsize, _Source, _Dsize);//换了个安全函数，未测
+    mbstowcs_s(&res, _Dest, _Dsize, _Source, _Dsize); //换了个安全函数，未测
     wstring result = _Dest;
-    delete[]_Dest;
+    delete[] _Dest;
 
     setlocale(LC_ALL, "C");
     return result;
@@ -116,7 +116,7 @@ std::string getModuleDir()
     char CharString[MAX_PATH];
     size_t convertedChars = 0;
     wcstombs_s(&convertedChars, CharString, MAX_PATH, exeFullPath, _TRUNCATE);
-    strPath = (std::string)CharString;    // Get full path of the file
+    strPath = (std::string)CharString; // Get full path of the file
     int pos = strPath.find_last_of('\\', strPath.length());
-    return strPath.substr(0, pos);  // Return the directory without the file name
+    return strPath.substr(0, pos); // Return the directory without the file name
 }

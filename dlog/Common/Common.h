@@ -34,7 +34,7 @@ std::wstring s2ws(const std::string& s);
 ///
 /// <returns> 十六进制字符串. </returns>
 ///-------------------------------------------------------------------------------------------------
-std::string byte2str(const void*  data, int length);
+std::string byte2str(const void* data, int length);
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary>

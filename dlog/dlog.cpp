@@ -50,21 +50,22 @@ extern "C" DLOG_EXPORT int __stdcall dlog_init(const char* logDir, const char* p
     if (inst == NULL) {
         inst = new GLogHelper(program, logDir);
         mt.unlock();
-        return 0;//第一次初始化
-    } else {
+        return 0; //第一次初始化
+    }
+    else {
         //只要没有ForceInit那么都是会复用的
         if (!isForceInit) {
             mt.unlock();
-            return 1;//成功复用
+            return 1; //成功复用
         }
         //如果设置了强制初始化
-        if (inst->programName.compare(program) != 0 &&//如果两次设置的程序名不一致，那么才删除
-                strcmp(program, "dlog") != 0) { //同时第二次设置的这个程序名不能等于默认名字
+        if (inst->programName.compare(program) != 0 && //如果两次设置的程序名不一致，那么才删除
+            strcmp(program, "dlog") != 0) {            //同时第二次设置的这个程序名不能等于默认名字
             delete inst;
             inst = new GLogHelper(program, logDir);
         }
         mt.unlock();
-        return 2;//强制重设了一次glog
+        return 2; //强制重设了一次glog
     }
 }
 
@@ -299,9 +300,10 @@ extern "C" DLOG_EXPORT int __stdcall dlog_get_memlog(char* buff, int offset, int
     std::string msg;
     int copyLen = 0;
     if (MemoryLog::GetInst()->getLog(msg)) {
-        copyLen = msg.size() < length ? msg.size() : length; //这里string的size是否就等于字节的size???
+        copyLen = msg.size() < (length - 1) ? msg.size() : (length - 1); //这里string的size是否就等于字节的size???
         msg.copy(buff, copyLen);
-    } else {
+    }
+    else {
         return 0;
     }
     buff[copyLen] = 0;
