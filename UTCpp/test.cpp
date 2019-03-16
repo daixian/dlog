@@ -99,6 +99,8 @@ TEST(Debug, LogSeverity)
     EXPECT_TRUE(count == 1) << "当前count" << count;
     MemoryLog::GetInst()->getLog(log);
     EXPECT_TRUE(log == string("LogE"));
+
+    //Debug::GetInst()->LogF("崩溃日志!!");//并不能打印出函数栈
 }
 
 TEST(dlog, memorylog)

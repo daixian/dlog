@@ -27,6 +27,7 @@ namespace dxlib {
 #define LOG_THR_INFO 0
 #define LOG_THR_WARNING 1
 #define LOG_THR_ERROR 2
+#define LOG_THR_FATAL 3
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary> Debug日志系统. </summary>
@@ -105,6 +106,10 @@ class Debug
     inline static void LogE(const char* strFormat, ...);
     inline static void LogE_va(const char* strFormat, va_list& arg_ptr);
     //static void LogE(const wchar_t * strFormat, ...);
+
+    inline static void LogF(const char* strFormat, ...);
+    inline static void LogF_va(const char* strFormat, va_list& arg_ptr);
+    //static void LogF(const wchar_t * strFormat, ...);
 };
 
 /// <summary> 重置设置. </summary>
@@ -394,6 +399,77 @@ inline void Debug::LogD_va(const char* strFormat, va_list& arg_ptr)
     }
 
     if (m_pInstance->isMemLogEnable && m_pInstance->logMemoryThr <= LOG_THR_DEBUG) {
+        MemoryLog::GetInst()->addLog(&buf[0]);
+    }
+}
+
+#pragma endregion
+
+#pragma region LOG(FATAL)
+
+inline void Debug::LogF(const char* strFormat, ...)
+{
+    if (m_pInstance == NULL) {
+        Debug::GetInst(); //如果单例对象还未构造那么就先构造一次
+    }
+    if (!m_pInstance->isEnable) {
+        return; //如果控制是不输出日志
+    }
+    if (m_pInstance->logUsualThr > LOG_THR_FATAL && m_pInstance->isMemLogEnable == false ||
+        m_pInstance->logUsualThr > LOG_THR_FATAL && m_pInstance->logMemoryThr > LOG_THR_FATAL) {
+        return; //如果控制是不输出DEBUG级别日志
+    }
+    if (NULL == strFormat) {
+        return; //如果输入参数为空
+    }
+
+    va_list arg_ptr = NULL;
+    va_start(arg_ptr, strFormat);
+
+    std::vector<char> buf(DEBUG_LOG_BUFF_SIZE);
+    int ret;
+    while ((ret = vsnprintf_s(&buf[0], buf.size() - 1, _TRUNCATE, strFormat, arg_ptr)) == -1) {
+        buf.resize(buf.size() * 2);
+    }
+    buf[ret] = '\0';
+    if (m_pInstance->logUsualThr <= LOG_THR_FATAL) { //满足优先级才输出
+        LOG(FATAL) << &buf[0];
+    }
+
+    va_end(arg_ptr);
+
+    if (m_pInstance->isMemLogEnable && m_pInstance->logMemoryThr <= LOG_THR_FATAL) {
+        MemoryLog::GetInst()->addLog(&buf[0]);
+    }
+}
+
+inline void Debug::LogF_va(const char* strFormat, va_list& arg_ptr)
+{
+    if (m_pInstance == NULL) {
+        Debug::GetInst(); //如果单例对象还未构造那么就先构造一次
+    }
+    if (!m_pInstance->isEnable) {
+        return; //如果控制是不输出日志
+    }
+    if (m_pInstance->logUsualThr > LOG_THR_FATAL && m_pInstance->isMemLogEnable == false ||
+        m_pInstance->logUsualThr > LOG_THR_FATAL && m_pInstance->logMemoryThr > LOG_THR_FATAL) {
+        return; //如果控制是不输出FATAL级别日志
+    }
+    if (NULL == strFormat) {
+        return; //如果输入参数为空
+    }
+
+    std::vector<char> buf(DEBUG_LOG_BUFF_SIZE);
+    int ret;
+    while ((ret = vsnprintf_s(&buf[0], buf.size() - 1, _TRUNCATE, strFormat, arg_ptr)) == -1) {
+        buf.resize(buf.size() * 2);
+    }
+    buf[ret] = '\0';
+    if (m_pInstance->logUsualThr <= LOG_THR_FATAL) { //满足优先级才输出
+        LOG(FATAL) << &buf[0];
+    }
+
+    if (m_pInstance->isMemLogEnable && m_pInstance->logMemoryThr <= LOG_THR_FATAL) {
         MemoryLog::GetInst()->addLog(&buf[0]);
     }
 }
