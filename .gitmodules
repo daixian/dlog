@@ -1,6 +1,3 @@
 [submodule "concurrentqueue"]
 	path = concurrentqueue
 	url = git@github.com:cameron314/concurrentqueue.git
-[submodule "sdk/glog"]
-	path = sdk/glog
-	url = git@github.com:google/glog.git
