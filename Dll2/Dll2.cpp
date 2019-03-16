@@ -9,12 +9,12 @@ int main()
 {
     int res = dlog_init("\\log", "MRSystem", false);
 
-    LogI("Cpp dll1 输出的日志是这个！");
+    LogI("Cpp dll2 输出的日志是这个！");
     return res;
 }
 
 //fun1是启动
-extern "C"  __declspec(dllexport) int __stdcall Fun1()
+extern "C"  __declspec(dllexport) int __stdcall Fun2()
 {
     return main();
 }

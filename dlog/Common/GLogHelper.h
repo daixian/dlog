@@ -1,9 +1,5 @@
 ﻿#pragma once
-
-#include "glog/logging.h"
-#include "glog/raw_logging.h"
-
-#include "Common.h"
+#include <string>
 
 class GLogHelper
 {
@@ -22,15 +18,6 @@ class GLogHelper
 
     //错误回调：（未能用）将信息输出到单独的文件和 LOG(ERROR)
     void static SignalHandle(const char* data, int size);
-
-    bool static dirExists(const std::string& dirName_in);
-    bool static dirExists(const std::wstring& dirName_in);
-
-    //得到模块目录末尾不带斜杠"D:\\Work\\F3DSys\\F3DSystem"
-    std::string static getAppDir();
-
-    std::string static isExistsAndCreat(std::string sDir);
-    std::string static isExistsAndCreat(std::wstring dirPath);
 
     //日志文件夹的记录(绝对路径)
     std::string logDirPath;

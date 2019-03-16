@@ -42,6 +42,9 @@
     <ClInclude Include="Common\MemoryLog.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Common\FileHelper.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -63,6 +66,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Common\MemoryLog.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\FileHelper.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\stack_allocator.hpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

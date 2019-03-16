@@ -9,6 +9,13 @@
 #include "glog/logging.h"
 
 #include "MemoryLog.h"
+//#include "stack_allocator.hpp"
+
+//栈分配器的使用(性能提升没感觉,可能也不是瓶颈,所以就不使用了)
+//char buffer[DEBUG_LOG_BUFF_SIZE];
+//typedef stack_allocator<char, DEBUG_LOG_BUFF_SIZE> allocator_type;
+//std::vector<char, allocator_type> buf((allocator_type(buffer)));
+//buf.reserve(DEBUG_LOG_BUFF_SIZE);
 
 //一条日志的默认预估长度
 #define DEBUG_LOG_BUFF_SIZE 128

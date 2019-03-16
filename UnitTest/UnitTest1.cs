@@ -1,10 +1,10 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.IO;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
 using xuexue;
 
 //Copy "$(SolutionDir)x64\Release\dlog.dll" "$(ProjectDir)dlog.dll"
@@ -188,9 +188,10 @@ namespace UnitTest
             int doneCount = 0;
 
             Interlocked.Increment(ref doneCount);
-            Task.Run(()=> {
+            Task.Run(() =>
+            {
                 int count = 0;
-                while (count<1000)
+                while (count < 1000)
                 {
                     //Thread.Sleep(1);
                     if (controlFlag == 0)
@@ -211,7 +212,8 @@ namespace UnitTest
             });
 
             Interlocked.Increment(ref doneCount);
-            Task.Run(() => {
+            Task.Run(() =>
+            {
                 int count = 0;
                 while (count < 1000)
                 {
@@ -235,7 +237,8 @@ namespace UnitTest
 
 
             Interlocked.Increment(ref doneCount);
-            Task.Run(() => {
+            Task.Run(() =>
+            {
                 int count = 0;
                 while (count < 1000)
                 {
@@ -259,7 +262,8 @@ namespace UnitTest
 
 
             Interlocked.Increment(ref doneCount);
-            Task.Run(() => {
+            Task.Run(() =>
+            {
                 int count = 0;
                 while (count < 1000)
                 {
@@ -297,6 +301,9 @@ namespace UnitTest
         [DllImport("Dll1")]
         public static extern int Fun1();
 
+        [DllImport("Dll2")]
+        public static extern int Fun2();
+
         /// <summary>
         /// cpp和c#部分融合使用
         /// </summary>
@@ -304,25 +311,35 @@ namespace UnitTest
         public void TestMethodDLogCPPCSharp()
         {
             //测试50次
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < 20; i++)
             {
                 DLog.dlog_close();
+
+                //调用DLL1里的函数
                 int res = Fun1();//先在cpp部分init,实际调用了一句 dlog_init("\\log", "MRSystem", false);
+                Assert.IsTrue(res == 0);//cpp部分创建成功了
+
+                res = Fun2();//
+                Assert.IsTrue(res == 1);//dll2应该是成功复用
+
                 DLog.dlog_memory_log_enable(true);//使能内存日志(库默认不使能)
                 int res2 = DLog.dlog_init("\\log", "MRSystem", false);
+                Assert.IsTrue(res2 == 1);//c#部分成功复用
 
-                DLog.LogI("这是第二条日志");
+                DLog.LogI("这是第二条日志");//内存日志的第一条
                 StringBuilder sb = new StringBuilder();
 
                 int success = DLog.dlog_get_memlog(sb, 0, 1024);
                 Assert.IsTrue(success == 14);//第一条内存日志应该提取成功
+                Assert.IsTrue(sb.ToString() == "这是第二条日志");
+
 
                 success = DLog.dlog_get_memlog(sb, 0, 1024);
                 Assert.IsTrue(success == 0);
 
                 int res3 = DLog.dlog_init("\\log", "MRSystem2", true);
-                Assert.IsTrue(res == 0);
-                Assert.IsTrue(res2 == 1);
+
+
                 Assert.IsTrue(res3 == 2);
             }
         }

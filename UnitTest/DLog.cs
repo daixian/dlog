@@ -6,18 +6,22 @@ namespace xuexue
     public class DLog
     {
         ///-------------------------------------------------------------------------------------------------
-        /// <summary> 模块初始化. </summary>
+        /// <summary>
+        /// 模块初始化,日志文件夹路径可以使用绝对目录也可以使用相对目录,
+        /// 如果使用相对目录,那么程序会将它理解为相对模块目录,路径例如 char* logDir = "\\log",char* program = "dlog".
+        /// isForceInit如果为false，那么就可以不强制初始化模块，理论上整个程序都共用一个日志.
+        /// </summary>
         ///
         /// <remarks> Dx, 2018/4/22. </remarks>
         ///
-        /// <param name="logDir">  [in] (Optional)
-        ///                        日志文件夹路径名（相对模块目录）. </param>
-        /// <param name="program"> [in] (Optional) 程序名. </param>
+        /// <param name="logDir">      [in]日志文件夹路径名（相对模块目录）. </param>
+        /// <param name="program">     [in]程序名. </param>
+        /// <param name="isForceInit"> (Optional) 如果为false，那么就可以不强制初始化模块，理论上整个程序都共用一个日志. </param>
         ///
-        /// <returns> 如果之前未被初始化返回0，否则返回1. </returns>
+        /// <returns> 如果之前未被初始化返回0,否则返回1,如果已经初始化，不用再初始化那么就返回2. </returns>
         ///-------------------------------------------------------------------------------------------------
         [DllImport("dlog")]
-        public static extern int dlog_init(string logDir = "\\log", string program = "dlog", bool isForceInit = true);
+        public static extern int dlog_init(string logDir = "\\log", string program = "dlog", bool isForceInit = false);
 
         ///-------------------------------------------------------------------------------------------------
         /// <summary> 关闭模块. </summary>

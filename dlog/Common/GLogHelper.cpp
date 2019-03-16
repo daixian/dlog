@@ -1,15 +1,20 @@
 ﻿#include <stdlib.h>
 #include "GLogHelper.h"
 #include <io.h>
-#include <windows.h>
-#include <ShlObj.h> //SHGetSpecialFolderPath
-#include <experimental\filesystem>
+#include <experimental/filesystem>
 
-#ifdef _DEBUG
-#pragma comment(lib, "glogd.lib")
-#elif NDEBUG
+#ifndef GOOGLE_GLOG_DLL_DECL
+#define GOOGLE_GLOG_DLL_DECL //如果是静态库就不需要内容,否则需要定义成__declspec(dllimport)
+#endif                       // !GOOGLE_GLOG_DLL_DECL
+//另外如果和windows.h冲突,那么还需要定义GLOG_NO_ABBREVIATED_SEVERITIES
+
+#include "glog/logging.h"
+#include "glog/raw_logging.h"
+
+#include "FileHelper.h"
+
 #pragma comment(lib, "glog.lib")
-#endif // _DEBUG
+#pragma comment(lib, "shlwapi.lib")
 
 //配置输出日志的目录：
 //#define LOGDIR "log"
@@ -33,50 +38,6 @@ void GLogHelper::SignalHandle(const char* data, int size)
     //误信息通过邮件或短信发送出去，这样就不需要监控脚本定时高频率执行，浪费效率了。
 }
 
-bool GLogHelper::dirExists(const std::string& dirName_in)
-{
-    int ftyp = _access(dirName_in.c_str(), 0);
-
-    if (0 == ftyp)
-        return true; // this is a directory!
-    else
-        return false; // this is not a directory!
-}
-
-bool GLogHelper::dirExists(const std::wstring& dirName_in)
-{
-    int ftyp = _access(ws2s(dirName_in).c_str(), 0);
-
-    if (0 == ftyp)
-        return true; // this is a directory!
-    else
-        return false; // this is not a directory!
-}
-
-std::string GLogHelper::getAppDir()
-{
-    return getModuleDir();
-}
-
-std::string GLogHelper::isExistsAndCreat(std::wstring dirPath)
-{
-    std::string sDir = ws2s(dirPath);
-    if (!dirExists(sDir)) {                                                   //如果文件夹路径不存在
-        std::string cmd = std::string("mkdir \"") + sDir + std::string("\""); //这个命令可以创建一串文件夹
-        system(cmd.c_str());                                                  //创建文件夹
-    }
-    return sDir;
-}
-
-std::string GLogHelper::isExistsAndCreat(std::string sDir)
-{
-    if (!dirExists(sDir)) {                                                   //如果文件夹路径不存在
-        std::string cmd = std::string("mkdir \"") + sDir + std::string("\""); //这个命令可以创建一串文件夹
-        system(cmd.c_str());                                                  //创建文件夹
-    }
-    return sDir;
-}
-
 //GLOG配置：
 GLogHelper::GLogHelper(const char* program, const char* logDir)
 {
@@ -84,26 +45,23 @@ GLogHelper::GLogHelper(const char* program, const char* logDir)
 
     google::InitGoogleLogging(program);
 
-    //std::wstring path = getMyDirectory();//path = L"D:\\Work\\F3DSys\\F3DSystem"
-    wchar_t* szPath = new wchar_t[512];
-
-    //这个函数不能用，由于管理员模式，路径不是当前文件夹
-    BOOL bRet = SHGetSpecialFolderPath(NULL, szPath, CSIDL_APPDATA, FALSE); //L"C:\\Users\\f3d\\AppData\\Roaming"
+    std::string md = dxlib::FileHelper::getModuleDir();
 
     logDirPath.clear();
     path dir = path(logDir);
 
+    //如果是绝对路径
     if (dir.is_absolute()) {
         logDirPath = logDir;
     }
-    else {
-        logDirPath = getModuleDir();
+    else { //如果是相对对路径,就从根目录去拼接
+        logDirPath = md;
         if (logDir[0] != '\\') {
             logDirPath.append("\\");
         }
         logDirPath.append(logDir);
     }
-    if (!dirExists(logDirPath)) { //如果文件夹路径不存在
+    if (!dxlib::FileHelper::dirExists(logDirPath)) { //如果文件夹路径不存在
         std::string cmd = std::string("mkdir \"") + logDirPath + std::string("\"");
         system(cmd.c_str()); //创建文件夹
     }
@@ -124,14 +82,12 @@ GLogHelper::GLogHelper(const char* program, const char* logDir)
     FLAGS_max_log_size = 50;                 // 当日志文件达到多少时，进行文件分割，以M为单位
     FLAGS_stop_logging_if_full_disk = false; // 当磁盘已满时,停止输出日志文件
 
-    google::InstallFailureSignalHandler();      //捕捉 core dumped
-    google::InstallFailureWriter(SignalHandle); //默认捕捉 SIGSEGV 信号信息输出会输出到 stderr，可以通过下面的方法自定义输出>方式：
+    //windows下可能不支持这个
+    //google::InstallFailureSignalHandler();      //捕捉 core dumped
+    //google::InstallFailureWriter(SignalHandle); //默认捕捉 SIGSEGV 信号信息输出会输出到 stderr，可以通过下面的方法自定义输出>方式：
 
-    std::wstring wsPath(szPath);
-
-    LOG(INFO) << "APPDATA_DiR=" << ws2s(wsPath);
+    LOG(INFO) << "APPDATA_DiR=" << md.c_str();
     LOG(INFO) << "log_dir=" << FLAGS_log_dir;
-    delete[] szPath;
 }
 
 //GLOG内存清理：

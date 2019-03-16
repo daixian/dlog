@@ -3,6 +3,9 @@
 #include "../dlog/Common/Debug.h"
 #include "../dlog/dlog.h"
 
+#pragma comment(lib, "dlog.lib")
+#pragma comment(lib, "shlwapi.lib")
+
 using namespace dxlib;
 using namespace std;
 
@@ -38,7 +41,7 @@ TEST(MemoryLog, ManyTest)
 
 TEST(Debug, LogSeverity)
 {
-    int count;
+    size_t count;
 
     //关闭整个之后应该没有日志写入
     Debug::GetInst()->isEnable = false;
@@ -55,7 +58,7 @@ TEST(Debug, LogSeverity)
     Debug::GetInst()->LogE("LogE");
 
     count = MemoryLog::GetInst()->count();
-    EXPECT_TRUE(count == 3)<< "当前count" << count;
+    EXPECT_TRUE(count == 3) << "当前count" << count;
     string log;
     MemoryLog::GetInst()->getLog(log);
     EXPECT_TRUE(log == string("LogI"));
@@ -65,7 +68,7 @@ TEST(Debug, LogSeverity)
     EXPECT_TRUE(log == string("LogE"));
 
     //打开向内存日志写入LogD
-    Debug::GetInst()->isEnable = true; 
+    Debug::GetInst()->isEnable = true;
     Debug::GetInst()->logMemoryThr = -1;
     Debug::GetInst()->LogD("LogD");
     Debug::GetInst()->LogI("LogI");
@@ -98,9 +101,9 @@ TEST(Debug, LogSeverity)
     EXPECT_TRUE(log == string("LogE"));
 }
 
-
-TEST(dlog, memorylog) {
-    dlog_init("D:\\临时测试\\log", "测试日志");
+TEST(dlog, memorylog)
+{
+    dlog_init("\\临时测试\\log", "测试日志");
     dlog_memory_log_enable(true);
 
     //LogI打印10W条，异步的，只要942毫秒
@@ -111,15 +114,33 @@ TEST(dlog, memorylog) {
 
     char msg[512];
     char msgCorr[512];
-    for (size_t i = 0; i < 4096; i++) {
+    for (int i = 0; i < 4096; i++) {
         if (dlog_get_memlog(msg, 0, 512) > 0) {
-            sprintf(msgCorr, "测试日志%d !", i);//正确的消息应该是
+            sprintf_s(msgCorr, 512, "测试日志%d !", i);//正确的消息应该是
             EXPECT_TRUE(strcmp(msg, msgCorr) == 0) << "msg=" << msg;//比对提取的消息是否正确
         }
         else {
-            FAIL(); 
+            FAIL();
         }
 
     }
+}
 
+TEST(dlog, init)
+{
+    //第一次创建
+    int res = dlog_init("\\临时测试\\log", "创建测试");
+    EXPECT_TRUE(res == 0);
+
+    //复用
+    res = dlog_init("\\临时测试\\log", "创建测试", false);
+    EXPECT_TRUE(res == 1);
+
+    //强制创建,因为重名所以还是复用
+    res = dlog_init("\\临时测试\\log", "创建测试", true);
+    EXPECT_TRUE(res == 3);
+
+    //强制创建
+    res = dlog_init("\\临时测试\\log", "创建测试2", true);
+    EXPECT_TRUE(res == 2);
 }

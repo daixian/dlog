@@ -1,11 +1,13 @@
 ﻿// dlog.cpp : 定义 DLL 应用程序的导出函数。
 //
-#include "stdafx.h"
 #include "dlog.h"
 
 #include "./Common/GLogHelper.h"
 #include "./Common/Debug.h"
 #include "./Common/MemoryLog.h"
+#include <mutex>
+
+//注意引用了glog头不能引用windows头,有宏定义冲突ERROR
 
 using namespace dxlib;
 
@@ -31,18 +33,24 @@ extern "C" DLOG_EXPORT void* __stdcall dlog_gh_ptr()
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary>
-/// 模块初始化,日志文件夹路径可以使用绝对目录也可以使用相对目录,
-/// 如果使用相对目录,那么程序会将它理解为相对模块目录,路径例如 char* logDir = "\\log",char* program = "dlog".
+/// 模块初始化,日志文件夹路径可以使用绝对目录也可以使用相对目录, 如果使用相对目录,
+/// 那么程序会将它理解为相对模块目录,路径例如 char* logDir = "\\log",char*
+/// program = "dlog".
 /// isForceInit如果为false，那么就可以不强制初始化模块，理论上整个程序都共用一个日志.
+/// 如果之前未被初始化返回0,如果成功复用那么就返回1,如果强制重设成功那么返回2,
+/// 如果强制重设但是失败还是复用了那么返回3.
 /// </summary>
 ///
 /// <remarks> Dx, 2018/4/22. </remarks>
 ///
 /// <param name="logDir">      [in]日志文件夹路径名（相对模块目录）. </param>
 /// <param name="program">     [in]程序名. </param>
-/// <param name="isForceInit"> (Optional) 如果为false，那么就可以不强制初始化模块，理论上整个程序都共用一个日志. </param>
+/// <param name="isForceInit"> 如果为false，那么就可以不强制初始化模块，理论上整个程序都共用一个日志. </param>
 ///
-/// <returns> 如果之前未被初始化返回0,否则返回2。如果已经初始化，不用再初始化那么就返回1. </returns>
+/// <returns>
+/// 如果之前未被初始化返回0,如果成功复用那么就返回1,如果强制重设成功那么返回2,
+/// 如果强制重设但是失败还是复用了那么返回3.
+/// </returns>
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT int __stdcall dlog_init(const char* logDir, const char* program, bool isForceInit)
 {
@@ -63,9 +71,11 @@ extern "C" DLOG_EXPORT int __stdcall dlog_init(const char* logDir, const char* p
             strcmp(program, "dlog") != 0) {            //同时第二次设置的这个程序名不能等于默认名字
             delete inst;
             inst = new GLogHelper(program, logDir);
+            mt.unlock();
+            return 2; //强制重设了一次glog
         }
         mt.unlock();
-        return 2; //强制重设了一次glog
+        return 3; //强制重设了一次glog
     }
 }
 
