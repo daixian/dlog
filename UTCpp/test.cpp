@@ -2,6 +2,7 @@
 #include "../dlog/Common/MemoryLog.h"
 #include "../dlog/Common/Debug.h"
 #include "../dlog/dlog.h"
+#include  "../dlog/Common/FileHelper.h"
 
 #pragma comment(lib, "dlog.lib")
 #pragma comment(lib, "shlwapi.lib")
@@ -145,4 +146,9 @@ TEST(dlog, init)
     //强制创建
     res = dlog_init("\\临时测试\\log", "创建测试2", true);
     EXPECT_TRUE(res == 2);
+}
+
+TEST(FileHelper, lisstOldFile)
+{
+
 }

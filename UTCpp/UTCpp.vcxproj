@@ -122,7 +122,7 @@
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <AdditionalDependencies>../dlog/x64/Release/Debug.obj;../dlog/x64/Release/MemoryLog.obj;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>../dlog/x64/Release/Common.obj;../dlog/x64/Release/Debug.obj;../dlog/x64/Release/MemoryLog.obj;../dlog/x64/Release/FileHelper.obj;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

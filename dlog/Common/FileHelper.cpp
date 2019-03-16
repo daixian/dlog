@@ -5,12 +5,13 @@
 #include <windows.h>
 #include <ShlObj.h> //SHGetSpecialFolderPath
 #include "Common.h"
+#include <ctime>
 
-#include <experimental/filesystem>
+//#include <boost/filesystem.hpp>
 
 ////这个脚本可能会报错 语言->符合模式 "combaseapi.h(229): error C2187: syntax error: 'identifier' was unexpected here" when using /permissive-
+//namespace fs = boost::filesystem;
 
-namespace fs = std::experimental::filesystem;
 using namespace std;
 
 namespace dxlib {
@@ -83,5 +84,4 @@ void FileHelper::isExistsAndCreat(std::string sDir)
         system(cmd.c_str()); //创建文件夹
     }
 }
-
 } // namespace dxlib

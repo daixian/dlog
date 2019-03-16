@@ -5,6 +5,7 @@
 #include "./Common/GLogHelper.h"
 #include "./Common/Debug.h"
 #include "./Common/MemoryLog.h"
+#include "./Common/FileHelper.h"
 #include <mutex>
 
 //注意引用了glog头不能引用windows头,有宏定义冲突ERROR
@@ -96,6 +97,14 @@ extern "C" DLOG_EXPORT int __stdcall dlog_close()
         mt.unlock();
         return 0;
     }
+    mt.unlock();
+    return 1;
+}
+
+extern "C" DLOG_EXPORT int __stdcall dlog_remove_old_log_file()
+{
+    mt.lock();
+
     mt.unlock();
     return 1;
 }

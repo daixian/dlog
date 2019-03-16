@@ -1,7 +1,9 @@
 ﻿#include <stdlib.h>
 #include "GLogHelper.h"
 #include <io.h>
-#include <experimental/filesystem>
+#include <boost/filesystem.hpp>
+#include <boost/algorithm/string.hpp>
+#include <regex>
 
 #ifndef GOOGLE_GLOG_DLL_DECL
 #define GOOGLE_GLOG_DLL_DECL //如果是静态库就不需要内容,否则需要定义成__declspec(dllimport)
@@ -22,7 +24,10 @@
 
 #define CSIDL_APPDATA 0x001a // <user name>\Application Data
 
-using std::experimental::filesystem::path;
+using boost::filesystem::path;
+namespace fs = boost::filesystem;
+
+namespace dxlib {
 
 //将信息输出到单独的文件和 LOG(ERROR)  windowd平台好像不行
 void GLogHelper::SignalHandle(const char* data, int size)
@@ -45,7 +50,7 @@ GLogHelper::GLogHelper(const char* program, const char* logDir)
 
     google::InitGoogleLogging(program);
 
-    std::string md = dxlib::FileHelper::getModuleDir();
+    std::string md = FileHelper::getModuleDir();
 
     logDirPath.clear();
     path dir = path(logDir);
@@ -61,7 +66,7 @@ GLogHelper::GLogHelper(const char* program, const char* logDir)
         }
         logDirPath.append(logDir);
     }
-    if (!dxlib::FileHelper::dirExists(logDirPath)) { //如果文件夹路径不存在
+    if (!FileHelper::dirExists(logDirPath)) { //如果文件夹路径不存在
         std::string cmd = std::string("mkdir \"") + logDirPath + std::string("\"");
         system(cmd.c_str()); //创建文件夹
     }
@@ -88,6 +93,8 @@ GLogHelper::GLogHelper(const char* program, const char* logDir)
 
     LOG(INFO) << "APPDATA_DiR=" << md.c_str();
     LOG(INFO) << "log_dir=" << FLAGS_log_dir;
+
+    removeOldFile();
 }
 
 //GLOG内存清理：
@@ -100,3 +107,56 @@ GLogHelper::~GLogHelper()
     catch (const std::exception&) {
     }
 }
+
+bool isNumber(std::string token)
+{
+    using namespace std;
+    return std::regex_match(token, std::regex(("((\\+|-)?[[:digit:]]+)(\\.(([[:digit:]]+)?))?")));
+}
+
+void GLogHelper::removeOldFile(long sec)
+{
+    using namespace std;
+    try {
+        vector<long> vFileSubTime;
+        vector<fs::path> vFilePath;
+
+        fs::directory_iterator diR(logDirPath);
+        for (auto& de : diR) {
+            if (fs::is_regular_file(de.status())) { //如果这个是文件
+                string fname = de.path().filename().string();
+                string ext = de.path().extension().string();
+                std::vector<std::string> strs;
+                boost::split(strs, fname, boost::is_any_of("."));
+                if (strs[0] == programName && //起头是自己的名字
+                    isNumber(strs.back())) {  //末尾是一串数字
+                    auto t = fs::last_write_time(de.path());
+                    std ::time_t now = std::time(nullptr);
+                    vFileSubTime.push_back(now - t); //记录所有文件的时间
+                    vFilePath.push_back(de.path());
+                }
+            }
+        }
+        vector<long> vFileSubTimeSort = vFileSubTime;
+        std::sort(vFileSubTimeSort.begin(), vFileSubTimeSort.end());
+        if (vFileSubTimeSort.size() < 50) {
+            LOG(INFO) << "\"" << programName << "\" 当前有" << vFileSubTimeSort.size() << "个日志文件";
+        }
+        else {
+            int thr = vFileSubTimeSort[49]; //删除的时间门限
+            if (thr < sec) {
+                thr = sec;
+            }
+            for (size_t i = 0; i < vFileSubTime.size(); i++) {
+                if (vFileSubTime[i] > thr) {
+                    fs::remove(vFilePath[i]);
+                    LOG(INFO) << "dlog移除过早的日志文件" << vFilePath[i];
+                }
+            }
+        }
+    }
+    catch (const std::exception&) {
+    }
+}
+
+} // namespace dxlib
