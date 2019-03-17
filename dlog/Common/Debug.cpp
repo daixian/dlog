@@ -16,6 +16,11 @@ Debug* Debug::m_pInstance = NULL;
 void Debug::init(const char* program, const char* logDir)
 {
     mt.lock();
+    if (isInit) {
+        mt.unlock();
+        return;
+    }
+
     try {
         //设置日志输出格式
         spdlog::set_pattern(logPattern);
@@ -50,19 +55,19 @@ void Debug::init(const char* program, const char* logDir)
 
         isInit = true; //标记已经初始化了
     }
-    catch (const std::exception&) {
+    catch (const std::exception& e) {
+        throw e;
     }
     mt.unlock();
-
-    //如果文件不存在
-    if (!fs::is_regular_file(logFilePath)) {
+    if (filelogger == nullptr || !fs::is_regular_file(logFilePath)) {
         string tp = logFilePath;
         clear();
-        throw "dlog未能创建日志文件" + tp;
+        throw std::invalid_argument("dlog creat log file fail! :" + tp);
     }
-
-    //清空老文件
-    removeOldFile();
+    else {
+        //清空老文件
+        removeOldFile();
+    }
 }
 
 void Debug::clear()
@@ -71,24 +76,35 @@ void Debug::clear()
     try {
         isEnable = true;
         isMemLogEnable = false;
+        isConsoleEnable = true;
         logUsualThr = LOG_THR_INFO;
         logMemoryThr = LOG_THR_INFO;
         logConsoleThr = LOG_THR_INFO;
         MemoryLog::GetInst()->clear();
-
-        programName.clear();
-        logDirPath.clear();
-        logFilePath.clear();
 
         logPattern = _logPattern;
 
         if (filelogger != nullptr) {
             filelogger->flush();
         }
+        if (consolelogger != nullptr) {
+            consolelogger->flush();
+        }
+
         filelogger = nullptr;
+        consolelogger = nullptr;
+        spdlog::drop_all(); //这里要注意删除,否则无法再创建同名的
+
+        programName.clear();
+        logDirPath.clear();
+        logFilePath.clear();
+
         isInit = false;
     }
-    catch (const std::exception&) {
+    catch (const std::exception& e) {
+        filelogger = nullptr;
+        consolelogger = nullptr;
+        spdlog::drop_all();
     }
     mt.unlock();
 }
@@ -133,8 +149,9 @@ void Debug::removeOldFile(long sec)
                 }
             }
         }
-    } // namespace dxlib
-    catch (const std::exception&) {
+    }
+    catch (const std::exception& e) {
+        LogE("dlog移除过早的日志文件异常:%s", e.what());
     }
 }
 

@@ -5,6 +5,11 @@ namespace xuexue
 {
     public class DLog
     {
+        public const int DLOG_Debug = -1;
+        public const int DLOG_INFO = 0;
+        public const int DLOG_WARNING = 1;
+        public const int DLOG_ERROR = 2;
+
         ///-------------------------------------------------------------------------------------------------
         /// <summary>
         /// 模块初始化,日志文件夹路径可以使用绝对目录也可以使用相对目录,
@@ -52,6 +57,16 @@ namespace xuexue
         ///-------------------------------------------------------------------------------------------------
         [DllImport("dlog")]
         public static extern void dlog_enable(bool enable);
+
+        ///-------------------------------------------------------------------------------------------------
+        /// <summary> 设置控制台log是否使能. </summary>
+        ///
+        /// <remarks> Dx, 2018/5/11. </remarks>
+        ///
+        /// <param name="enable"> 设置为false之后Log函数会直接返回不作任何操作. </param>
+        ///-------------------------------------------------------------------------------------------------
+        [DllImport("dlog")]
+        public static extern void dlog_console_log_enable(bool enable);
 
         ///-------------------------------------------------------------------------------------------------
         /// <summary> 设置Dlog的常规日志（非内存日志）门限,大于等于该优先级的日志都会工作. </summary>

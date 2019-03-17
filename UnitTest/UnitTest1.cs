@@ -22,12 +22,18 @@ namespace UnitTest
         [TestMethod]
         public void TestMethodDLogMemlog()
         {
+            ThreadPool.SetMinThreads(32, 32);
+
             int ThreadStartCount = 0;
             int DoneCount = 0;
 
             string logDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log");
 
             DLog.dlog_init(logDir);
+            DLog.dlog_console_log_enable(false);//禁用控制台,如果不禁用的话时间可能很长
+
+            //DLog.dlog_set_usual_thr(DLog.DLOG_ERROR + 1);
+
             StringBuilder sb = new StringBuilder(256);
             DLog.dlog_get_log_dir(sb);
             DLog.dlog_memory_log_enable(true);
@@ -36,20 +42,20 @@ namespace UnitTest
             {
                 Task.Run(() =>
                 {
-                    ThreadStartCount++;
+                    Interlocked.Increment(ref ThreadStartCount);
                     //要注意条数不能太多了，否则超出内存日志的缓存上限，会造成后面Assert条数失败
                     for (int i = 0; i < 5000; i++)
                     {
                         xuexue.DLog.LogI($"测试日志{i}");
 
                     }
-                    DoneCount++;
+                    Interlocked.Increment(ref DoneCount);
                 });
             }
 
             while (true)
             {
-                Thread.Sleep(1);
+                Thread.Sleep(100);
                 if (DoneCount == ThreadStartCount)
                 {
                     break;
@@ -83,6 +89,7 @@ namespace UnitTest
         [TestMethod]
         public void TestMethodDLogInitClose()
         {
+            DLog.dlog_close();
             string logDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log");
             if (Directory.Exists(logDir))
             {
@@ -101,10 +108,11 @@ namespace UnitTest
             }
 
             int count = 0;
-
+            int res = 0;
             for (int i = 0; i < 50; i++)
             {
-                DLog.dlog_init(logDir, $"开关测试{count}");
+                res = DLog.dlog_init(logDir, $"开关测试{count}");
+                Assert.IsTrue(res == 0);
                 DLog.LogI($"开关测试log！{count}");
                 DLog.dlog_close();
                 count++;
@@ -112,9 +120,11 @@ namespace UnitTest
 
             for (int i = 0; i < 50; i++)
             {
-                DLog.dlog_init(logDir, $"开关测试{count}");
+                res = DLog.dlog_init(logDir, $"开关测试{count}");
+                Assert.IsTrue(res == 0);
                 DLog.LogI($"开关测试log！{count}");
-                DLog.dlog_init(logDir, $"开关测试{count}");
+                res = DLog.dlog_init(logDir, $"开关测试{count}");
+                Assert.IsTrue(res == 1);
                 DLog.LogI($"开关测试log！{count}");
                 DLog.dlog_close();
                 count++;
@@ -155,7 +165,7 @@ namespace UnitTest
             }
 
             string[] logfiles = Directory.GetFiles(logDir);
-            Assert.IsTrue(logfiles.Length == 300);
+            Assert.IsTrue(logfiles.Length == count);
         }
 
         /// <summary>
@@ -310,14 +320,20 @@ namespace UnitTest
         [TestMethod]
         public void TestMethodDLogCPPCSharp()
         {
+            string logDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log");
+
             //测试50次
             for (int i = 0; i < 20; i++)
             {
                 DLog.dlog_close();
 
+                int res;
+                res = DLog.dlog_init(logDir, "MRSystem", false);
+                Assert.IsTrue(res == 0);//c#部分成功复用
+
                 //调用DLL1里的函数
-                int res = Fun1();//先在cpp部分init,实际调用了一句 dlog_init("\\log", "MRSystem", false);
-                Assert.IsTrue(res == 0);//cpp部分创建成功了
+                res = Fun1();//先在cpp部分init,实际调用了一句 dlog_init("\\log", "MRSystem", false);
+                Assert.IsTrue(res == 1);//cpp部分创建成功了
 
                 res = Fun2();//
                 Assert.IsTrue(res == 1);//dll2应该是成功复用
@@ -337,10 +353,10 @@ namespace UnitTest
                 success = DLog.dlog_get_memlog(sb, 0, 1024);
                 Assert.IsTrue(success == 0);
 
-                int res3 = DLog.dlog_init("\\log", "MRSystem2", true);
+                //int res3 = DLog.dlog_init("\\log", "MRSystem2", true);
 
 
-                Assert.IsTrue(res3 == 2);
+                //Assert.IsTrue(res3 == 2);
             }
         }
 

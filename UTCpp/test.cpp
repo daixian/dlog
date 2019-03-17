@@ -138,25 +138,32 @@ TEST(dlog, memorylog)
     }
 }
 
-TEST(dlog, init)
+TEST(dlog, init_close)
 {
-    dlog_close();
+    for (size_t i = 0; i < 10; i++) {
+        dlog_close();
 
-    //第一次创建
-    int res = dlog_init("\\临时测试\\log", "创建测试");
-    EXPECT_TRUE(res == 0);
+        //第一次创建
+        int res = dlog_init("\\临时测试\\log", "创建测试");
+        EXPECT_TRUE(res == 0);
+        LogI("132");
 
-    //复用
-    res = dlog_init("\\临时测试\\log", "创建测试", false);
-    EXPECT_TRUE(res == 1);
+        //复用
+        res = dlog_init("\\临时测试\\log", "创建测试", false);
+        EXPECT_TRUE(res == 1);
+        LogI("132");
 
-    //强制创建,因为重名所以还是复用
-    res = dlog_init("\\临时测试\\log", "创建测试", true);
-    EXPECT_TRUE(res == 3);
+        //强制创建,因为重名所以还是复用
+        res = dlog_init("\\临时测试\\log", "创建测试", true);
+        EXPECT_TRUE(res == 3);
+        LogI("132");
 
-    //强制创建
-    res = dlog_init("\\临时测试\\log", "创建测试2", true);
-    EXPECT_TRUE(res == 2);
+        //强制创建
+        res = dlog_init("\\临时测试\\log", "创建测试2", true);
+        EXPECT_TRUE(res == 2);
+        LogI("132");
+
+    }
 }
 
 TEST(FileHelper, lisstOldFile)
