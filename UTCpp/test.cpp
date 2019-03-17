@@ -5,7 +5,6 @@
 #include  "../dlog/Common/FileHelper.h"
 
 #pragma comment(lib, "dlog.lib")
-#pragma comment(lib, "shlwapi.lib")
 
 using namespace dxlib;
 using namespace std;
@@ -44,7 +43,15 @@ TEST(Debug, LogSeverity)
 {
     size_t count;
 
-    //关闭整个之后应该没有日志写入
+    Debug::GetInst()->clear();
+    EXPECT_FALSE(Debug::GetInst()->isInit);//应该还未初始化
+    EXPECT_TRUE(Debug::GetInst()->filelogger == nullptr);
+
+    Debug::GetInst()->init();
+    EXPECT_TRUE(Debug::GetInst()->isInit);//应该初始化成功
+    EXPECT_TRUE(Debug::GetInst()->filelogger != nullptr);
+
+   //关闭整个之后应该没有日志写入
     Debug::GetInst()->isEnable = false;
     Debug::GetInst()->isMemLogEnable = true;
 
@@ -106,9 +113,11 @@ TEST(Debug, LogSeverity)
 
 TEST(dlog, memorylog)
 {
+    dlog_close();
+
     dlog_init("\\临时测试\\log", "测试日志");
     dlog_memory_log_enable(true);
-
+    dlog_set_console_thr(DLOG_ERROR);
     //LogI打印10W条，异步的，只要942毫秒
     //LogW打印10W条，也只要1秒的样子
     for (size_t i = 0; i < 4096; i++) {
@@ -131,6 +140,8 @@ TEST(dlog, memorylog)
 
 TEST(dlog, init)
 {
+    dlog_close();
+
     //第一次创建
     int res = dlog_init("\\临时测试\\log", "创建测试");
     EXPECT_TRUE(res == 0);

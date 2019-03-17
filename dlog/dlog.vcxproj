@@ -179,7 +179,6 @@
     <ClInclude Include="Common\Debug.h" />
     <ClInclude Include="Common\FileHelper.h" />
     <ClInclude Include="dlog.h" />
-    <ClInclude Include="Common\GLogHelper.h" />
     <ClInclude Include="Common\MemoryLog.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -205,7 +204,6 @@
       </PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="dlog.cpp" />
-    <ClCompile Include="Common\GLogHelper.cpp" />
     <ClCompile Include="Common\MemoryLog.cpp" />
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>

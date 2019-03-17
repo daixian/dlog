@@ -2,21 +2,11 @@
 //
 #include "dlog.h"
 
-#include "./Common/GLogHelper.h"
 #include "./Common/Debug.h"
 #include "./Common/MemoryLog.h"
 #include "./Common/FileHelper.h"
-#include <mutex>
-
-//注意引用了glog头不能引用windows头,有宏定义冲突ERROR
 
 using namespace dxlib;
-
-//互斥锁，用于初始化和关闭的时候
-std::mutex mt;
-
-//全局对象，用于在dll释放的时候自动析构
-static GLogHelper* volatile inst = NULL;
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary> 去得到一个全局指针的值，如果c++的值和c#的值相等那么应该是共用log模块了. </summary>
@@ -29,7 +19,7 @@ static GLogHelper* volatile inst = NULL;
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT void* __stdcall dlog_gh_ptr()
 {
-    return inst;
+    return nullptr;
 }
 
 ///-------------------------------------------------------------------------------------------------
@@ -55,27 +45,21 @@ extern "C" DLOG_EXPORT void* __stdcall dlog_gh_ptr()
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT int __stdcall dlog_init(const char* logDir, const char* program, bool isForceInit)
 {
-    mt.lock();
-    if (inst == NULL) {
-        inst = new GLogHelper(program, logDir);
-        mt.unlock();
-        return 0; //第一次初始化
+    if (isForceInit == false) {
+        if (!Debug::GetInst()->isInit) {
+            Debug::GetInst()->init(program, logDir);
+            return 0; //第一次初始化
+        }
+        return 1; //成功复用
     }
     else {
-        //只要没有ForceInit那么都是会复用的
-        if (!isForceInit) {
-            mt.unlock();
-            return 1; //成功复用
-        }
         //如果设置了强制初始化
-        if (inst->programName.compare(program) != 0 && //如果两次设置的程序名不一致，那么才删除
-            strcmp(program, "dlog") != 0) {            //同时第二次设置的这个程序名不能等于默认名字
-            delete inst;
-            inst = new GLogHelper(program, logDir);
-            mt.unlock();
+        if (Debug::GetInst()->programName.compare(program) != 0 && //如果两次设置的程序名不一致，那么才删除
+            strcmp(program, "dlog") != 0) {                        //同时第二次设置的这个程序名不能等于默认名字
+            Debug::GetInst()->clear();
+            Debug::GetInst()->init(program, logDir);
             return 2; //强制重设了一次glog
         }
-        mt.unlock();
         return 3; //强制重设了一次glog
     }
 }
@@ -89,23 +73,13 @@ extern "C" DLOG_EXPORT int __stdcall dlog_init(const char* logDir, const char* p
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT int __stdcall dlog_close()
 {
-    mt.lock();
-    Debug::GetInst()->Reset();
-    if (inst != NULL) {
-        delete inst;
-        inst = NULL;
-        mt.unlock();
-        return 0;
-    }
-    mt.unlock();
-    return 1;
+    Debug::GetInst()->clear();
+    return 0;
 }
 
 extern "C" DLOG_EXPORT int __stdcall dlog_remove_old_log_file()
 {
-    mt.lock();
 
-    mt.unlock();
     return 1;
 }
 
@@ -118,9 +92,7 @@ extern "C" DLOG_EXPORT int __stdcall dlog_remove_old_log_file()
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT void __stdcall dlog_get_log_dir(char* result)
 {
-    if (inst != NULL) {
-        inst->logDirPath.copy(result, inst->logDirPath.size());
-    }
+    Debug::GetInst()->logDirPath.copy(result, Debug::GetInst()->logDirPath.size());
 }
 
 ///-------------------------------------------------------------------------------------------------
@@ -192,9 +164,21 @@ extern "C" DLOG_EXPORT int __stdcall dlog_get_memory_thr()
 ///
 /// <param name="LogSeverity"> 大于等于这一级的日志都会输出到控制台. </param>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void __stdcall dlog_FLAGS_stderrthreshold(int LogSeverity)
+extern "C" DLOG_EXPORT void __stdcall dlog_set_console_thr(int LogSeverity)
 {
-    FLAGS_stderrthreshold = LogSeverity; // 当日志级别大于等于此级别时，自动将此日志输出到标准错误(终端窗口)中
+    Debug::GetInst()->logConsoleThr = LogSeverity; // 当日志级别大于等于此级别时，自动将此日志输出到标准错误(终端窗口)中
+}
+
+///-------------------------------------------------------------------------------------------------
+/// <summary> 得到Dlog的控制台日志门限,大于等于该优先级的日志都会工作. </summary>
+///
+/// <remarks> Dx, 2018/11/15. </remarks>
+///
+/// <param name="usualThr"> The usual thr. </param>
+///-------------------------------------------------------------------------------------------------
+extern "C" DLOG_EXPORT int __stdcall dlog_get_console_thr()
+{
+    return Debug::GetInst()->logConsoleThr;
 }
 
 ///-------------------------------------------------------------------------------------------------
@@ -210,13 +194,13 @@ extern "C" DLOG_EXPORT void __stdcall dlog_FLAGS_stderrthreshold(int LogSeverity
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT void __stdcall LogI(const char* strFormat, ...)
 {
-    if (inst == NULL) { //如果还没有初始化过，那么就调用默认构造
+    if (!Debug::GetInst()->isInit) { //如果还没有初始化过，那么就调用默认构造
         dlog_init();
     }
 
     va_list arg_ptr = NULL;
     va_start(arg_ptr, strFormat);
-    Debug::LogI_va(strFormat, arg_ptr);
+    Debug::GetInst()->LogI_va(strFormat, arg_ptr);
     va_end(arg_ptr);
 }
 
@@ -233,13 +217,13 @@ extern "C" DLOG_EXPORT void __stdcall LogI(const char* strFormat, ...)
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT void __stdcall LogW(const char* strFormat, ...)
 {
-    if (inst == NULL) { //如果还没有初始化过，那么就调用默认构造
+    if (!Debug::GetInst()->isInit) { //如果还没有初始化过，那么就调用默认构造
         dlog_init();
     }
 
     va_list arg_ptr = NULL;
     va_start(arg_ptr, strFormat);
-    Debug::LogW_va(strFormat, arg_ptr);
+    Debug::GetInst()->LogW_va(strFormat, arg_ptr);
     va_end(arg_ptr);
 }
 
@@ -256,13 +240,13 @@ extern "C" DLOG_EXPORT void __stdcall LogW(const char* strFormat, ...)
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT void __stdcall LogE(const char* strFormat, ...)
 {
-    if (inst == NULL) { //如果还没有初始化过，那么就调用默认构造
+    if (!Debug::GetInst()->isInit) { //如果还没有初始化过，那么就调用默认构造
         dlog_init();
     }
 
     va_list arg_ptr = NULL;
     va_start(arg_ptr, strFormat);
-    Debug::LogE_va(strFormat, arg_ptr);
+    Debug::GetInst()->LogE_va(strFormat, arg_ptr);
     va_end(arg_ptr);
 }
 
@@ -279,13 +263,13 @@ extern "C" DLOG_EXPORT void __stdcall LogE(const char* strFormat, ...)
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT void __stdcall LogD(const char* strFormat, ...)
 {
-    if (inst == NULL) { //如果还没有初始化过，那么就调用默认构造
+    if (!Debug::GetInst()->isInit) { //如果还没有初始化过，那么就调用默认构造
         dlog_init();
     }
 
     va_list arg_ptr = NULL;
     va_start(arg_ptr, strFormat);
-    Debug::LogD_va(strFormat, arg_ptr);
+    Debug::GetInst()->LogD_va(strFormat, arg_ptr);
     va_end(arg_ptr);
 }
 

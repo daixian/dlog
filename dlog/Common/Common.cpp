@@ -3,7 +3,7 @@
 #include <locale.h>
 #include "Common.h"
 #include <windows.h>
-#include <ShlObj.h> //SHGetSpecialFolderPath
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 using namespace std;
 
@@ -115,8 +115,42 @@ std::string getModuleDir()
 
     char CharString[MAX_PATH];
     size_t convertedChars = 0;
-    wcstombs_s(&convertedChars, CharString, MAX_PATH, exeFullPath, _TRUNCATE);
-    strPath = (std::string)CharString; // Get full path of the file
+    wcstombs_s(&convertedChars, CharString, MAX_PATH, exeFullPath, _TRUNCATE); //转换宽字符
+    strPath = (std::string)CharString;                                         // Get full path of the file
     int pos = strPath.find_last_of('\\', strPath.length());
     return strPath.substr(0, pos); // Return the directory without the file name
+}
+
+///-------------------------------------------------------------------------------------------------
+/// <summary> 得到当前时间戳. </summary>
+///
+/// <remarks> Dx, 2018/12/14. </remarks>
+///
+/// <returns> The time. </returns>
+///-------------------------------------------------------------------------------------------------
+std::string secTimeStr()
+{
+    std::string strTime = boost::posix_time::to_iso_string(
+        boost::posix_time::second_clock::local_time());
+
+    // 这时候strTime里存放时间的格式是YYYYMMDDTHHMMSS，日期和时间用大写字母T隔开了
+
+    size_t pos = strTime.find('T');
+    strTime.replace(pos, 1, std::string("-"));
+    //strTime.replace(pos + 3, 0, std::string(":")); //这个冒号加上不能用作文件名了
+    //strTime.replace(pos + 6, 0, std::string(":"));
+
+    return strTime;
+}
+
+void setConsoleMode()
+{
+    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    if (hOut != INVALID_HANDLE_VALUE) {
+        DWORD dwMode = 0;
+        GetConsoleMode(hOut, &dwMode);
+
+        dwMode |= 0x0004;
+        SetConsoleMode(hOut, dwMode);
+    }
 }

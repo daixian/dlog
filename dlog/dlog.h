@@ -30,7 +30,7 @@
 ///
 /// <returns> 如果之前未被初始化返回0,否则返回1,如果已经初始化，不用再初始化那么就返回2. </returns>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT int __stdcall dlog_init(const char* logDir = "\\log",
+extern "C" DLOG_EXPORT int __stdcall dlog_init(const char* logDir = "log",
                                                const char* program = "dlog",
                                                bool isForceInit = false);
 
@@ -109,7 +109,16 @@ extern "C" DLOG_EXPORT int __stdcall dlog_get_memory_thr();
 ///
 /// <param name="LogSeverity"> 大于等于这一级的日志都会输出到控制台. </param>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void __stdcall dlog_FLAGS_stderrthreshold(int LogSeverity);
+extern "C" DLOG_EXPORT void __stdcall dlog_set_console_thr(int LogSeverity);
+
+///-------------------------------------------------------------------------------------------------
+/// <summary> 得到Dlog的控制台日志门限,大于等于该优先级的日志都会工作. </summary>
+///
+/// <remarks> Dx, 2018/11/15. </remarks>
+///
+/// <param name="usualThr"> The usual thr. </param>
+///-------------------------------------------------------------------------------------------------
+extern "C" DLOG_EXPORT int __stdcall dlog_get_console_thr();
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary> Logs an info. </summary>
