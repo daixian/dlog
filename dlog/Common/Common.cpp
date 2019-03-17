@@ -78,50 +78,6 @@ std::string byte2str(const void* data, int length)
 }
 
 ///-------------------------------------------------------------------------------------------------
-/// <summary>
-/// path = L"D:\\Work\\F3DSys\\F3DSystem",
-/// 它可以变成system32,所以一般应该使用下面的getModuleDir().
-/// </summary>
-///
-/// <remarks> Dx, 2018/1/11. </remarks>
-///
-/// <returns> The application directory. </returns>
-///-------------------------------------------------------------------------------------------------
-std::wstring getAppDirectory()
-{
-    std::wstring wstr;
-    unsigned long size = GetCurrentDirectory(0, NULL);
-    wchar_t* path = new wchar_t[size];
-    if (GetCurrentDirectory(size, path) != 0) {
-        wstr = path;
-    }
-    delete[] path;
-    return wstr;
-}
-
-///-------------------------------------------------------------------------------------------------
-/// <summary> Gets module dir. </summary>
-///
-/// <remarks> Dx, 2018/1/11. </remarks>
-///
-/// <returns> The module dir. </returns>
-///-------------------------------------------------------------------------------------------------
-std::string getModuleDir()
-{
-    wchar_t exeFullPath[MAX_PATH]; // Full path
-    std::string strPath = "";
-
-    GetModuleFileName(NULL, exeFullPath, MAX_PATH);
-
-    char CharString[MAX_PATH];
-    size_t convertedChars = 0;
-    wcstombs_s(&convertedChars, CharString, MAX_PATH, exeFullPath, _TRUNCATE); //转换宽字符
-    strPath = (std::string)CharString;                                         // Get full path of the file
-    int pos = strPath.find_last_of('\\', strPath.length());
-    return strPath.substr(0, pos); // Return the directory without the file name
-}
-
-///-------------------------------------------------------------------------------------------------
 /// <summary> 得到当前时间戳. </summary>
 ///
 /// <remarks> Dx, 2018/12/14. </remarks>

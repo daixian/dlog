@@ -24,15 +24,8 @@ void Debug::init(const char* program, const char* logDir)
         logDirPath.clear();
         logFilePath.clear();
 
-        if (isConsoleEnable && consolelogger == nullptr) {
-            consolelogger = spdlog::stdout_color_mt("console");
-
-            auto console_sink = dynamic_cast<spdlog::sinks::stdout_color_sink_mt*>(consolelogger->sinks().back().get());
-            //console_sink->set_color(spdlog::level::debug, console_sink->CYAN);
-            console_sink->set_color(spdlog::level::info, console_sink->WHITE);
-            //console_sink->set_color(spdlog::level::warn, console_sink->YELLOW);
-            //console_sink->set_color(spdlog::level::err, console_sink->RED);
-        }
+        //初始化控制台
+        setIsConsoleEnable(isConsoleEnable);
 
         string md = FileHelper::getModuleDir();
         fs::path mdDir = md; //模块目录
@@ -70,6 +63,34 @@ void Debug::init(const char* program, const char* logDir)
 
     //清空老文件
     removeOldFile();
+}
+
+void Debug::clear()
+{
+    mt.lock();
+    try {
+        isEnable = true;
+        isMemLogEnable = false;
+        logUsualThr = LOG_THR_INFO;
+        logMemoryThr = LOG_THR_INFO;
+        logConsoleThr = LOG_THR_INFO;
+        MemoryLog::GetInst()->clear();
+
+        programName.clear();
+        logDirPath.clear();
+        logFilePath.clear();
+
+        logPattern = _logPattern;
+
+        if (filelogger != nullptr) {
+            filelogger->flush();
+        }
+        filelogger = nullptr;
+        isInit = false;
+    }
+    catch (const std::exception&) {
+    }
+    mt.unlock();
 }
 
 void Debug::removeOldFile(long sec)
@@ -114,6 +135,21 @@ void Debug::removeOldFile(long sec)
         }
     } // namespace dxlib
     catch (const std::exception&) {
+    }
+}
+
+void Debug::setIsConsoleEnable(bool enable)
+{
+    isConsoleEnable = enable;
+
+    if (isConsoleEnable && consolelogger == nullptr) {
+        consolelogger = spdlog::stdout_color_mt("console");
+
+        auto console_sink = dynamic_cast<spdlog::sinks::stdout_color_sink_mt*>(consolelogger->sinks().back().get());
+        //console_sink->set_color(spdlog::level::debug, console_sink->CYAN);
+        console_sink->set_color(spdlog::level::info, console_sink->WHITE);
+        //console_sink->set_color(spdlog::level::warn, console_sink->YELLOW);
+        //console_sink->set_color(spdlog::level::err, console_sink->RED);
     }
 }
 

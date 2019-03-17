@@ -62,6 +62,15 @@ extern "C" DLOG_EXPORT void __stdcall dlog_get_log_dir(char* result);
 extern "C" DLOG_EXPORT void __stdcall dlog_enable(bool enable);
 
 ///-------------------------------------------------------------------------------------------------
+/// <summary> 设置控制台log是否使能. </summary>
+///
+/// <remarks> Dx, 2018/5/11. </remarks>
+///
+/// <param name="enable"> 设置为false之后Log函数会直接返回不作任何操作. </param>
+///-------------------------------------------------------------------------------------------------
+extern "C" DLOG_EXPORT void __stdcall dlog_console_log_enable(bool enable);
+
+///-------------------------------------------------------------------------------------------------
 /// <summary> 设置Dlog的常规日志（非内存日志）门限,大于等于该优先级的日志都会工作. </summary>
 ///
 /// <remarks> Dx, 2018/11/15. </remarks>

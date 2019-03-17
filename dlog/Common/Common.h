@@ -37,27 +37,6 @@ std::wstring s2ws(const std::string& s);
 std::string byte2str(const void* data, int length);
 
 ///-------------------------------------------------------------------------------------------------
-/// <summary>
-/// path = L"D:\\Work\\F3DSys\\F3DSystem",
-/// 它可以变成system32,所以一般应该使用下面的getModuleDir().
-/// </summary>
-///
-/// <remarks> Dx, 2018/1/11. </remarks>
-///
-/// <returns> The application directory. </returns>
-///-------------------------------------------------------------------------------------------------
-std::wstring getAppDirectory();
-
-///-------------------------------------------------------------------------------------------------
-/// <summary> Gets module dir. </summary>
-///
-/// <remarks> Dx, 2018/1/11. </remarks>
-///
-/// <returns> The module dir. </returns>
-///-------------------------------------------------------------------------------------------------
-std::string getModuleDir();
-
-///-------------------------------------------------------------------------------------------------
 /// <summary> 得到当前时间戳. </summary>
 ///
 /// <remarks> Dx, 2018/12/14. </remarks>

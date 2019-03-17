@@ -140,33 +140,7 @@ class Debug
     ///
     /// <remarks> Dx, 2019/3/17. </remarks>
     ///-------------------------------------------------------------------------------------------------
-    void clear()
-    {
-        mt.lock();
-        try {
-            isEnable = true;
-            isMemLogEnable = false;
-            logUsualThr = LOG_THR_INFO;
-            logMemoryThr = LOG_THR_INFO;
-            logConsoleThr = LOG_THR_INFO;
-            MemoryLog::GetInst()->clear();
-
-            programName.clear();
-            logDirPath.clear();
-            logFilePath.clear();
-
-            logPattern = _logPattern;
-
-            if (filelogger != nullptr) {
-                filelogger->flush();
-            }
-            filelogger = nullptr;
-            isInit = false;
-        }
-        catch (const std::exception&) {
-        }
-        mt.unlock();
-    }
+    void clear();
 
     ///-------------------------------------------------------------------------------------------------
     /// <summary> 移除老的日志文件(3天前). </summary>
@@ -174,6 +148,18 @@ class Debug
     /// <remarks> Surface, 2019/3/17. </remarks>
     ///-------------------------------------------------------------------------------------------------
     void removeOldFile(long sec = 3600 * 24 * 3);
+
+    ///-------------------------------------------------------------------------------------------------
+    /// <summary> 设置是否使能控制台日志. </summary>
+    ///
+    /// <remarks> Dx, 2019/3/17. </remarks>
+    ///
+    /// <param name="enable"> True to enable, false to
+    ///                       disable. </param>
+    ///-------------------------------------------------------------------------------------------------
+    void setIsConsoleEnable(bool enable);
+
+#pragma region LOGX
 
     void LogD(const char* strFormat, ...)
     {
@@ -183,8 +169,9 @@ class Debug
         if (!isEnable) {
             return; //如果控制是不输出日志
         }
-        if (logUsualThr > LOG_THR_DEBUG && logConsoleThr > LOG_THR_DEBUG && isMemLogEnable == false ||
-            logUsualThr > LOG_THR_DEBUG && logConsoleThr > LOG_THR_DEBUG && logMemoryThr > LOG_THR_DEBUG) {
+        if (logUsualThr > LOG_THR_DEBUG &&
+            (!isConsoleEnable || logConsoleThr > LOG_THR_DEBUG) &&
+            (!isMemLogEnable || logMemoryThr > LOG_THR_DEBUG)) {
             return; //如果控制是不输出DEBUG级别日志
         }
         if (NULL == strFormat) {
@@ -222,8 +209,9 @@ class Debug
         if (!isEnable) {
             return; //如果控制是不输出日志
         }
-        if (logUsualThr > LOG_THR_DEBUG && logConsoleThr > LOG_THR_DEBUG && isMemLogEnable == false ||
-            logUsualThr > LOG_THR_DEBUG && logConsoleThr > LOG_THR_DEBUG && logMemoryThr > LOG_THR_DEBUG) {
+        if (logUsualThr > LOG_THR_DEBUG &&
+            (!isConsoleEnable || logConsoleThr > LOG_THR_DEBUG) &&
+            (!isMemLogEnable || logMemoryThr > LOG_THR_DEBUG)) {
             return; //如果控制是不输出DEBUG级别日志
         }
         if (NULL == strFormat) {
@@ -258,8 +246,9 @@ class Debug
         if (!isEnable) {
             return; //如果控制是不输出日志
         }
-        if (logUsualThr > LOG_THR_INFO && logConsoleThr > LOG_THR_INFO && isMemLogEnable == false ||
-            logUsualThr > LOG_THR_INFO && logConsoleThr > LOG_THR_INFO && logMemoryThr > LOG_THR_INFO) {
+        if (logUsualThr > LOG_THR_INFO &&
+            (!isConsoleEnable || logConsoleThr > LOG_THR_INFO) &&
+            (!isMemLogEnable || logMemoryThr > LOG_THR_INFO)) {
             return; //如果控制是不输出info级别日志
         }
         if (NULL == strFormat) {
@@ -294,12 +283,13 @@ class Debug
         if (!isInit) {
             init(); //如果还没有初始化那么就初始化一次
         }
-        if (logUsualThr > LOG_THR_INFO && logConsoleThr > LOG_THR_INFO && isMemLogEnable == false ||
-            logUsualThr > LOG_THR_INFO && logConsoleThr > LOG_THR_INFO && logMemoryThr > LOG_THR_INFO) {
-            return; //如果控制是不输出info级别日志
-        }
         if (!isEnable) {
             return; //如果控制是不输出日志
+        }
+        if (logUsualThr > LOG_THR_INFO &&
+            (!isConsoleEnable || logConsoleThr > LOG_THR_INFO) &&
+            (!isMemLogEnable || logMemoryThr > LOG_THR_INFO)) {
+            return; //如果控制是不输出info级别日志
         }
         if (NULL == strFormat) {
             return; //如果输入参数为空
@@ -333,8 +323,9 @@ class Debug
         if (!isEnable) {
             return; //如果控制是不输出日志
         }
-        if (logUsualThr > LOG_THR_WARNING && logConsoleThr > LOG_THR_WARNING && isMemLogEnable == false ||
-            logUsualThr > LOG_THR_WARNING && logConsoleThr > LOG_THR_WARNING && logMemoryThr > LOG_THR_WARNING) {
+        if (logUsualThr > LOG_THR_WARNING &&
+            (!isConsoleEnable || logConsoleThr > LOG_THR_WARNING) &&
+            (!isMemLogEnable || logMemoryThr > LOG_THR_WARNING)) {
             return; //如果控制是不输出warning级别日志
         }
         if (NULL == strFormat) {
@@ -372,8 +363,9 @@ class Debug
         if (!isEnable) {
             return; //如果控制是不输出日志
         }
-        if (logUsualThr > LOG_THR_WARNING && logConsoleThr > LOG_THR_WARNING && isMemLogEnable == false ||
-            logUsualThr > LOG_THR_WARNING && logConsoleThr > LOG_THR_WARNING && logMemoryThr > LOG_THR_WARNING) {
+        if (logUsualThr > LOG_THR_WARNING &&
+            (!isConsoleEnable || logConsoleThr > LOG_THR_WARNING) &&
+            (!isMemLogEnable || logMemoryThr > LOG_THR_WARNING)) {
             return; //如果控制是不输出warning级别日志
         }
         if (NULL == strFormat) {
@@ -409,8 +401,9 @@ class Debug
         if (!isEnable) {
             return; //如果控制是不输出日志
         }
-        if (logUsualThr > LOG_THR_ERROR && logConsoleThr > LOG_THR_ERROR && isMemLogEnable == false ||
-            logUsualThr > LOG_THR_ERROR && logConsoleThr > LOG_THR_ERROR && logMemoryThr > LOG_THR_ERROR) {
+        if (logUsualThr > LOG_THR_ERROR &&
+            (!isConsoleEnable || logConsoleThr > LOG_THR_ERROR) &&
+            (!isMemLogEnable || logMemoryThr > LOG_THR_ERROR)) {
             return; //如果控制是不输出error级别日志
         }
         if (NULL == strFormat) {
@@ -448,8 +441,9 @@ class Debug
         if (!isEnable) {
             return; //如果控制是不输出日志
         }
-        if (logUsualThr > LOG_THR_ERROR && logConsoleThr > LOG_THR_ERROR && isMemLogEnable == false ||
-            logUsualThr > LOG_THR_ERROR && logConsoleThr > LOG_THR_ERROR && logMemoryThr > LOG_THR_ERROR) {
+        if (logUsualThr > LOG_THR_ERROR &&
+            (!isConsoleEnable || logConsoleThr > LOG_THR_ERROR) &&
+            (!isMemLogEnable || logMemoryThr > LOG_THR_ERROR)) {
             return; //如果控制是不输出error级别日志
         }
         if (NULL == strFormat) {
@@ -474,6 +468,8 @@ class Debug
         }
     }
     //static void LogE(const wchar_t * strFormat, ...);
+
+#pragma endregion
 };
 
 } // namespace dxlib
