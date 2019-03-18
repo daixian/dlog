@@ -74,6 +74,11 @@ void Debug::clear()
 {
     mt.lock();
     try {
+        if (!isInit) {
+            mt.unlock();
+        }
+        isInit = false;
+
         isEnable = true;
         isMemLogEnable = false;
         isConsoleEnable = true;
@@ -98,8 +103,6 @@ void Debug::clear()
         programName.clear();
         logDirPath.clear();
         logFilePath.clear();
-
-        isInit = false;
     }
     catch (const std::exception& e) {
         filelogger = nullptr;
