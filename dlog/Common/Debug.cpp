@@ -52,7 +52,7 @@ void Debug::init(const char* program, const char* logDir)
         logFilePath = (fs::path(logDirPath) / logFileName).string();
 
         filelogger = spdlog::basic_logger_mt(programName, logFilePath);
-
+        filelogger->flush_on(spdlog::level::level_enum::warn);
         isInit = true; //标记已经初始化了
     }
     catch (const std::exception& e) {

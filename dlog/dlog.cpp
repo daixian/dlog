@@ -194,6 +194,27 @@ extern "C" DLOG_EXPORT int __stdcall dlog_get_console_thr()
 }
 
 ///-------------------------------------------------------------------------------------------------
+/// <summary> 设置立即刷新的flush on. </summary>
+///
+/// <remarks> Dx, 2019/3/18. </remarks>
+///
+/// <param name="LogSeverity"> The log severity. </param>
+///
+/// <returns> An int. </returns>
+///-------------------------------------------------------------------------------------------------
+extern "C" DLOG_EXPORT void __stdcall dlog_set_flush_on(int LogSeverity)
+{
+    if (LogSeverity == DLOG_Debug)
+        Debug::GetInst()->setFlush(spdlog::level::level_enum::debug);
+    else if (LogSeverity == DLOG_INFO)
+        Debug::GetInst()->setFlush(spdlog::level::level_enum::info);
+    else if (LogSeverity == DLOG_WARNING)
+        Debug::GetInst()->setFlush(spdlog::level::level_enum::warn);
+    else if (LogSeverity == DLOG_ERROR)
+        Debug::GetInst()->setFlush(spdlog::level::level_enum::err);
+}
+
+///-------------------------------------------------------------------------------------------------
 /// <summary> Logs an info. </summary>
 ///
 /// <remarks> Dx, 2018/4/22. </remarks>

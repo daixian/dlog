@@ -159,6 +159,19 @@ class Debug
     ///-------------------------------------------------------------------------------------------------
     void setIsConsoleEnable(bool enable);
 
+    ///-------------------------------------------------------------------------------------------------
+    /// <summary> 设置立即Flush的级别. </summary>
+    ///
+    /// <remarks> Dx, 2019/3/18. </remarks>
+    ///
+    /// <param name="log_level"> The log level. </param>
+    ///-------------------------------------------------------------------------------------------------
+    void setFlush(spdlog::level::level_enum log_level)
+    {
+        if (filelogger != nullptr)
+            filelogger->flush_on(log_level);
+    }
+
 #pragma region LOGX
 
     void LogD(const char* strFormat, ...)
