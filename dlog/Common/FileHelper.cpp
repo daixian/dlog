@@ -7,10 +7,7 @@
 #include "Common.h"
 #include <ctime>
 
-//#include <boost/filesystem.hpp>
-
 ////这个脚本可能会报错 语言->符合模式 "combaseapi.h(229): error C2187: syntax error: 'identifier' was unexpected here" when using /permissive-
-//namespace fs = boost::filesystem;
 
 using namespace std;
 
@@ -66,6 +63,15 @@ std::string FileHelper::getModuleDir()
         moduleDir = strPath.substr(0, pos); // Return the directory without the file name
         return moduleDir;
     }
+}
+
+std::string FileHelper::getAppDir()
+{
+    char szPath[MAX_PATH];
+    if (SUCCEEDED(SHGetFolderPathA(NULL, CSIDL_APPDATA, NULL, 0, szPath))) {
+        return std::string(szPath);
+    }
+    return std::string();
 }
 
 void FileHelper::isExistsAndCreat(std::wstring dirPath)

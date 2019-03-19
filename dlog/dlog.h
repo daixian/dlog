@@ -44,15 +44,6 @@ extern "C" DLOG_EXPORT int __stdcall dlog_init(const char* logDir = "log",
 extern "C" DLOG_EXPORT int __stdcall dlog_close();
 
 ///-------------------------------------------------------------------------------------------------
-/// <summary> 得到当前设置的日志目录. </summary>
-///
-/// <remarks> Dx, 2018/4/22. </remarks>
-///
-/// <param name="result"> [out] If non-null, the result. </param>
-///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void __stdcall dlog_get_log_dir(char* result);
-
-///-------------------------------------------------------------------------------------------------
 /// <summary> 设置整个log使能. </summary>
 ///
 /// <remarks> Dx, 2018/4/23. </remarks>
@@ -217,5 +208,53 @@ extern "C" DLOG_EXPORT void __stdcall dlog_memory_log_enable(bool enable);
 extern "C" DLOG_EXPORT int __stdcall dlog_get_memlog(char* buff, int offset, int count);
 
 #pragma endregion
+
+///-------------------------------------------------------------------------------------------------
+/// <summary> 得到appdata的路径,目录末尾不带斜杠"C:\\Users\\dx\\AppData\\Roaming". </summary>
+///
+/// <remarks> Dx, 2019/3/19. </remarks>
+///
+/// <param name="buff">   [in] 拷贝字符的buff. </param>
+/// <param name="length"> buff大小. </param>
+///
+/// <returns> 实际的字符串长度. </returns>
+///-------------------------------------------------------------------------------------------------
+extern "C" DLOG_EXPORT int __stdcall dlog_get_appdata_dir(char* buff, int size);
+
+///-------------------------------------------------------------------------------------------------
+/// <summary> 得到模块的路径,目录末尾不带斜杠. </summary>
+///
+/// <remarks> Dx, 2019/3/19. </remarks>
+///
+/// <param name="buff">   [in] 拷贝字符的buff. </param>
+/// <param name="length"> buff大小. </param>
+///
+/// <returns> 实际的字符串长度. </returns>
+///-------------------------------------------------------------------------------------------------
+extern "C" DLOG_EXPORT int __stdcall dlog_get_module_dir(char* buff, int size);
+
+///-------------------------------------------------------------------------------------------------
+/// <summary> 得到日志文件夹的路径. </summary>
+///
+/// <remarks> Dx, 2019/3/19. </remarks>
+///
+/// <param name="buff">   [in] 拷贝字符的buff. </param>
+/// <param name="length"> buff大小. </param>
+///
+/// <returns> 实际的字符串长度. </returns>
+///-------------------------------------------------------------------------------------------------
+extern "C" DLOG_EXPORT int __stdcall dlog_get_log_dir(char* buff, int size);
+
+///-------------------------------------------------------------------------------------------------
+/// <summary> 得到日志文件的路径. </summary>
+///
+/// <remarks> Dx, 2019/3/19. </remarks>
+///
+/// <param name="buff">   [in] 拷贝字符的buff. </param>
+/// <param name="length"> buff大小. </param>
+///
+/// <returns> 实际的字符串长度. </returns>
+///-------------------------------------------------------------------------------------------------
+extern "C" DLOG_EXPORT int __stdcall dlog_get_log_file_path(char* buff, int size);
 
 #endif // !_DLOG_H_

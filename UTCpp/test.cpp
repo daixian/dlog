@@ -166,7 +166,8 @@ TEST(dlog, init_close)
     }
 }
 
-TEST(FileHelper, lisstOldFile)
+TEST(FileHelper, getAppDir)
 {
-
+    string dir = FileHelper::getAppDir();
+    EXPECT_TRUE(dir.size() > 0);
 }

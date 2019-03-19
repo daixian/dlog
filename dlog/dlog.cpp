@@ -77,24 +77,6 @@ extern "C" DLOG_EXPORT int __stdcall dlog_close()
     return 0;
 }
 
-extern "C" DLOG_EXPORT int __stdcall dlog_remove_old_log_file()
-{
-
-    return 1;
-}
-
-///-------------------------------------------------------------------------------------------------
-/// <summary> 得到当前设置的日志目录. </summary>
-///
-/// <remarks> Dx, 2018/4/22. </remarks>
-///
-/// <param name="result"> [out] If non-null, the result. </param>
-///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void __stdcall dlog_get_log_dir(char* result)
-{
-    Debug::GetInst()->logDirPath.copy(result, Debug::GetInst()->logDirPath.size());
-}
-
 ///-------------------------------------------------------------------------------------------------
 /// <summary> 设置整个log使能. </summary>
 ///
@@ -337,13 +319,92 @@ extern "C" DLOG_EXPORT int __stdcall dlog_get_memlog(char* buff, int offset, int
     int copyLen = 0;
     if (MemoryLog::GetInst()->getLog(msg)) {
         copyLen = msg.size() < (length - 1) ? msg.size() : (length - 1); //这里string的size是否就等于字节的size???
-        msg.copy(buff, copyLen);
+        msg.copy(buff + offset, copyLen);
     }
     else {
         return 0;
     }
-    buff[copyLen] = 0;
+    buff[copyLen] = '\0';
     return copyLen;
 }
 
+#pragma endregion
+
+#pragma region 其他辅助功能
+
+///-------------------------------------------------------------------------------------------------
+/// <summary> 得到appdata的路径,目录末尾不带斜杠"C:\\Users\\dx\\AppData\\Roaming". </summary>
+///
+/// <remarks> Dx, 2019/3/19. </remarks>
+///
+/// <param name="buff">   [in] 拷贝字符的buff. </param>
+/// <param name="length"> buff大小. </param>
+///
+/// <returns> 实际的字符串长度. </returns>
+///-------------------------------------------------------------------------------------------------
+extern "C" DLOG_EXPORT int __stdcall dlog_get_appdata_dir(char* buff, int size)
+{
+    std::string dir = FileHelper::getAppDir();
+    int copyLen = dir.size() < (size - 1) ? dir.size() : (size - 1); //这里string的size是否就等于字节的size???
+    dir.copy(buff, copyLen);
+    buff[copyLen] = '\0';
+    return copyLen;
+}
+
+///-------------------------------------------------------------------------------------------------
+/// <summary> 得到模块的路径,目录末尾不带斜杠. </summary>
+///
+/// <remarks> Dx, 2019/3/19. </remarks>
+///
+/// <param name="buff">   [in] 拷贝字符的buff. </param>
+/// <param name="length"> buff大小. </param>
+///
+/// <returns> 实际的字符串长度. </returns>
+///-------------------------------------------------------------------------------------------------
+extern "C" DLOG_EXPORT int __stdcall dlog_get_module_dir(char* buff, int size)
+{
+    std::string dir = FileHelper::getModuleDir();
+    int copyLen = dir.size() < (size - 1) ? dir.size() : (size - 1); //这里string的size是否就等于字节的size???
+    dir.copy(buff, copyLen);
+    buff[copyLen] = '\0';
+    return copyLen;
+}
+
+///-------------------------------------------------------------------------------------------------
+/// <summary> 得到日志文件夹的路径. </summary>
+///
+/// <remarks> Dx, 2019/3/19. </remarks>
+///
+/// <param name="buff">   [in] 拷贝字符的buff. </param>
+/// <param name="length"> buff大小. </param>
+///
+/// <returns> 实际的字符串长度. </returns>
+///-------------------------------------------------------------------------------------------------
+extern "C" DLOG_EXPORT int __stdcall dlog_get_log_dir(char* buff, int size)
+{
+    std::string dir = Debug::GetInst()->logDirPath;
+    int copyLen = dir.size() < (size - 1) ? dir.size() : (size - 1); //这里string的size是否就等于字节的size???
+    dir.copy(buff, copyLen);
+    buff[copyLen] = '\0';
+    return copyLen;
+}
+
+///-------------------------------------------------------------------------------------------------
+/// <summary> 得到日志文件的路径. </summary>
+///
+/// <remarks> Dx, 2019/3/19. </remarks>
+///
+/// <param name="buff">   [in] 拷贝字符的buff. </param>
+/// <param name="length"> buff大小. </param>
+///
+/// <returns> 实际的字符串长度. </returns>
+///-------------------------------------------------------------------------------------------------
+extern "C" DLOG_EXPORT int __stdcall dlog_get_log_file_path(char* buff, int size)
+{
+    std::string dir = Debug::GetInst()->logFilePath;
+    int copyLen = dir.size() < (size - 1) ? dir.size() : (size - 1); //这里string的size是否就等于字节的size???
+    dir.copy(buff, copyLen);
+    buff[copyLen] = '\0';
+    return copyLen;
+}
 #pragma endregion

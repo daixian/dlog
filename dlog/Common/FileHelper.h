@@ -14,6 +14,9 @@ class FileHelper
     //得到模块目录末尾不带斜杠"D:\\Work\\F3DSys\\F3DSystem"
     static std::string getModuleDir();
 
+    //得到AppData目录末尾不带斜杠"C:\\Users\\dx\\AppData\\Roaming"
+    static std::string getAppDir();
+
     //如果文件夹不存在就直接创建文件夹（确保创建文件夹）
     static void isExistsAndCreat(std::string sDir);
     static void isExistsAndCreat(std::wstring dirPath);
