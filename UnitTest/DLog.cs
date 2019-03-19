@@ -111,6 +111,16 @@ namespace xuexue
         public static extern int dlog_get_memory_thr();
 
         ///-------------------------------------------------------------------------------------------------
+        /// <summary> 得到Dlog的控制台日志门限,大于等于该优先级的日志都会工作. </summary>
+        ///
+        /// <remarks> Dx, 2018/11/15. </remarks>
+        ///
+        /// <param name="usualThr"> The usual thr. </param>
+        ///-------------------------------------------------------------------------------------------------
+        [DllImport("dlog")]
+        public static extern int dlog_get_console_thr();
+
+        ///-------------------------------------------------------------------------------------------------
         /// <summary>
         /// 设置最高某一级日志输出到控制台，大于等于这一级别的日志都会输出到控制台，小于这一级别的日志不会输出到控制台.
         /// 参数有DLOG_INFO,DLOG_WARNING,DLOG_ERROR, DLOG_FATAL.
@@ -121,7 +131,19 @@ namespace xuexue
         /// <param name="LogSeverity"> 大于等于这一级的日志都会输出到控制台. </param>
         ///-------------------------------------------------------------------------------------------------
         [DllImport("dlog")]
-        public static extern void dlog_FLAGS_stderrthreshold(int LogSeverity);
+        public static extern void dlog_set_console_thr(int LogSeverity);
+
+        ///-------------------------------------------------------------------------------------------------
+        /// <summary> 设置立即刷新的flush on. </summary>
+        ///
+        /// <remarks> Dx, 2019/3/18. </remarks>
+        ///
+        /// <param name="LogSeverity"> The log severity. </param>
+        ///
+        /// <returns> An int. </returns>
+        ///-------------------------------------------------------------------------------------------------
+        [DllImport("dlog")]
+        public static extern void dlog_set_flush_on(int LogSeverity);
 
         [DllImport("dlog")]
         public static extern void LogD(string strFormat);
@@ -135,6 +157,13 @@ namespace xuexue
         [DllImport("dlog")]
         public static extern void LogE(string strFormat);
 
+        ///-------------------------------------------------------------------------------------------------
+        /// <summary> 设置内存log是否使能. </summary>
+        ///
+        /// <remarks> Dx, 2018/5/11. </remarks>
+        ///
+        /// <param name="enable"> 设置为false之后Log函数会直接返回不作任何操作. </param>
+        ///-------------------------------------------------------------------------------------------------
         [DllImport("dlog")]
         public static extern void dlog_memory_log_enable(bool enable);
 
