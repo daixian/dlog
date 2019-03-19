@@ -109,7 +109,7 @@ void Debug::clear()
         logDirPath.clear();
         logFilePath.clear();
     }
-    catch (const std::exception& e) {
+    catch (const std::exception&) {
         filelogger = nullptr;
         consolelogger = nullptr;
         spdlog::drop_all();
