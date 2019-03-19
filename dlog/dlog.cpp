@@ -24,26 +24,30 @@ extern "C" DLOG_EXPORT void* __stdcall dlog_gh_ptr()
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary>
-/// 模块初始化,日志文件夹路径可以使用绝对目录也可以使用相对目录, 如果使用相对目录,
-/// 那么程序会将它理解为相对模块目录,路径例如 char* logDir = "\\log",char*
-/// program = "dlog".
+/// 模块初始化,日志文件夹路径可以使用绝对目录也可以使用相对目录(第三个参数进行相对位置的设置),
+/// 如果使用相对目录,那么程序会将它理解为相对模块目录,路径例如 char* logDir = "\\log",char* program = "dlog".
 /// isForceInit如果为false，那么就可以不强制初始化模块，理论上整个程序都共用一个日志.
 /// 如果之前未被初始化返回0,如果成功复用那么就返回1,如果强制重设成功那么返回2,
 /// 如果强制重设但是失败还是复用了那么返回3.
 /// </summary>
 ///
-/// <remarks> Dx, 2018/4/22. </remarks>
+/// <remarks>
+/// DLOG_INIT_RELATIVE_APPDATA: 相对于AppData文件夹.
+/// DLOG_INIT_RELATIVE_MODULE: 相对于dll文件自身文件夹.
+/// Dx, 2018/4/22.
+/// </remarks>
 ///
 /// <param name="logDir">      [in]日志文件夹路径名（相对模块目录）. </param>
 /// <param name="program">     [in]程序名. </param>
-/// <param name="isForceInit"> 如果为false，那么就可以不强制初始化模块，理论上整个程序都共用一个日志. </param>
+/// <param name="dir_relatvie">[in]相对路径的相对位置. </param>
+/// <param name="isForceInit"> (Optional) 如果为false，那么就可以不强制初始化模块，理论上整个程序都共用一个日志. </param>
 ///
 /// <returns>
 /// 如果之前未被初始化返回0,如果成功复用那么就返回1,如果强制重设成功那么返回2,
 /// 如果强制重设但是失败还是复用了那么返回3.
 /// </returns>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT int __stdcall dlog_init(const char* logDir, const char* program, bool isForceInit)
+extern "C" DLOG_EXPORT int __stdcall dlog_init(const char* logDir, const char* program, int dir_relatvie, bool isForceInit)
 {
     if (isForceInit == false) {
         if (!Debug::GetInst()->isInit) {

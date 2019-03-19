@@ -13,7 +13,7 @@ namespace dxlib {
 
 Debug* Debug::m_pInstance = NULL;
 
-void Debug::init(const char* program, const char* logDir)
+void Debug::init(const char* program, const char* logDir, INIT_RELATIVE rel)
 {
     mt.lock();
     if (isInit) {
@@ -32,16 +32,21 @@ void Debug::init(const char* program, const char* logDir)
         //初始化控制台
         setIsConsoleEnable(isConsoleEnable);
 
-        string md = FileHelper::getModuleDir();
-        fs::path mdDir = md; //模块目录
         fs::path inputDir = fs::path(logDir);
 
-        //如果是绝对路径
+        //如果是绝对路径,就直接使用
         if (inputDir.is_absolute()) {
             this->logDirPath = logDir;
         }
         else { //如果是相对对路径,就从根目录去拼接
-            this->logDirPath = (mdDir / inputDir).string();
+            if (rel == INIT_RELATIVE::MODULE) {
+                fs::path mdDir = FileHelper::getModuleDir(); //模块目录
+                this->logDirPath = (mdDir / inputDir).string();
+            }
+            else {
+                fs::path appDir = FileHelper::getAppDir(); //模块目录
+                this->logDirPath = (appDir / inputDir).string();
+            }
         }
         if (!FileHelper::dirExists(logDirPath)) { //如果文件夹路径不存在
             string cmd = std::string("mkdir \"") + logDirPath + std::string("\"");

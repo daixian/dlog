@@ -33,6 +33,13 @@ namespace dxlib {
 #define LOG_THR_ERROR 2
 #define LOG_THR_FATAL 3
 
+/// <summary> 初始化的相对位置 </summary>
+enum class INIT_RELATIVE
+{
+    APPDATA = 0,
+    MODULE = 1,
+};
+
 ///-------------------------------------------------------------------------------------------------
 /// <summary> Debug日志系统. </summary>
 ///
@@ -133,7 +140,8 @@ class Debug
     /// <param name="program"> The program. </param>
     /// <param name="logDir">  (Optional) The log dir. </param>
     ///-------------------------------------------------------------------------------------------------
-    void init(const char* program = "dlog", const char* logDir = "log");
+    void init(const char* program = "dlog", const char* logDir = "log",
+              INIT_RELATIVE rel = INIT_RELATIVE::APPDATA);
 
     ///-------------------------------------------------------------------------------------------------
     /// <summary> 重置设置回默认设置. </summary>
