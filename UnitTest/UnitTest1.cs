@@ -35,7 +35,7 @@ namespace UnitTest
             //DLog.dlog_set_usual_thr(DLog.DLOG_ERROR + 1);
 
             StringBuilder sb = new StringBuilder(256);
-            DLog.dlog_get_log_dir(sb);
+            DLog.dlog_get_log_dir(sb, 256);
             DLog.dlog_memory_log_enable(true);
 
             for (int threadCount = 0; threadCount < 20; threadCount++)//20个线程一起写
@@ -320,15 +320,13 @@ namespace UnitTest
         [TestMethod]
         public void TestMethodDLogCPPCSharp()
         {
-            string logDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log");
-
             //测试50次
             for (int i = 0; i < 20; i++)
             {
                 DLog.dlog_close();
 
                 int res;
-                res = DLog.dlog_init(logDir, "MRSystem", false);
+                res = DLog.dlog_init("\\log", "MRSystem");
                 Assert.IsTrue(res == 0);//c#部分成功复用
 
                 //调用DLL1里的函数
@@ -339,7 +337,7 @@ namespace UnitTest
                 Assert.IsTrue(res == 1);//dll2应该是成功复用
 
                 DLog.dlog_memory_log_enable(true);//使能内存日志(库默认不使能)
-                int res2 = DLog.dlog_init("\\log", "MRSystem", false);
+                int res2 = DLog.dlog_init("\\log", "MRSystem");
                 Assert.IsTrue(res2 == 1);//c#部分成功复用
 
                 DLog.LogI("这是第二条日志");//内存日志的第一条

@@ -14,12 +14,12 @@ using namespace dxlib;
 /// <remarks> Dx, 2018/11/2. </remarks>
 ///
 /// <returns>
-/// 直接返回全局的GLogHelper指针
+/// 直接返回全局的指针
 /// </returns>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void* __stdcall dlog_gh_ptr()
+extern "C" DLOG_EXPORT void* __stdcall dlog_global_ptr()
 {
-    return nullptr;
+    return Debug::GetInst();
 }
 
 ///-------------------------------------------------------------------------------------------------
@@ -39,7 +39,7 @@ extern "C" DLOG_EXPORT void* __stdcall dlog_gh_ptr()
 ///
 /// <param name="logDir">      [in]日志文件夹路径名（相对模块目录）. </param>
 /// <param name="program">     [in]程序名. </param>
-/// <param name="dir_relatvie">[in]相对路径的相对位置. </param>
+/// <param name="dir_relatvie">(Optional)相对路径的相对文件夹位置. </param>
 /// <param name="isForceInit"> (Optional) 如果为false，那么就可以不强制初始化模块，理论上整个程序都共用一个日志. </param>
 ///
 /// <returns>
@@ -106,7 +106,7 @@ extern "C" DLOG_EXPORT void __stdcall dlog_console_log_enable(bool enable)
 }
 
 ///-------------------------------------------------------------------------------------------------
-/// <summary> 设置Dlog的常规日志（非内存日志）门限,大于等于该优先级的日志都会工作. </summary>
+/// <summary> 设置Dlog的常规日志（非内存日志）门限,大于等于该优先级的日志都会写入. </summary>
 ///
 /// <remarks> Dx, 2018/11/15. </remarks>
 ///
@@ -118,7 +118,7 @@ extern "C" DLOG_EXPORT void __stdcall dlog_set_usual_thr(int usualThr)
 }
 
 ///-------------------------------------------------------------------------------------------------
-/// <summary> 得到Dlog的常规日志（非内存日志）门限,大于等于该优先级的日志都会工作. </summary>
+/// <summary> 得到Dlog的常规日志（非内存日志）门限,大于等于该优先级的日志都会写入. </summary>
 ///
 /// <remarks> Dx, 2018/11/15. </remarks>
 ///
@@ -130,7 +130,7 @@ extern "C" DLOG_EXPORT int __stdcall dlog_get_usual_thr()
 }
 
 ///-------------------------------------------------------------------------------------------------
-/// <summary> 设置Dlog的内存日志门限,大于等于该优先级的日志都会工作. </summary>
+/// <summary> 设置Dlog的内存日志门限,大于等于该优先级的日志都会写入. </summary>
 ///
 /// <remarks> Dx, 2018/11/15. </remarks>
 ///
@@ -142,7 +142,7 @@ extern "C" DLOG_EXPORT void __stdcall dlog_set_memory_thr(int memoryThr)
 }
 
 ///-------------------------------------------------------------------------------------------------
-/// <summary> 得到Dlog的内存日志门限,大于等于该优先级的日志都会工作. </summary>
+/// <summary> 得到Dlog的内存日志门限,大于等于该优先级的日志都会写入. </summary>
 ///
 /// <remarks> Dx, 2018/11/15. </remarks>
 ///
@@ -168,7 +168,7 @@ extern "C" DLOG_EXPORT void __stdcall dlog_set_console_thr(int LogSeverity)
 }
 
 ///-------------------------------------------------------------------------------------------------
-/// <summary> 得到Dlog的控制台日志门限,大于等于该优先级的日志都会工作. </summary>
+/// <summary> 得到Dlog的控制台日志门限,大于等于该优先级的日志都会写入. </summary>
 ///
 /// <remarks> Dx, 2018/11/15. </remarks>
 ///
