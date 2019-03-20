@@ -144,22 +144,22 @@ TEST(dlog, init_close)
         dlog_close();
 
         //第一次创建
-        int res = dlog_init("\\临时测试\\log", "创建测试");
+        int res = dlog_init("\\临时测试\\log", "创建测试", DLOG_INIT_RELATIVE_MODULE);
         EXPECT_TRUE(res == 0);
         LogI("132");
 
         //复用
-        res = dlog_init("\\临时测试\\log", "创建测试", false);
+        res = dlog_init("\\临时测试\\log", "创建测试", DLOG_INIT_RELATIVE_MODULE, false);
         EXPECT_TRUE(res == 1);
         LogI("132");
 
         //强制创建,因为重名所以还是复用
-        res = dlog_init("\\临时测试\\log", "创建测试", true);
+        res = dlog_init("\\临时测试\\log", "创建测试", DLOG_INIT_RELATIVE_MODULE, true);
         EXPECT_TRUE(res == 3);
         LogI("132");
 
         //强制创建
-        res = dlog_init("\\临时测试\\log", "创建测试2", true);
+        res = dlog_init("\\临时测试\\log", "创建测试2", DLOG_INIT_RELATIVE_MODULE, true);
         EXPECT_TRUE(res == 2);
         LogI("132");
 

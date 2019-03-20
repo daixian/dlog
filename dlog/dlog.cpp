@@ -191,13 +191,13 @@ extern "C" DLOG_EXPORT int __stdcall dlog_get_console_thr()
 extern "C" DLOG_EXPORT void __stdcall dlog_set_flush_on(int LogSeverity)
 {
     if (LogSeverity == DLOG_Debug)
-        Debug::GetInst()->setFlush(spdlog::level::level_enum::debug);
+        Debug::GetInst()->setFlushOn(spdlog::level::level_enum::debug);
     else if (LogSeverity == DLOG_INFO)
-        Debug::GetInst()->setFlush(spdlog::level::level_enum::info);
+        Debug::GetInst()->setFlushOn(spdlog::level::level_enum::info);
     else if (LogSeverity == DLOG_WARNING)
-        Debug::GetInst()->setFlush(spdlog::level::level_enum::warn);
+        Debug::GetInst()->setFlushOn(spdlog::level::level_enum::warn);
     else if (LogSeverity == DLOG_ERROR)
-        Debug::GetInst()->setFlush(spdlog::level::level_enum::err);
+        Debug::GetInst()->setFlushOn(spdlog::level::level_enum::err);
 }
 
 ///-------------------------------------------------------------------------------------------------

@@ -132,6 +132,9 @@ class Debug
     /// <summary> 是否初始化了. </summary>
     bool isInit = false;
 
+    /// <summary> 是否初始化失败了. </summary>
+    bool isInitFail = false;
+
     ///-------------------------------------------------------------------------------------------------
     /// <summary> 输入一个文件夹来初始化. </summary>
     ///
@@ -174,7 +177,7 @@ class Debug
     ///
     /// <param name="log_level"> The log level. </param>
     ///-------------------------------------------------------------------------------------------------
-    void setFlush(spdlog::level::level_enum log_level)
+    void setFlushOn(spdlog::level::level_enum log_level)
     {
         if (filelogger != nullptr)
             filelogger->flush_on(log_level);
@@ -184,7 +187,7 @@ class Debug
 
     void LogD(const char* strFormat, ...)
     {
-        if (!isInit) {
+        if (!isInit && !isInitFail) {
             init(); //如果还没有初始化那么就初始化一次
         }
         if (!isEnable) {
@@ -224,7 +227,7 @@ class Debug
 
     void LogD_va(const char* strFormat, va_list& arg_ptr)
     {
-        if (!isInit) {
+        if (!isInit && !isInitFail) {
             init(); //如果还没有初始化那么就初始化一次
         }
         if (!isEnable) {
@@ -261,7 +264,7 @@ class Debug
 
     void LogI(const char* strFormat, ...)
     {
-        if (!isInit) {
+        if (!isInit && !isInitFail) {
             init(); //如果还没有初始化那么就初始化一次
         }
         if (!isEnable) {
@@ -301,7 +304,7 @@ class Debug
 
     void LogI_va(const char* strFormat, va_list& arg_ptr)
     {
-        if (!isInit) {
+        if (!isInit && !isInitFail) {
             init(); //如果还没有初始化那么就初始化一次
         }
         if (!isEnable) {
@@ -338,7 +341,7 @@ class Debug
 
     void LogW(const char* strFormat, ...)
     {
-        if (!isInit) {
+        if (!isInit && !isInitFail) {
             init(); //如果还没有初始化那么就初始化一次
         }
         if (!isEnable) {
@@ -378,7 +381,7 @@ class Debug
 
     void LogW_va(const char* strFormat, va_list& arg_ptr)
     {
-        if (!isInit) {
+        if (!isInit && !isInitFail) {
             init(); //如果还没有初始化那么就初始化一次
         }
         if (!isEnable) {
@@ -416,7 +419,7 @@ class Debug
 
     void LogE(const char* strFormat, ...)
     {
-        if (!isInit) {
+        if (!isInit && !isInitFail) {
             init(); //如果还没有初始化那么就初始化一次
         }
         if (!isEnable) {
@@ -456,7 +459,7 @@ class Debug
 
     void LogE_va(const char* strFormat, va_list& arg_ptr)
     {
-        if (!isInit) {
+        if (!isInit && !isInitFail) {
             init(); //如果还没有初始化那么就初始化一次
         }
         if (!isEnable) {

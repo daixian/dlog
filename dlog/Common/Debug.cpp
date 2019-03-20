@@ -59,15 +59,22 @@ void Debug::init(const char* program, const char* logDir, INIT_RELATIVE rel)
         filelogger = spdlog::basic_logger_mt(programName, logFilePath);
         filelogger->flush_on(spdlog::level::level_enum::warn);
         isInit = true; //标记已经初始化了
+        isInitFail = false;
+        mt.unlock();
     }
     catch (const std::exception& e) {
+
+        isInitFail = true; //标记初始化失败过了
+        mt.unlock();
         throw e;
     }
-    mt.unlock();
+
+    //检查看看日志文件是否存在了
     if (filelogger == nullptr || !fs::is_regular_file(logFilePath)) {
-        string tp = logFilePath;
+        string msg = "dlog creat log file fail! :" + logFilePath; //底下马上要clear(),所以这里先写了
         clear();
-        throw std::invalid_argument("dlog creat log file fail! :" + tp);
+        isInitFail = true; //标记初始化失败过了
+        throw std::invalid_argument(msg);
     }
     else {
         //清空老文件
