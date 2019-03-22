@@ -1,4 +1,3 @@
-dlog
-### 1、目前修改了glog的发布方式，所以最后使用的时候需要glog.dll和dlog.dll
-### 2、目前都是MD的编译方式，VS2017的运行时。
-### 3、测试的配置只写了x64的，主要是几个cs工程里都只有Any CPU的配置，配置路径都在x64文件夹，测试线程会正常无法启动加载。
+[![Build Status](https://dev.azure.com/daixian/dlogPipeline/_apis/build/status/dlogPipeline-x64?branchName=master)](https://dev.azure.com/daixian/dlogPipeline/_build/latest?definitionId=2&branchName=master)
+### 1、 目前都是MD的编译方式，VS2017的运行时.
+### 2、 内部从glog换成的spdlog.
