@@ -158,7 +158,7 @@ namespace xuexue
         /// <returns> An int. </returns>
         ///-------------------------------------------------------------------------------------------------
         [DllImport("dlog")]
-        public static extern void dlog_set_flush_on(int LogSeverity);
+        public static extern void dlog_set_flush_on(LOG_THR LogSeverity);
 
         [DllImport("dlog")]
         public static extern void LogD(string strFormat);
@@ -204,7 +204,23 @@ namespace xuexue
         /// <returns> 实际的字符串长度. </returns>
         ///-------------------------------------------------------------------------------------------------
         [DllImport("dlog")]
-        public static extern int dlog_get_appdata_dir(StringBuilder buff, int size);
+        internal static extern int dlog_get_appdata_dir(StringBuilder buff, int size);
+
+        ///-------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// 得到appdata的路径,目录末尾不带斜杠"C:\\Users\\dx\\AppData\\Roaming".
+        /// </summary>
+        ///
+        /// <remarks> Dx, 2019/3/19. </remarks>
+        ///
+        /// <returns> 路径字符串. </returns>
+        ///-------------------------------------------------------------------------------------------------
+        public static string dlog_get_appdata_dir()
+        {
+            StringBuilder buff = new StringBuilder(512);
+            dlog_get_appdata_dir(buff, buff.Capacity);
+            return buff.ToString();
+        }
 
         ///-------------------------------------------------------------------------------------------------
         /// <summary> 得到模块的路径,目录末尾不带斜杠. </summary>
@@ -217,7 +233,21 @@ namespace xuexue
         /// <returns> 实际的字符串长度. </returns>
         ///-------------------------------------------------------------------------------------------------
         [DllImport("dlog")]
-        public static extern int dlog_get_module_dir(StringBuilder buff, int size);
+        internal static extern int dlog_get_module_dir(StringBuilder buff, int size);
+
+        ///-------------------------------------------------------------------------------------------------
+        /// <summary> 得到模块的路径,目录末尾不带斜杠. </summary>
+        ///
+        /// <remarks> Dx, 2019/3/19. </remarks>
+        ///
+        /// <returns> 路径字符串. </returns>
+        ///-------------------------------------------------------------------------------------------------
+        public static string dlog_get_module_dir()
+        {
+            StringBuilder buff = new StringBuilder(512);
+            dlog_get_module_dir(buff, buff.Capacity);
+            return buff.ToString();
+        }
 
         ///-------------------------------------------------------------------------------------------------
         /// <summary> 得到日志文件夹的路径. </summary>
@@ -230,7 +260,21 @@ namespace xuexue
         /// <returns> 实际的字符串长度. </returns>
         ///-------------------------------------------------------------------------------------------------
         [DllImport("dlog")]
-        public static extern int dlog_get_log_dir(StringBuilder buff, int size);
+        internal static extern int dlog_get_log_dir(StringBuilder buff, int size);
+
+        ///-------------------------------------------------------------------------------------------------
+        /// <summary> 得到日志文件夹的路径. </summary>
+        ///
+        /// <remarks> Dx, 2019/3/22. </remarks>
+        ///
+        /// <returns> 路径字符串. </returns>
+        ///-------------------------------------------------------------------------------------------------
+        public static string dlog_get_log_dir()
+        {
+            StringBuilder buff = new StringBuilder(512);
+            dlog_get_log_dir(buff, buff.Capacity);
+            return buff.ToString();
+        }
 
         ///-------------------------------------------------------------------------------------------------
         /// <summary> 得到日志文件的路径. </summary>
@@ -243,6 +287,20 @@ namespace xuexue
         /// <returns> 实际的字符串长度. </returns>
         ///-------------------------------------------------------------------------------------------------
         [DllImport("dlog")]
-        public static extern int dlog_get_log_file_path(StringBuilder buff, int size);
+        internal static extern int dlog_get_log_file_path(StringBuilder buff, int size);
+
+        ///-------------------------------------------------------------------------------------------------
+        /// <summary> 得到日志文件的路径. </summary>
+        ///
+        /// <remarks> Dx, 2019/3/19. </remarks>
+        ///
+        /// <returns> 路径字符串. </returns>
+        ///-------------------------------------------------------------------------------------------------
+        public static string dlog_get_log_file_path()
+        {
+            StringBuilder buff = new StringBuilder(512);
+            dlog_get_log_file_path(buff, buff.Capacity);
+            return buff.ToString();
+        }
     }
 }

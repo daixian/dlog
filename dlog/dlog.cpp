@@ -51,7 +51,7 @@ extern "C" DLOG_EXPORT int __stdcall dlog_init(const char* logDir, const char* p
 {
     if (isForceInit == false) {
         if (!Debug::GetInst()->isInit) {
-            Debug::GetInst()->init(program, logDir);
+            Debug::GetInst()->init(program, logDir, (INIT_RELATIVE)dir_relatvie);
             return 0; //第一次初始化
         }
         return 1; //成功复用
@@ -61,7 +61,7 @@ extern "C" DLOG_EXPORT int __stdcall dlog_init(const char* logDir, const char* p
         if (Debug::GetInst()->programName.compare(program) != 0 && //如果两次设置的程序名不一致，那么才删除
             strcmp(program, "dlog") != 0) {                        //同时第二次设置的这个程序名不能等于默认名字
             Debug::GetInst()->clear();
-            Debug::GetInst()->init(program, logDir);
+            Debug::GetInst()->init(program, logDir, (INIT_RELATIVE)dir_relatvie);
             return 2; //强制重设了一次glog
         }
         return 3; //强制重设了一次glog

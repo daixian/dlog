@@ -358,5 +358,31 @@ namespace UnitTest
             }
         }
 
+
+        /// <summary>
+        /// 测试内存日志
+        /// </summary>
+        [TestMethod]
+        public void TestPathGet()
+        {
+            string ad = DLog.dlog_get_appdata_dir();
+            string md = DLog.dlog_get_module_dir();
+            Assert.IsTrue(ad != md);
+        }
+
+        //[TestMethod]
+        //public void Test_INIT_RELATIVE_MODULE()
+        //{
+
+        //string md = DLog.dlog_get_module_dir();
+        //DLog.dlog_close();
+        //StringBuilder sb = new StringBuilder(128);
+        //sb.Append("123");
+        //DLog.dlog_init("\\LOG", "MRSystem", DLog.INIT_RELATIVE.MODULE, false);
+
+        //string logDir = DLog.dlog_get_log_dir();
+        //Assert.IsTrue(logDir == Path.Combine(md, "LOG"));
+        //}
+
     }
 }

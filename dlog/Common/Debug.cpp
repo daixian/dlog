@@ -160,7 +160,7 @@ void Debug::removeOldFile(long sec)
             for (size_t i = 0; i < vFileSubTime.size(); i++) {
                 if (vFileSubTime[i] > thr) {
                     fs::remove(vFilePath[i]);
-                    LogI("dlog移除过早的日志文件%s", vFilePath[i].c_str());
+                    LogI("dlog移除过早的日志文件%s", vFilePath[i].string().c_str());
                 }
             }
         }
