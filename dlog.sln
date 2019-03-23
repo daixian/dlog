@@ -13,6 +13,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UTCpp", "UTCpp\UTCpp.vcxproj", "{5EBD2EB5-6997-4D31-9B4E-7B932747CA74}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Dll2", "Dll2\Dll2.vcxproj", "{C7B773B1-7264-49B8-A931-3ABC0BC04BE9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DD743092-8B1D-4373-A643-DDFF0DB1A9AE} = {DD743092-8B1D-4373-A643-DDFF0DB1A9AE}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
