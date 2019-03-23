@@ -193,6 +193,26 @@ namespace xuexue
         public static extern int dlog_get_memlog(StringBuilder buff, int offset, int count);
 
 
+        /// <summary>
+        /// 提取内存中的日志，如果给的buffer过短那么就只能得到不完整的信息.
+        /// </summary>
+        public static string dlog_get_memlog()
+        {
+            StringBuilder buff = new StringBuilder(512);
+            dlog_get_memlog(buff, 0, buff.Capacity);
+            return buff.ToString();
+        }
+
+        /// <summary>
+        /// 提取内存中的日志，如果给的buffer过短那么就只能得到不完整的信息.
+        /// </summary>
+        public static string dlog_get_memlog(StringBuilder buff)
+        {
+            buff.Clear();
+            dlog_get_memlog(buff, 0, buff.Capacity);
+            return buff.ToString();
+        }
+
         ///-------------------------------------------------------------------------------------------------
         /// <summary> 得到appdata的路径,目录末尾不带斜杠"C:\\Users\\dx\\AppData\\Roaming". </summary>
         ///
@@ -204,7 +224,7 @@ namespace xuexue
         /// <returns> 实际的字符串长度. </returns>
         ///-------------------------------------------------------------------------------------------------
         [DllImport("dlog")]
-        internal static extern int dlog_get_appdata_dir(StringBuilder buff, int size);
+        private static extern int dlog_get_appdata_dir(StringBuilder buff, int size);
 
         ///-------------------------------------------------------------------------------------------------
         /// <summary>
@@ -233,7 +253,7 @@ namespace xuexue
         /// <returns> 实际的字符串长度. </returns>
         ///-------------------------------------------------------------------------------------------------
         [DllImport("dlog")]
-        internal static extern int dlog_get_module_dir(StringBuilder buff, int size);
+        private static extern int dlog_get_module_dir(StringBuilder buff, int size);
 
         ///-------------------------------------------------------------------------------------------------
         /// <summary> 得到模块的路径,目录末尾不带斜杠. </summary>
@@ -260,7 +280,7 @@ namespace xuexue
         /// <returns> 实际的字符串长度. </returns>
         ///-------------------------------------------------------------------------------------------------
         [DllImport("dlog")]
-        internal static extern int dlog_get_log_dir(StringBuilder buff, int size);
+        private static extern int dlog_get_log_dir(StringBuilder buff, int size);
 
         ///-------------------------------------------------------------------------------------------------
         /// <summary> 得到日志文件夹的路径. </summary>
@@ -287,7 +307,7 @@ namespace xuexue
         /// <returns> 实际的字符串长度. </returns>
         ///-------------------------------------------------------------------------------------------------
         [DllImport("dlog")]
-        internal static extern int dlog_get_log_file_path(StringBuilder buff, int size);
+        private static extern int dlog_get_log_file_path(StringBuilder buff, int size);
 
         ///-------------------------------------------------------------------------------------------------
         /// <summary> 得到日志文件的路径. </summary>

@@ -27,15 +27,20 @@ namespace UnitTest
             int ThreadStartCount = 0;
             int DoneCount = 0;
 
+            DLog.dlog_close();//关闭
+
             string logDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log");
+            if (Directory.Exists(logDir))
+            {
+                Directory.Delete(logDir, true);
+            }
 
             DLog.dlog_init(logDir);
             DLog.dlog_console_log_enable(false);//禁用控制台,如果不禁用的话时间可能很长
-
+            Thread.Sleep(500);
+            int testMsgNum = 500;
             //DLog.dlog_set_usual_thr(DLog.DLOG_ERROR + 1);
 
-            StringBuilder sb = new StringBuilder(256);
-            DLog.dlog_get_log_dir(sb, 256);
             DLog.dlog_memory_log_enable(true);
 
             for (int threadCount = 0; threadCount < 20; threadCount++)//20个线程一起写
@@ -44,7 +49,7 @@ namespace UnitTest
                 {
                     Interlocked.Increment(ref ThreadStartCount);
                     //要注意条数不能太多了，否则超出内存日志的缓存上限，会造成后面Assert条数失败
-                    for (int i = 0; i < 5000; i++)
+                    for (int i = 0; i < testMsgNum; i++)
                     {
                         xuexue.DLog.LogI($"测试日志{i}");
 
@@ -77,7 +82,7 @@ namespace UnitTest
                 }
             }
 
-            Assert.IsTrue(msgCount == 20 * 5000);//检查消息条数是否漏了
+            Assert.IsTrue(msgCount == 20 * testMsgNum);//检查消息条数是否漏了
 
             DLog.dlog_close();//必须要关闭，否则有线程在后台还
 
@@ -93,18 +98,7 @@ namespace UnitTest
             string logDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log");
             if (Directory.Exists(logDir))
             {
-                try
-                {
-                    string[] files = Directory.GetFiles(logDir);
-                    for (int i = 0; i < files.Length; i++)
-                    {
-                        File.Delete(files[i]);
-                    }
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                }
+                Directory.Delete(logDir, true);
             }
 
             int count = 0;
@@ -166,6 +160,8 @@ namespace UnitTest
 
             string[] logfiles = Directory.GetFiles(logDir);
             Assert.IsTrue(logfiles.Length == count);
+
+            DLog.dlog_close();//关闭
         }
 
         /// <summary>
@@ -174,21 +170,12 @@ namespace UnitTest
         [TestMethod]
         public void TestMethodDLogMT()
         {
+            DLog.dlog_close();//关闭
+
             string logDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log");
             if (Directory.Exists(logDir))
             {
-                try
-                {
-                    string[] files = Directory.GetFiles(logDir);
-                    for (int i = 0; i < files.Length; i++)
-                    {
-                        File.Delete(files[i]);
-                    }
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                }
+                Directory.Delete(logDir, true);
             }
             xuexue.DLog.dlog_init(logDir, "线程测试");
 
