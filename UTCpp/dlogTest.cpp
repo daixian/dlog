@@ -1,0 +1,66 @@
+﻿#include "pch.h"
+#include "../dlog/Common/MemoryLog.h"
+#include "../dlog/Common/Debug.h"
+#include "../dlog/dlog.h"
+#include  "../dlog/Common/FileHelper.h"
+
+#pragma comment(lib, "dlog.lib")
+
+using namespace dxlib;
+using namespace std;
+
+
+TEST(dlog, memorylog)
+{
+    dlog_close();
+
+    dlog_init("\\临时测试\\log", "测试日志");
+    dlog_memory_log_enable(true);
+    dlog_set_console_thr(dlog_level::err);
+    //LogI打印10W条，异步的，只要942毫秒
+    //LogW打印10W条，也只要1秒的样子
+    for (size_t i = 0; i < 4096; i++) {
+        LogW("测试日志%d !", i);
+    }
+
+    char msg[512];
+    char msgCorr[512];
+    for (int i = 0; i < 4096; i++) {
+        if (dlog_get_memlog(msg, 0, 512) > 0) {
+            sprintf_s(msgCorr, 512, "测试日志%d !", i);//正确的消息应该是
+            EXPECT_TRUE(strcmp(msg, msgCorr) == 0) << "msg=" << msg;//比对提取的消息是否正确
+        }
+        else {
+            FAIL();
+        }
+
+    }
+}
+
+TEST(dlog, init_close)
+{
+    for (size_t i = 0; i < 10; i++) {
+        dlog_close();
+
+        //第一次创建
+        int res = dlog_init("\\临时测试\\log", "创建测试", dlog_init_relative::MODULE);
+        EXPECT_TRUE(res == 0);
+        LogI("132");
+
+        //复用
+        res = dlog_init("\\临时测试\\log", "创建测试", dlog_init_relative::MODULE, false);
+        EXPECT_TRUE(res == 1);
+        LogI("132");
+
+        //强制创建,因为重名所以还是复用
+        res = dlog_init("\\临时测试\\log", "创建测试", dlog_init_relative::MODULE, true);
+        EXPECT_TRUE(res == 3);
+        LogI("132");
+
+        //强制创建
+        res = dlog_init("\\临时测试\\log", "创建测试2", dlog_init_relative::MODULE, true);
+        EXPECT_TRUE(res == 2);
+        LogI("132");
+
+    }
+}

@@ -7,7 +7,7 @@
 //这个dll为了测试多个模块共用一个dlog的dll
 int main()
 {
-    int res = dlog_init("\\log", "MRSystem", false);
+    int res = dlog_init("\\log", "MRSystem");
 
     LogI("Cpp dll2 输出的日志是这个！");
     return res;

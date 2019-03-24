@@ -26,13 +26,6 @@
 
 namespace dxlib {
 
-//几种优先级的定义,由于构造的时候门限被设为了0,所以默认没有使能DEBUG
-#define LOG_THR_DEBUG -1
-#define LOG_THR_INFO 0
-#define LOG_THR_WARNING 1
-#define LOG_THR_ERROR 2
-#define LOG_THR_FATAL 3
-
 /// <summary> 初始化的相对位置 </summary>
 enum class INIT_RELATIVE
 {
@@ -115,13 +108,13 @@ class Debug
     bool isConsoleEnable = true;
 
     /// <summary> 大于等于这个优先级的常规日志(文件日志)都会工作. </summary>
-    int logUsualThr = LOG_THR_INFO;
+    spdlog::level::level_enum logFileThr = spdlog::level::level_enum::info;
 
     /// <summary> 大于等于这个级别的日志都会进入内存日志. </summary>
-    int logMemoryThr = LOG_THR_INFO;
+    spdlog::level::level_enum logMemoryThr = spdlog::level::level_enum::info;
 
     /// <summary> 大于等于这个级别的日志都会输出到控制台. </summary>
-    int logConsoleThr = LOG_THR_INFO;
+    spdlog::level::level_enum logConsoleThr = spdlog::level::level_enum::info;
 
     /// <summary> 文件日志器. </summary>
     std::shared_ptr<spdlog::logger> filelogger = nullptr;
@@ -185,7 +178,7 @@ class Debug
 
 #pragma region LOGX
 
-    void LogD(const char* strFormat, ...)
+    void Log(spdlog::level::level_enum logThr, const char* strFormat, ...)
     {
         if (!isInit && !isInitFail) {
             init(); //如果还没有初始化那么就初始化一次
@@ -193,9 +186,9 @@ class Debug
         if (!isEnable) {
             return; //如果控制是不输出日志
         }
-        if (logUsualThr > LOG_THR_DEBUG &&
-            (!isConsoleEnable || logConsoleThr > LOG_THR_DEBUG) &&
-            (!isMemLogEnable || logMemoryThr > LOG_THR_DEBUG)) {
+        if (logFileThr > logThr &&
+            (!isConsoleEnable || logConsoleThr > logThr) &&
+            (!isMemLogEnable || logMemoryThr > logThr)) {
             return; //如果控制是不输出DEBUG级别日志
         }
         if (NULL == strFormat) {
@@ -210,22 +203,21 @@ class Debug
         while ((ret = vsnprintf_s(&buf[0], buf.size() - 1, _TRUNCATE, strFormat, arg_ptr)) == -1) {
             buf.resize(buf.size() * 2);
         }
-        buf[ret] = '\0';
-        if (logUsualThr <= LOG_THR_DEBUG) { //满足优先级才输出
-            filelogger->debug(&buf[0]);
-        }
-        if (isConsoleEnable && logConsoleThr <= LOG_THR_DEBUG) { //满足优先级才输出
-            consolelogger->debug(&buf[0]);
-        }
-
         va_end(arg_ptr);
+        buf[ret] = '\0';
 
-        if (isMemLogEnable && logMemoryThr <= LOG_THR_DEBUG) {
+        if (logFileThr <= logThr) { //满足优先级才输出 - 文件
+            filelogger->log(logThr, &buf[0]);
+        }
+        if (isConsoleEnable && logConsoleThr <= logThr) { //满足优先级才输出 - 控制台
+            consolelogger->log(logThr, &buf[0]);
+        }
+        if (isMemLogEnable && logMemoryThr <= logThr) { //满足优先级才输出 - 内存队列
             MemoryLog::GetInst()->addLog(&buf[0]);
         }
     }
 
-    void LogD_va(const char* strFormat, va_list& arg_ptr)
+    void Log_va(spdlog::level::level_enum logThr, const char* strFormat, va_list& arg_ptr)
     {
         if (!isInit && !isInitFail) {
             init(); //如果还没有初始化那么就初始化一次
@@ -233,9 +225,9 @@ class Debug
         if (!isEnable) {
             return; //如果控制是不输出日志
         }
-        if (logUsualThr > LOG_THR_DEBUG &&
-            (!isConsoleEnable || logConsoleThr > LOG_THR_DEBUG) &&
-            (!isMemLogEnable || logMemoryThr > LOG_THR_DEBUG)) {
+        if (logFileThr > logThr &&
+            (!isConsoleEnable || logConsoleThr > logThr) &&
+            (!isMemLogEnable || logMemoryThr > logThr)) {
             return; //如果控制是不输出DEBUG级别日志
         }
         if (NULL == strFormat) {
@@ -248,250 +240,58 @@ class Debug
             buf.resize(buf.size() * 2);
         }
         buf[ret] = '\0';
-        if (logUsualThr <= LOG_THR_DEBUG) { //满足优先级才输出
-            filelogger->debug(&buf[0]);
+        if (logFileThr <= logThr) { //满足优先级才输出 - 文件
+            filelogger->log(logThr, &buf[0]);
         }
-        if (isConsoleEnable && logConsoleThr <= LOG_THR_DEBUG) { //满足优先级才输出
-            consolelogger->debug(&buf[0]);
+        if (isConsoleEnable && logConsoleThr <= logThr) { //满足优先级才输出 - 控制台
+            consolelogger->log(logThr, &buf[0]);
         }
-
-        if (isMemLogEnable && logMemoryThr <= LOG_THR_DEBUG) {
+        if (isMemLogEnable && logMemoryThr <= logThr) { //满足优先级才输出 - 内存队列
             MemoryLog::GetInst()->addLog(&buf[0]);
         }
     }
 
-    //static void LogDEBUG(const wchar_t * strFormat, ...);
+    void LogD(const char* strFormat, ...)
+    {
+        va_list arg_ptr = NULL;
+        va_start(arg_ptr, strFormat);
+        Log_va(spdlog::level::level_enum::debug, strFormat, arg_ptr);
+        va_end(arg_ptr);
+    }
+
+    //static void LogD(const wchar_t * strFormat, ...);
 
     void LogI(const char* strFormat, ...)
     {
-        if (!isInit && !isInitFail) {
-            init(); //如果还没有初始化那么就初始化一次
-        }
-        if (!isEnable) {
-            return; //如果控制是不输出日志
-        }
-        if (logUsualThr > LOG_THR_INFO &&
-            (!isConsoleEnable || logConsoleThr > LOG_THR_INFO) &&
-            (!isMemLogEnable || logMemoryThr > LOG_THR_INFO)) {
-            return; //如果控制是不输出info级别日志
-        }
-        if (NULL == strFormat) {
-            return; //如果输入参数为空
-        }
-
         va_list arg_ptr = NULL;
         va_start(arg_ptr, strFormat);
-
-        std::vector<char> buf(DEBUG_LOG_BUFF_SIZE);
-        int ret;
-        while ((ret = vsnprintf_s(&buf[0], buf.size() - 1, _TRUNCATE, strFormat, arg_ptr)) == -1) {
-            buf.resize(buf.size() * 2);
-        }
-        buf[ret] = '\0';
-        if (logUsualThr <= LOG_THR_INFO) { //满足优先级才输出
-            filelogger->info(&buf[0]);
-        }
-        if (isConsoleEnable && logConsoleThr <= LOG_THR_INFO) { //满足优先级才输出
-            consolelogger->info(&buf[0]);
-        }
-
+        Log_va(spdlog::level::level_enum::info, strFormat, arg_ptr);
         va_end(arg_ptr);
-
-        if (isMemLogEnable && logMemoryThr <= LOG_THR_INFO) { //满足优先级才输出
-            MemoryLog::GetInst()->addLog(&buf[0]);
-        }
     }
-
-    void LogI_va(const char* strFormat, va_list& arg_ptr)
-    {
-        if (!isInit && !isInitFail) {
-            init(); //如果还没有初始化那么就初始化一次
-        }
-        if (!isEnable) {
-            return; //如果控制是不输出日志
-        }
-        if (logUsualThr > LOG_THR_INFO &&
-            (!isConsoleEnable || logConsoleThr > LOG_THR_INFO) &&
-            (!isMemLogEnable || logMemoryThr > LOG_THR_INFO)) {
-            return; //如果控制是不输出info级别日志
-        }
-        if (NULL == strFormat) {
-            return; //如果输入参数为空
-        }
-
-        std::vector<char> buf(DEBUG_LOG_BUFF_SIZE);
-        int ret;
-        while ((ret = vsnprintf_s(&buf[0], buf.size() - 1, _TRUNCATE, strFormat, arg_ptr)) == -1) {
-            buf.resize(buf.size() * 2);
-        }
-        buf[ret] = '\0';
-        if (logUsualThr <= LOG_THR_INFO) { //满足优先级才输出
-            filelogger->info(&buf[0]);
-        }
-        if (isConsoleEnable && logConsoleThr <= LOG_THR_INFO) { //满足优先级才输出
-            consolelogger->info(&buf[0]);
-        }
-
-        if (isMemLogEnable && logMemoryThr <= LOG_THR_INFO) { //满足优先级才输出
-            MemoryLog::GetInst()->addLog(&buf[0]);
-        }
-    }
-
-    //static void LogI(const wchar_t * strFormat, ...);
 
     void LogW(const char* strFormat, ...)
     {
-        if (!isInit && !isInitFail) {
-            init(); //如果还没有初始化那么就初始化一次
-        }
-        if (!isEnable) {
-            return; //如果控制是不输出日志
-        }
-        if (logUsualThr > LOG_THR_WARNING &&
-            (!isConsoleEnable || logConsoleThr > LOG_THR_WARNING) &&
-            (!isMemLogEnable || logMemoryThr > LOG_THR_WARNING)) {
-            return; //如果控制是不输出warning级别日志
-        }
-        if (NULL == strFormat) {
-            return; //如果输入参数为空
-        }
-
         va_list arg_ptr = NULL;
         va_start(arg_ptr, strFormat);
-
-        std::vector<char> buf(DEBUG_LOG_BUFF_SIZE);
-        int ret;
-        while ((ret = vsnprintf_s(&buf[0], buf.size() - 1, _TRUNCATE, strFormat, arg_ptr)) == -1) {
-            buf.resize(buf.size() * 2);
-        }
-        buf[ret] = '\0';
-        if (logUsualThr <= LOG_THR_WARNING) { //满足优先级才输出
-            filelogger->warn(&buf[0]);
-        }
-        if (isConsoleEnable && logConsoleThr <= LOG_THR_WARNING) { //满足优先级才输出
-            consolelogger->warn(&buf[0]);
-        }
-
+        Log_va(spdlog::level::level_enum::warn, strFormat, arg_ptr);
         va_end(arg_ptr);
-
-        if (isMemLogEnable && logMemoryThr <= LOG_THR_WARNING) {
-            MemoryLog::GetInst()->addLog(&buf[0]);
-        }
     }
-
-    void LogW_va(const char* strFormat, va_list& arg_ptr)
-    {
-        if (!isInit && !isInitFail) {
-            init(); //如果还没有初始化那么就初始化一次
-        }
-        if (!isEnable) {
-            return; //如果控制是不输出日志
-        }
-        if (logUsualThr > LOG_THR_WARNING &&
-            (!isConsoleEnable || logConsoleThr > LOG_THR_WARNING) &&
-            (!isMemLogEnable || logMemoryThr > LOG_THR_WARNING)) {
-            return; //如果控制是不输出warning级别日志
-        }
-        if (NULL == strFormat) {
-            return; //如果输入参数为空
-        }
-
-        std::vector<char> buf(DEBUG_LOG_BUFF_SIZE);
-        int ret;
-        while ((ret = vsnprintf_s(&buf[0], buf.size() - 1, _TRUNCATE, strFormat, arg_ptr)) == -1) {
-            buf.resize(buf.size() * 2);
-        }
-        buf[ret] = '\0';
-
-        if (logUsualThr <= LOG_THR_WARNING) { //满足优先级才输出
-            filelogger->warn(&buf[0]);
-        }
-        if (isConsoleEnable && logConsoleThr <= LOG_THR_WARNING) { //满足优先级才输出
-            consolelogger->warn(&buf[0]);
-        }
-
-        if (isMemLogEnable && logMemoryThr <= LOG_THR_WARNING) {
-            MemoryLog::GetInst()->addLog(&buf[0]);
-        }
-    }
-
-    //static void LogW(const wchar_t * strFormat, ...);
 
     void LogE(const char* strFormat, ...)
     {
-        if (!isInit && !isInitFail) {
-            init(); //如果还没有初始化那么就初始化一次
-        }
-        if (!isEnable) {
-            return; //如果控制是不输出日志
-        }
-        if (logUsualThr > LOG_THR_ERROR &&
-            (!isConsoleEnable || logConsoleThr > LOG_THR_ERROR) &&
-            (!isMemLogEnable || logMemoryThr > LOG_THR_ERROR)) {
-            return; //如果控制是不输出error级别日志
-        }
-        if (NULL == strFormat) {
-            return; //如果输入参数为空
-        }
-
         va_list arg_ptr = NULL;
         va_start(arg_ptr, strFormat);
-
-        std::vector<char> buf(DEBUG_LOG_BUFF_SIZE);
-        int ret;
-        while ((ret = vsnprintf_s(&buf[0], buf.size() - 1, _TRUNCATE, strFormat, arg_ptr)) == -1) {
-            buf.resize(buf.size() * 2);
-        }
-        buf[ret] = '\0';
-        if (logUsualThr <= LOG_THR_ERROR) { //满足优先级才输出
-            filelogger->error(&buf[0]);
-        }
-        if (isConsoleEnable && logConsoleThr <= LOG_THR_ERROR) { //满足优先级才输出
-            consolelogger->error(&buf[0]);
-        }
-
+        Log_va(spdlog::level::level_enum::err, strFormat, arg_ptr);
         va_end(arg_ptr);
-
-        if (isMemLogEnable && logMemoryThr <= LOG_THR_ERROR) {
-            MemoryLog::GetInst()->addLog(&buf[0]);
-        }
     }
 
-    void LogE_va(const char* strFormat, va_list& arg_ptr)
+    void LogC(const char* strFormat, ...)
     {
-        if (!isInit && !isInitFail) {
-            init(); //如果还没有初始化那么就初始化一次
-        }
-        if (!isEnable) {
-            return; //如果控制是不输出日志
-        }
-        if (logUsualThr > LOG_THR_ERROR &&
-            (!isConsoleEnable || logConsoleThr > LOG_THR_ERROR) &&
-            (!isMemLogEnable || logMemoryThr > LOG_THR_ERROR)) {
-            return; //如果控制是不输出error级别日志
-        }
-        if (NULL == strFormat) {
-            return; //如果输入参数为空
-        }
-
-        std::vector<char> buf(DEBUG_LOG_BUFF_SIZE);
-        int ret;
-        while ((ret = vsnprintf_s(&buf[0], buf.size() - 1, _TRUNCATE, strFormat, arg_ptr)) == -1) {
-            buf.resize(buf.size() * 2);
-        }
-        buf[ret] = '\0';
-        if (logUsualThr <= LOG_THR_ERROR) { //满足优先级才输出
-            filelogger->error(&buf[0]);
-        }
-        if (isConsoleEnable && logConsoleThr <= LOG_THR_ERROR) { //满足优先级才输出
-            consolelogger->error(&buf[0]);
-        }
-
-        if (isMemLogEnable && logMemoryThr <= LOG_THR_ERROR) {
-            MemoryLog::GetInst()->addLog(&buf[0]);
-        }
+        va_list arg_ptr = NULL;
+        va_start(arg_ptr, strFormat);
+        Log_va(spdlog::level::level_enum::critical, strFormat, arg_ptr);
+        va_end(arg_ptr);
     }
-    //static void LogE(const wchar_t * strFormat, ...);
 
 #pragma endregion
 };

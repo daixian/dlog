@@ -88,15 +88,16 @@ void Debug::clear()
     try {
         if (!isInit) {
             mt.unlock();
+            return;
         }
         isInit = false;
 
         isEnable = true;
         isMemLogEnable = false;
         isConsoleEnable = true;
-        logUsualThr = LOG_THR_INFO;
-        logMemoryThr = LOG_THR_INFO;
-        logConsoleThr = LOG_THR_INFO;
+        logFileThr = spdlog::level::level_enum::info;
+        logMemoryThr = spdlog::level::level_enum::info;
+        logConsoleThr = spdlog::level::level_enum::info;
         MemoryLog::GetInst()->clear();
 
         logPattern = _logPattern;

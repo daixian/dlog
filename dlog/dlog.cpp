@@ -47,7 +47,7 @@ extern "C" DLOG_EXPORT void* __stdcall dlog_global_ptr()
 /// 如果强制重设但是失败还是复用了那么返回3.
 /// </returns>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT int __stdcall dlog_init(const char* logDir, const char* program, int dir_relatvie, bool isForceInit)
+extern "C" DLOG_EXPORT int __stdcall dlog_init(const char* logDir, const char* program, dlog_init_relative dir_relatvie, bool isForceInit)
 {
     if (isForceInit == false) {
         if (!Debug::GetInst()->isInit) {
@@ -112,9 +112,9 @@ extern "C" DLOG_EXPORT void __stdcall dlog_console_log_enable(bool enable)
 ///
 /// <param name="usualThr"> The usual thr. </param>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void __stdcall dlog_set_usual_thr(int usualThr)
+extern "C" DLOG_EXPORT void __stdcall dlog_set_file_thr(dlog_level usualThr)
 {
-    Debug::GetInst()->logUsualThr = usualThr;
+    Debug::GetInst()->logFileThr = (spdlog::level::level_enum)usualThr;
 }
 
 ///-------------------------------------------------------------------------------------------------
@@ -124,9 +124,9 @@ extern "C" DLOG_EXPORT void __stdcall dlog_set_usual_thr(int usualThr)
 ///
 /// <param name="usualThr"> The usual thr. </param>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT int __stdcall dlog_get_usual_thr()
+extern "C" DLOG_EXPORT int __stdcall dlog_get_file_thr()
 {
-    return Debug::GetInst()->logUsualThr;
+    return Debug::GetInst()->logFileThr;
 }
 
 ///-------------------------------------------------------------------------------------------------
@@ -136,9 +136,9 @@ extern "C" DLOG_EXPORT int __stdcall dlog_get_usual_thr()
 ///
 /// <param name="usualThr"> The usual thr. </param>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void __stdcall dlog_set_memory_thr(int memoryThr)
+extern "C" DLOG_EXPORT void __stdcall dlog_set_memory_thr(dlog_level memoryThr)
 {
-    Debug::GetInst()->logMemoryThr = memoryThr;
+    Debug::GetInst()->logMemoryThr = (spdlog::level::level_enum)memoryThr;
 }
 
 ///-------------------------------------------------------------------------------------------------
@@ -162,9 +162,9 @@ extern "C" DLOG_EXPORT int __stdcall dlog_get_memory_thr()
 ///
 /// <param name="LogSeverity"> 大于等于这一级的日志都会输出到控制台. </param>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void __stdcall dlog_set_console_thr(int LogSeverity)
+extern "C" DLOG_EXPORT void __stdcall dlog_set_console_thr(dlog_level LogSeverity)
 {
-    Debug::GetInst()->logConsoleThr = LogSeverity; // 当日志级别大于等于此级别时，自动将此日志输出到标准错误(终端窗口)中
+    Debug::GetInst()->logConsoleThr = (spdlog::level::level_enum)LogSeverity; // 当日志级别大于等于此级别时，自动将此日志输出到标准错误(终端窗口)中
 }
 
 ///-------------------------------------------------------------------------------------------------
@@ -176,7 +176,7 @@ extern "C" DLOG_EXPORT void __stdcall dlog_set_console_thr(int LogSeverity)
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT int __stdcall dlog_get_console_thr()
 {
-    return Debug::GetInst()->logConsoleThr;
+    return (int)Debug::GetInst()->logConsoleThr;
 }
 
 ///-------------------------------------------------------------------------------------------------
@@ -188,16 +188,9 @@ extern "C" DLOG_EXPORT int __stdcall dlog_get_console_thr()
 ///
 /// <returns> An int. </returns>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void __stdcall dlog_set_flush_on(int LogSeverity)
+extern "C" DLOG_EXPORT void __stdcall dlog_set_flush_on(dlog_level LogSeverity)
 {
-    if (LogSeverity == DLOG_Debug)
-        Debug::GetInst()->setFlushOn(spdlog::level::level_enum::debug);
-    else if (LogSeverity == DLOG_INFO)
-        Debug::GetInst()->setFlushOn(spdlog::level::level_enum::info);
-    else if (LogSeverity == DLOG_WARNING)
-        Debug::GetInst()->setFlushOn(spdlog::level::level_enum::warn);
-    else if (LogSeverity == DLOG_ERROR)
-        Debug::GetInst()->setFlushOn(spdlog::level::level_enum::err);
+    Debug::GetInst()->setFlushOn((spdlog::level::level_enum)LogSeverity);
 }
 
 ///-------------------------------------------------------------------------------------------------
@@ -219,7 +212,7 @@ extern "C" DLOG_EXPORT void __stdcall LogI(const char* strFormat, ...)
 
     va_list arg_ptr = NULL;
     va_start(arg_ptr, strFormat);
-    Debug::GetInst()->LogI_va(strFormat, arg_ptr);
+    Debug::GetInst()->Log_va(spdlog::level::level_enum::info, strFormat, arg_ptr);
     va_end(arg_ptr);
 }
 
@@ -242,7 +235,7 @@ extern "C" DLOG_EXPORT void __stdcall LogW(const char* strFormat, ...)
 
     va_list arg_ptr = NULL;
     va_start(arg_ptr, strFormat);
-    Debug::GetInst()->LogW_va(strFormat, arg_ptr);
+    Debug::GetInst()->Log_va(spdlog::level::level_enum::warn, strFormat, arg_ptr);
     va_end(arg_ptr);
 }
 
@@ -265,7 +258,7 @@ extern "C" DLOG_EXPORT void __stdcall LogE(const char* strFormat, ...)
 
     va_list arg_ptr = NULL;
     va_start(arg_ptr, strFormat);
-    Debug::GetInst()->LogE_va(strFormat, arg_ptr);
+    Debug::GetInst()->Log_va(spdlog::level::level_enum::err, strFormat, arg_ptr);
     va_end(arg_ptr);
 }
 
@@ -288,7 +281,7 @@ extern "C" DLOG_EXPORT void __stdcall LogD(const char* strFormat, ...)
 
     va_list arg_ptr = NULL;
     va_start(arg_ptr, strFormat);
-    Debug::GetInst()->LogD_va(strFormat, arg_ptr);
+    Debug::GetInst()->Log_va(spdlog::level::level_enum::debug, strFormat, arg_ptr);
     va_end(arg_ptr);
 }
 

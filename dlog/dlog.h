@@ -9,14 +9,26 @@
 #define DLOG_EXPORT __declspec(dllimport)
 #endif
 
-//给用户使用的LogSeverity定义(用作某些函数的参数参考)
-#define DLOG_Debug -1
-#define DLOG_INFO 0
-#define DLOG_WARNING 1
-#define DLOG_ERROR 2
+//给用户使用的LogSeverity定义,目前和spdlog里的定义一致,但是只使用debug,info,warn,err
+enum class dlog_level
+{
+    trace = 0,
+    debug = 1,
+    info = 2,
+    warn = 3,
+    err = 4,
+    critical = 5,
+    off = 6,
+};
 
-#define DLOG_INIT_RELATIVE_APPDATA 0
-#define DLOG_INIT_RELATIVE_MODULE 1
+//日志库初始化的时候如果使用了相对目录,那么相对目录的选择
+enum class dlog_init_relative
+{
+    //相对appdata文件夹
+    APPDATA = 0,
+    //相对dll自身文件夹
+    MODULE = 1,
+};
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary>
@@ -45,7 +57,7 @@
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT int __stdcall dlog_init(const char* logDir = "log",
                                                const char* program = "dlog",
-                                               int dir_relatvie = DLOG_INIT_RELATIVE_MODULE,
+                                               dlog_init_relative dir_relatvie = dlog_init_relative::APPDATA,
                                                bool isForceInit = false);
 
 ///-------------------------------------------------------------------------------------------------
@@ -80,9 +92,9 @@ extern "C" DLOG_EXPORT void __stdcall dlog_console_log_enable(bool enable);
 ///
 /// <remarks> Dx, 2018/11/15. </remarks>
 ///
-/// <param name="usualThr"> The usual thr. </param>
+/// <param name="fileThr"> The usual thr. </param>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void __stdcall dlog_set_usual_thr(int usualThr);
+extern "C" DLOG_EXPORT void __stdcall dlog_set_file_thr(dlog_level fileThr);
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary>
@@ -93,7 +105,7 @@ extern "C" DLOG_EXPORT void __stdcall dlog_set_usual_thr(int usualThr);
 ///
 /// <returns> An int. </returns>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT int __stdcall dlog_get_usual_thr();
+extern "C" DLOG_EXPORT int __stdcall dlog_get_file_thr();
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary> 设置Dlog的内存日志门限,大于等于该优先级的日志都会写入. </summary>
@@ -102,7 +114,7 @@ extern "C" DLOG_EXPORT int __stdcall dlog_get_usual_thr();
 ///
 /// <param name="usualThr"> The usual thr. </param>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void __stdcall dlog_set_memory_thr(int memoryThr);
+extern "C" DLOG_EXPORT void __stdcall dlog_set_memory_thr(dlog_level memoryThr);
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary> 得到Dlog的内存日志门限,大于等于该优先级的日志都会写入. </summary>
@@ -116,14 +128,13 @@ extern "C" DLOG_EXPORT int __stdcall dlog_get_memory_thr();
 ///-------------------------------------------------------------------------------------------------
 /// <summary>
 /// 设置最高某一级日志输出到控制台，大于等于这一级别的日志都会输出到控制台，小于这一级别的日志不会输出到控制台.
-/// 参数有DLOG_INFO,DLOG_WARNING,DLOG_ERROR, DLOG_FATAL.
 /// </summary>
 ///
 /// <remarks> Dx, 2018/4/23. </remarks>
 ///
 /// <param name="LogSeverity"> 大于等于这一级的日志都会输出到控制台. </param>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void __stdcall dlog_set_console_thr(int LogSeverity);
+extern "C" DLOG_EXPORT void __stdcall dlog_set_console_thr(dlog_level LogSeverity);
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary> 得到Dlog的控制台日志门限,大于等于该优先级的日志都会写入. </summary>
@@ -143,7 +154,7 @@ extern "C" DLOG_EXPORT int __stdcall dlog_get_console_thr();
 ///
 /// <returns> An int. </returns>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void __stdcall dlog_set_flush_on(int LogSeverity);
+extern "C" DLOG_EXPORT void __stdcall dlog_set_flush_on(dlog_level LogSeverity);
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary> Logs an info. </summary>

@@ -371,5 +371,21 @@ namespace UnitTest
         //Assert.IsTrue(logDir == Path.Combine(md, "LOG"));
         //}
 
+        /// <summary>
+        /// 测试修改日志等级
+        /// </summary>
+        [TestMethod]
+        public void TestMethod_thrTest()
+        {
+            DLog.dlog_close();
+            DLog.dlog_set_console_thr(DLog.LOG_THR.err);//设置只有err级别的日志才输出到控制台
+            Assert.IsTrue(DLog.dlog_get_console_thr() == (int)DLog.LOG_THR.err);
+
+            DLog.dlog_set_file_thr(DLog.LOG_THR.err);
+            Assert.IsTrue(DLog.dlog_get_file_thr() == (int)DLog.LOG_THR.err);
+
+            DLog.dlog_set_memory_thr(DLog.LOG_THR.err);
+            Assert.IsTrue(DLog.dlog_get_memory_thr() == (int)DLog.LOG_THR.err);
+        }
     }
 }
