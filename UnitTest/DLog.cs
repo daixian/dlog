@@ -170,6 +170,12 @@ namespace xuexue
         public static extern void dlog_set_flush_on(LOG_THR LogSeverity);
 
         /// <summary>
+        /// 立即刷新
+        /// </summary>
+        [DllImport("dlog", CallingConvention = CallingConvention.StdCall)]
+        public static extern void  dlog_flush();
+
+        /// <summary>
         /// Debug级别日志
         /// </summary>
         /// <param name="strFormat"></param>

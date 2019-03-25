@@ -387,5 +387,21 @@ namespace UnitTest
             DLog.dlog_set_memory_thr(DLog.LOG_THR.err);
             Assert.IsTrue(DLog.dlog_get_memory_thr() == (int)DLog.LOG_THR.err);
         }
+
+        [TestMethod]
+        public void TestMethod_flush()
+        {
+            DLog.dlog_close();
+            for (int i = 0; i < 10; i++)
+            {
+                DLog.dlog_flush();
+            }
+            for (int i = 0; i < 10; i++)
+            {
+                DLog.LogI("123");
+                DLog.dlog_flush();
+            }
+            DLog.dlog_close();
+        }
     }
 }

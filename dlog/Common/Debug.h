@@ -251,6 +251,8 @@ class Debug
         }
     }
 
+#pragma endregion
+
     void LogD(const char* strFormat, ...)
     {
         va_list arg_ptr = NULL;
@@ -293,7 +295,20 @@ class Debug
         va_end(arg_ptr);
     }
 
-#pragma endregion
+    ///-------------------------------------------------------------------------------------------------
+    /// <summary> 直接执行flush. </summary>
+    ///
+    /// <remarks> Dx, 2019/3/25. </remarks>
+    ///-------------------------------------------------------------------------------------------------
+    void flush()
+    {
+        if (filelogger != nullptr) {
+            filelogger->flush();
+        }
+        if (consolelogger != nullptr) {
+            consolelogger->flush();
+        }
+    }
 };
 
 } // namespace dxlib

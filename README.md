@@ -13,10 +13,13 @@
 DLog.dlog_init("FViewTool\\log", "FViewTool", DLog.INIT_RELATIVE.APPDATA, false);
 
 //设置立即flush的等级为debug
-DLog.dlog_set_flush_on(DLog.LOG_THR.Debug);
+DLog.dlog_set_flush_on(DLog.LOG_THR.debug);
 
 //输出一条日志,立即flush了
 DLog.LogI("App Start!");
+
+//或者直接调用flush也可以...
+DLog.dlog_flush();
 ```
 2、日志分为文件、控制台、内存分别独立的三路日志。通常后台工作时可以关闭控制台日志和内存日志。有的时候如果发现日志性能极低，那么有可能是stdout被重定向到了某个看不见控制台，可以尝试关闭控制台输出。通常频繁的日志不能输出到控制台。
 ``` c#

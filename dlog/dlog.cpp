@@ -194,6 +194,16 @@ extern "C" DLOG_EXPORT void __stdcall dlog_set_flush_on(dlog_level LogSeverity)
 }
 
 ///-------------------------------------------------------------------------------------------------
+/// <summary> 立即flush. </summary>
+///
+/// <remarks> Dx, 2019/3/25. </remarks>
+///-------------------------------------------------------------------------------------------------
+extern "C" DLOG_EXPORT void __stdcall dlog_flush()
+{
+    Debug::GetInst()->flush();
+}
+
+///-------------------------------------------------------------------------------------------------
 /// <summary> Logs an info. </summary>
 ///
 /// <remarks> Dx, 2018/4/22. </remarks>
