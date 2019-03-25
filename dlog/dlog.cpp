@@ -214,7 +214,7 @@ extern "C" DLOG_EXPORT void __stdcall dlog_flush()
 ///                          providing additional
 ///                          information. </param>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void __stdcall LogI(const char* strFormat, ...)
+extern "C" DLOG_EXPORT void __cdecl LogI(const char* strFormat, ...)
 {
     if (!Debug::GetInst()->isInit) { //如果还没有初始化过，那么就调用默认构造
         dlog_init();
@@ -237,7 +237,7 @@ extern "C" DLOG_EXPORT void __stdcall LogI(const char* strFormat, ...)
 ///                          providing additional
 ///                          information. </param>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void __stdcall LogW(const char* strFormat, ...)
+extern "C" DLOG_EXPORT void __cdecl LogW(const char* strFormat, ...)
 {
     if (!Debug::GetInst()->isInit) { //如果还没有初始化过，那么就调用默认构造
         dlog_init();
@@ -260,7 +260,7 @@ extern "C" DLOG_EXPORT void __stdcall LogW(const char* strFormat, ...)
 ///                          providing additional
 ///                          information. </param>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void __stdcall LogE(const char* strFormat, ...)
+extern "C" DLOG_EXPORT void __cdecl LogE(const char* strFormat, ...)
 {
     if (!Debug::GetInst()->isInit) { //如果还没有初始化过，那么就调用默认构造
         dlog_init();
@@ -283,7 +283,7 @@ extern "C" DLOG_EXPORT void __stdcall LogE(const char* strFormat, ...)
 ///                          providing additional
 ///                          information. </param>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void __stdcall LogD(const char* strFormat, ...)
+extern "C" DLOG_EXPORT void __cdecl LogD(const char* strFormat, ...)
 {
     if (!Debug::GetInst()->isInit) { //如果还没有初始化过，那么就调用默认构造
         dlog_init();

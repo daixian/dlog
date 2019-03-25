@@ -173,34 +173,34 @@ namespace xuexue
         /// 立即刷新
         /// </summary>
         [DllImport("dlog", CallingConvention = CallingConvention.StdCall)]
-        public static extern void  dlog_flush();
+        public static extern void dlog_flush();
 
         /// <summary>
-        /// Debug级别日志
+        /// Debug级别日志,它是一个varargs的函数
         /// </summary>
         /// <param name="strFormat"></param>
-        [DllImport("dlog", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("dlog", CallingConvention = CallingConvention.Cdecl)]
         public static extern void LogD(string str);
 
         /// <summary>
-        /// Info级别日志
+        /// Info级别日志,它是一个varargs的函数
         /// </summary>
         /// <param name="strFormat"></param>
-        [DllImport("dlog", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("dlog", CallingConvention = CallingConvention.Cdecl)]
         public static extern void LogI(string str);
 
         /// <summary>
-        /// Warnning级别日志
+        /// Warnning级别日志,它是一个varargs的函数
         /// </summary>
         /// <param name="strFormat"></param>
-        [DllImport("dlog", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("dlog", CallingConvention = CallingConvention.Cdecl)]
         public static extern void LogW(string str);
 
         /// <summary>
-        /// Error级别日志
+        /// Error级别日志,它是一个varargs的函数
         /// </summary>
         /// <param name="strFormat"></param>
-        [DllImport("dlog", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("dlog", CallingConvention = CallingConvention.Cdecl)]
         public static extern void LogE(string str);
 
         ///-------------------------------------------------------------------------------------------------

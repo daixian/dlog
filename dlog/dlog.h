@@ -174,7 +174,7 @@ extern "C" DLOG_EXPORT void __stdcall dlog_flush();
 ///                          providing additional
 ///                          information. </param>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void __stdcall LogI(const char* strFormat, ...);
+extern "C" DLOG_EXPORT void __cdecl LogI(const char* strFormat, ...);
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary> Logs a warring. </summary>
@@ -187,7 +187,7 @@ extern "C" DLOG_EXPORT void __stdcall LogI(const char* strFormat, ...);
 ///                          providing additional
 ///                          information. </param>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void __stdcall LogW(const char* strFormat, ...);
+extern "C" DLOG_EXPORT void __cdecl LogW(const char* strFormat, ...);
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary> Logs an error. </summary>
@@ -200,7 +200,7 @@ extern "C" DLOG_EXPORT void __stdcall LogW(const char* strFormat, ...);
 ///                          providing additional
 ///                          information. </param>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void __stdcall LogE(const char* strFormat, ...);
+extern "C" DLOG_EXPORT void __cdecl LogE(const char* strFormat, ...);
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary> Logs a debug. </summary>
@@ -213,7 +213,7 @@ extern "C" DLOG_EXPORT void __stdcall LogE(const char* strFormat, ...);
 ///                          providing additional
 ///                          information. </param>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void __stdcall LogD(const char* strFormat, ...);
+extern "C" DLOG_EXPORT void __cdecl LogD(const char* strFormat, ...);
 
 #pragma region 内存缓存日志相关
 
