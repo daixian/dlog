@@ -363,3 +363,5 @@ UnitTest1/Debug/
 /Win32/Release
 /dlog/Win32/Release
 /Artifacts
+/dlog/Debug
+/dlog/Release
