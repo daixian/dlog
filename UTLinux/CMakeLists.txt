@@ -11,6 +11,7 @@ include_directories(${GTEST_INCLUDE_DIRS})
 
  
 add_executable(utlinux main.cpp)
+target_link_libraries(utlinux dlog)
 #target_link_libraries(utcpp PRIVATE GTest::GTest GTest::Main)
 
 #add_test(AllTestsInUtcpp utcpp)
