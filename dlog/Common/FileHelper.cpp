@@ -1,15 +1,18 @@
 ﻿#include "FileHelper.h"
 
 #include <stdlib.h>
-#include <io.h>
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
 #include <ShlObj.h> //SHGetSpecialFolderPath
 #endif
 
+#include <boost/filesystem.hpp>
+
 #include "Common.h"
 #include <ctime>
+
+namespace fs = boost::filesystem;
 
 ////这个脚本可能会报错 语言->符合模式 "combaseapi.h(229): error C2187: syntax error: 'identifier' was unexpected here" when using /permissive-
 namespace dxlib {
@@ -70,22 +73,12 @@ void FileHelper::isExistsAndCreat(const std::string& sDir)
 
 bool FileHelper::dirExists(const std::string& dirName_in)
 {
-    int ftyp = _access(dirName_in.c_str(), 0);
-
-    if (0 == ftyp)
-        return true; // this is a directory!
-    else
-        return false; // this is not a directory!
+    return fs::exists(dirName_in);
 }
 
 bool FileHelper::dirExists(const std::wstring& dirName_in)
 {
-    int ftyp = _access(ws2s(dirName_in).c_str(), 0);
-
-    if (0 == ftyp)
-        return true; // this is a directory!
-    else
-        return false; // this is not a directory!
+    return fs::exists(dirName_in);
 }
 
 } // namespace dxlib

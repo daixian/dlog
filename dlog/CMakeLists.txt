@@ -5,7 +5,7 @@ project(dlog
 		VERSION 2.1.2
 		LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 14)
+		set(CMAKE_CXX_STANDARD 14)
 
 # Dependencies
 # No dependencies for EventBus yay!
@@ -41,6 +41,8 @@ add_library(dlog
 	Common/FileHelper.h
 	Common/stack_allocator.hpp
 	Common/MemoryLog.h
+#	../concurrentqueue/concurrentqueue.h
+#	../concurrentqueue/blockingconcurrentqueue.h
 	dlog.h
 	Common/Debug.cpp
 	Common/Common.cpp

@@ -2,6 +2,8 @@
 #
 cmake_minimum_required (VERSION 3.0)
 
+set(CMAKE_CXX_STANDARD 14)
+
 option(ENABLE_TEST "Enable test" OFF)
 
 #这种写法在windows下貌似无效
@@ -24,8 +26,6 @@ endif()
 SET(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 SET(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 SET(RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
-set(CMAKE_CXX_STANDARD 14)
 
 set( Boost_USE_STATIC_LIBS ON )
 set( Boost_USE_MULTITHREADED ON )
