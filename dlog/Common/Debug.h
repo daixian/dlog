@@ -199,10 +199,17 @@ class Debug
         va_start(arg_ptr, strFormat);
 
         std::vector<char> buf(DEBUG_LOG_BUFF_SIZE);
+#if defined(_WIN32) || defined(_WIN64)
         int ret;
         while ((ret = vsnprintf_s(&buf[0], buf.size() - 1, _TRUNCATE, strFormat, arg_ptr)) == -1) {
             buf.resize(buf.size() * 2);
         }
+#else
+        int ret;
+        while ((ret = vsnprintf(&buf[0], buf.size() - 1, _TRUNCATE, strFormat, arg_ptr)) == -1) {
+            buf.resize(buf.size() * 2);
+        }
+#endif
         va_end(arg_ptr);
         buf[ret] = '\0';
 
@@ -235,10 +242,17 @@ class Debug
         }
 
         std::vector<char> buf(DEBUG_LOG_BUFF_SIZE);
+#if defined(_WIN32) || defined(_WIN64)
         int ret;
         while ((ret = vsnprintf_s(&buf[0], buf.size() - 1, _TRUNCATE, strFormat, arg_ptr)) == -1) {
             buf.resize(buf.size() * 2);
         }
+#else
+        int ret;
+        while ((ret = vsnprintf(&buf[0], buf.size() - 1, _TRUNCATE, strFormat, arg_ptr)) == -1) {
+            buf.resize(buf.size() * 2);
+        }
+#endif
         buf[ret] = '\0';
         if (logFileThr <= logThr) { //满足优先级才输出 - 文件
             filelogger->log(logThr, &buf[0]);

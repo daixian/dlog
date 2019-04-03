@@ -2,11 +2,22 @@
 #ifndef _DLOG_H_
 #define _DLOG_H_
 
+#if defined(_WIN32) || defined(_WIN64)
+
 #if defined DLOG_EXPORTS
 #define DLOG_EXPORT __declspec(dllexport)
 #else
 #pragma comment(lib, "dlog.lib")
 #define DLOG_EXPORT __declspec(dllimport)
+#endif
+
+#elif defined(__linux__)
+/* Linux. --------------------------------------------------- */
+#if __GNUC__ >= 4
+#define DLOG_EXPORT __attribute__((visibility("default")))
+//#define DLL_LOCAL __attribute__((visibility("hidden")))
+#else
+#endif
 #endif
 
 //给用户使用的LogSeverity定义,目前和spdlog里的定义一致,但是只使用debug,info,warn,err
