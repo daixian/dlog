@@ -48,4 +48,4 @@ set (BOOST_ALL_DYN_LINK OFF)
 set(Boost_DEBUG 0)
 
 add_subdirectory(dlog/)
-add_subdirectory(UTCpp/)
+add_subdirectory(UTLinux/)
