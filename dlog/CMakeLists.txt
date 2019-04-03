@@ -1,14 +1,20 @@
 cmake_minimum_required(VERSION 3.8 FATAL_ERROR)
 
 # BUILD_SHARED_LIBS can controll build type!
-project(dlog
-		VERSION 2.1.2
-		LANGUAGES CXX)
 
-		set(CMAKE_CXX_STANDARD 14)
+
+set(CMAKE_CXX_STANDARD 14)
+
+add_definitions(-D DLOG_EXPORTS)
+add_definitions(-D UNICODE)
+if(WIN32) 
+	add_definitions(-D _WINDOWS)
+	add_definitions(-D _USERDLL)
+endif()
 
 # Dependencies
-# No dependencies for EventBus yay!
+find_package(Boost 1.69.0 REQUIRED COMPONENTS filesystem)
+find_package(spdlog CONFIG REQUIRED)
 
 # Introduce variables:
 # * CMAKE_INSTALL_LIBDIR
@@ -21,16 +27,6 @@ project(dlog
 #   * <prefix>/include/
 set(config_install_dir "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")
 
-find_package(Boost 1.69.0 REQUIRED COMPONENTS filesystem)
-find_package(spdlog CONFIG REQUIRED)
-
-add_definitions(-D DLOG_EXPORTS)
-add_definitions(-D UNICODE)
-if(WIN32) 
-	add_definitions(-D _WINDOWS)
-	add_definitions(-D _USERDLL)
-endif()
-
 # Library definition
 add_library(dlog SHARED
 	resource.h
@@ -41,8 +37,6 @@ add_library(dlog SHARED
 	Common/FileHelper.h
 	Common/stack_allocator.hpp
 	Common/MemoryLog.h
-#	../concurrentqueue/concurrentqueue.h
-#	../concurrentqueue/blockingconcurrentqueue.h
 	dlog.h
 	Common/Debug.cpp
 	Common/Common.cpp
@@ -52,7 +46,6 @@ add_library(dlog SHARED
 	stdafx.cpp
 	dllmain.cpp
 	)
-#add_library(Dexode::EventBus ALIAS EventBus)
 
 target_compile_features(dlog PUBLIC cxx_std_14)
 

@@ -1,5 +1,4 @@
-﻿#pragma once
-#include "Debug.h"
+﻿#include "Debug.h"
 #include "FileHelper.h"
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string.hpp>

@@ -1,7 +1,7 @@
 {
     "cmake.configureSettings": {
-        "CMAKE_TOOLCHAIN_FILE": "~/vcpkg/scripts/buildsystems/vcpkg.cmake",
-        "VCPKG_TARGET_TRIPLET": "x64-linux"
+        //"CMAKE_TOOLCHAIN_FILE": "~/vcpkg/scripts/buildsystems/vcpkg.cmake",
+        //"VCPKG_TARGET_TRIPLET": "x64-linux"
     },
-    "cmake.configureOnOpen": true,
+    "cmake.configureOnOpen": false,
 }

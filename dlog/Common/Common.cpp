@@ -1,5 +1,4 @@
-﻿#pragma once
-#include <string>
+﻿#include <string>
 #include <locale.h>
 #include "Common.h"
 #include <boost/date_time/posix_time/posix_time.hpp>
