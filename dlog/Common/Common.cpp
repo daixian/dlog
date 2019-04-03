@@ -3,8 +3,7 @@
 #include <locale.h>
 #include "Common.h"
 #include <boost/date_time/posix_time/posix_time.hpp>
-
-using namespace std;
+#include <stdlib.h>
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
@@ -26,6 +25,8 @@ void setConsoleMode()
 /* Linux. --------------------------------------------------- */
 
 #endif
+
+using namespace std;
 
 string ws2s(const wstring& ws)
 {

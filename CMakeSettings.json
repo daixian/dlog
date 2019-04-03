@@ -22,6 +22,33 @@
           "value": "x64-windows-static-md"
         }
       ]
+    },
+    {
+      "name": "Linux-Debug",
+      "generator": "Unix Makefiles",
+      "remoteMachineName": "${defaultRemoteMachineName}",
+      "configurationType": "Debug",
+      "remoteCMakeListsRoot": "/var/tmp/src/${workspaceHash}/${name}",
+      "cmakeExecutable": "/usr/bin/cmake",
+      "buildRoot": "${env.LOCALAPPDATA}\\CMakeBuilds\\${workspaceHash}\\build\\${name}",
+      "remoteBuildRoot": "/var/tmp/build/${workspaceHash}/build/${name}",
+      "remoteCopySources": true,
+      "remoteCopySourcesOutputVerbosity": "Normal",
+      "remoteCopySourcesConcurrentCopies": "10",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "",
+      "ctestCommandArgs": "",
+      "inheritEnvironments": [ "linux-x64" ],
+      "variables": [
+        {
+          "name": "CMAKE_TOOLCHAIN_FILE",
+          "value": "~/vcpkg/scripts/buildsystems/vcpkg.cmake"
+        },
+        {
+          "name": "VCPKG_TARGET_TRIPLET",
+          "value": "x64-linux"
+        }
+      ]
     }
   ]
 }

@@ -9,10 +9,13 @@ option(ENABLE_TEST "Enable test" OFF)
 if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
   set(CMAKE_TOOLCHAIN_FILE "~/vcpkg/scripts/buildsystems/vcpkg.cmake"
       CACHE STRING "") 
+     
 endif()
- 
-if(WIN32 AND NOT DEFINED DVCPKG_TARGET_TRIPLET)
-  set(DVCPKG_TARGET_TRIPLET "x64-windows-static-md"
+
+message(STATUS "vcpkg.cmake = " ${CMAKE_TOOLCHAIN_FILE})
+
+if(NOT DEFINED DVCPKG_TARGET_TRIPLET)
+  set(DVCPKG_TARGET_TRIPLET "x64-linux"
       CACHE STRING "") 
 endif()
 
