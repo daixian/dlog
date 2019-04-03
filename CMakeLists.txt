@@ -7,7 +7,7 @@ option(ENABLE_TEST "Enable test" OFF)
 #这种写法在windows下貌似无效
  
 if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
-  set(CMAKE_TOOLCHAIN_FILE "D:/SDK/vcpkg/scripts/buildsystems/vcpkg.cmake"
+  set(CMAKE_TOOLCHAIN_FILE "~/vcpkg/scripts/buildsystems/vcpkg.cmake"
       CACHE STRING "") 
 endif()
  

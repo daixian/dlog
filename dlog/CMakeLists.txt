@@ -26,9 +26,12 @@ find_package(spdlog CONFIG REQUIRED)
 
 add_definitions(-D DLOG_EXPORTS)
 add_definitions(-D UNICODE)
+if(WIN32) 
+	add_definitions(-D _WINDOWS)
+	add_definitions(-D _USERDLL)
+endif()
 
 # Library definition
-if(WIN32) 
 add_library(dlog
 	resource.h
 	stdafx.h 
@@ -47,21 +50,6 @@ add_library(dlog
 	stdafx.cpp
 	dllmain.cpp
 	)
-else()
-add_library(dlog
-	Common/Common.h
-	Common/Debug.h	
-	Common/FileHelper.h
-	Common/MemoryLog.h
-	dlog.h
-	Common/stack_allocator.hpp
-	Common/Common.cpp
-	Common/Debug.cpp
-	Common/FileHelper.cpp
-	Common/MemoryLog.cpp
-	dlog.cpp
-	)
-endif()
 #add_library(Dexode::EventBus ALIAS EventBus)
 
 target_compile_features(dlog PUBLIC cxx_std_14)
