@@ -44,5 +44,3 @@ std::string byte2str(const void* data, int length);
 /// <returns> The time. </returns>
 ///-------------------------------------------------------------------------------------------------
 std::string secTimeStr();
-
-void setConsoleMode();

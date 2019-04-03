@@ -18,7 +18,7 @@ class FileHelper
     static std::string getAppDir();
 
     //如果文件夹不存在就直接创建文件夹（确保创建文件夹）
-    static void isExistsAndCreat(std::string sDir);
-    static void isExistsAndCreat(std::wstring dirPath);
+    static void isExistsAndCreat(const std::string& sDir);
+    static void isExistsAndCreat(const std::wstring& dirPath);
 };
 } // namespace dxlib

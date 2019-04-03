@@ -86,6 +86,8 @@ TEST(FileHelper, getAppDir)
 {
     string dir = FileHelper::getAppDir();
     EXPECT_TRUE(dir.size() > 0);
+    dir = FileHelper::getModuleDir();
+    EXPECT_TRUE(dir.size() > 0);
 }
 
 TEST(Debug, Flush)

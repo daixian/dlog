@@ -2,10 +2,30 @@
 #include <string>
 #include <locale.h>
 #include "Common.h"
-#include <windows.h>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 using namespace std;
+
+#if defined(_WIN32) || defined(_WIN64)
+#include <windows.h>
+
+//一个windows下的实验的函数,设置控制台彩色的
+void setConsoleMode()
+{
+    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    if (hOut != INVALID_HANDLE_VALUE) {
+        DWORD dwMode = 0;
+        GetConsoleMode(hOut, &dwMode);
+
+        dwMode |= 0x0004;
+        SetConsoleMode(hOut, dwMode);
+    }
+}
+
+#elif defined(__linux__)
+/* Linux. --------------------------------------------------- */
+
+#endif
 
 string ws2s(const wstring& ws)
 {
@@ -97,16 +117,4 @@ std::string secTimeStr()
     //strTime.replace(pos + 6, 0, std::string(":"));
 
     return strTime;
-}
-
-void setConsoleMode()
-{
-    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-    if (hOut != INVALID_HANDLE_VALUE) {
-        DWORD dwMode = 0;
-        GetConsoleMode(hOut, &dwMode);
-
-        dwMode |= 0x0004;
-        SetConsoleMode(hOut, dwMode);
-    }
 }

@@ -2,6 +2,8 @@
 #include "stdafx.h"
 #include "dlog.h"
 
+#if defined(_WIN32) || defined(_WIN64)
+
 BOOL APIENTRY DllMain(HMODULE hModule,
                       DWORD ul_reason_for_call,
                       LPVOID lpReserved)
@@ -11,9 +13,9 @@ BOOL APIENTRY DllMain(HMODULE hModule,
     case DLL_THREAD_ATTACH:
     case DLL_THREAD_DETACH:
 
-    case DLL_PROCESS_DETACH:
-        //卸载dll的时候自动释放
-        if (ul_reason_for_call == 0) { //目前发现貌似最后一次进入是0
+    case DLL_PROCESS_DETACH: //卸载dll的时候自动释放
+        //目前发现貌似最后一次进入是0
+        if (ul_reason_for_call == 0) {
             LogI("dll释放,日志关闭!");
 
             dlog_close();
@@ -22,3 +24,5 @@ BOOL APIENTRY DllMain(HMODULE hModule,
     }
     return TRUE;
 }
+
+#endif
