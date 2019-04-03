@@ -25,6 +25,8 @@ set(CMAKE_CXX_STANDARD 14)
 
 option(ENABLE_TEST "Enable test" OFF)
 
+enable_testing()
+
 #add_definitions(-DBOOST_ALL_NO_LIB)
 
 SET(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
@@ -46,3 +48,4 @@ set (BOOST_ALL_DYN_LINK OFF)
 set(Boost_DEBUG 0)
 
 add_subdirectory(dlog/)
+add_subdirectory(UTCpp/)
