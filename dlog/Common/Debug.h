@@ -195,7 +195,7 @@ class Debug
             return; //如果输入参数为空
         }
 
-        va_list arg_ptr = NULL;
+        va_list arg_ptr;
         va_start(arg_ptr, strFormat);
 
         std::vector<char> buf(DEBUG_LOG_BUFF_SIZE);
@@ -206,7 +206,7 @@ class Debug
         }
 #else
         int ret;
-        while ((ret = vsnprintf(&buf[0], buf.size() - 1, _TRUNCATE, strFormat, arg_ptr)) == -1) {
+        while ((ret = vsnprintf(&buf[0], buf.size() - 1, strFormat, arg_ptr)) == -1) {
             buf.resize(buf.size() * 2);
         }
 #endif
@@ -249,7 +249,7 @@ class Debug
         }
 #else
         int ret;
-        while ((ret = vsnprintf(&buf[0], buf.size() - 1, _TRUNCATE, strFormat, arg_ptr)) == -1) {
+        while ((ret = vsnprintf(&buf[0], buf.size() - 1, strFormat, arg_ptr)) == -1) {
             buf.resize(buf.size() * 2);
         }
 #endif
@@ -269,7 +269,7 @@ class Debug
 
     void LogD(const char* strFormat, ...)
     {
-        va_list arg_ptr = NULL;
+        va_list arg_ptr;
         va_start(arg_ptr, strFormat);
         Log_va(spdlog::level::level_enum::debug, strFormat, arg_ptr);
         va_end(arg_ptr);
@@ -279,7 +279,7 @@ class Debug
 
     void LogI(const char* strFormat, ...)
     {
-        va_list arg_ptr = NULL;
+        va_list arg_ptr;
         va_start(arg_ptr, strFormat);
         Log_va(spdlog::level::level_enum::info, strFormat, arg_ptr);
         va_end(arg_ptr);
@@ -287,7 +287,7 @@ class Debug
 
     void LogW(const char* strFormat, ...)
     {
-        va_list arg_ptr = NULL;
+        va_list arg_ptr;
         va_start(arg_ptr, strFormat);
         Log_va(spdlog::level::level_enum::warn, strFormat, arg_ptr);
         va_end(arg_ptr);
@@ -295,7 +295,7 @@ class Debug
 
     void LogE(const char* strFormat, ...)
     {
-        va_list arg_ptr = NULL;
+        va_list arg_ptr;
         va_start(arg_ptr, strFormat);
         Log_va(spdlog::level::level_enum::err, strFormat, arg_ptr);
         va_end(arg_ptr);
@@ -303,7 +303,7 @@ class Debug
 
     void LogC(const char* strFormat, ...)
     {
-        va_list arg_ptr = NULL;
+        va_list arg_ptr;
         va_start(arg_ptr, strFormat);
         Log_va(spdlog::level::level_enum::critical, strFormat, arg_ptr);
         va_end(arg_ptr);

@@ -32,7 +32,7 @@ if(WIN32)
 endif()
 
 # Library definition
-add_library(dlog
+add_library(dlog SHARED
 	resource.h
 	stdafx.h 
 	targetver.h

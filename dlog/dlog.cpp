@@ -220,7 +220,7 @@ extern "C" DLOG_EXPORT void __cdecl LogI(const char* strFormat, ...)
         dlog_init();
     }
 
-    va_list arg_ptr = NULL;
+    va_list arg_ptr;
     va_start(arg_ptr, strFormat);
     Debug::GetInst()->Log_va(spdlog::level::level_enum::info, strFormat, arg_ptr);
     va_end(arg_ptr);
@@ -243,7 +243,7 @@ extern "C" DLOG_EXPORT void __cdecl LogW(const char* strFormat, ...)
         dlog_init();
     }
 
-    va_list arg_ptr = NULL;
+    va_list arg_ptr;
     va_start(arg_ptr, strFormat);
     Debug::GetInst()->Log_va(spdlog::level::level_enum::warn, strFormat, arg_ptr);
     va_end(arg_ptr);
@@ -266,7 +266,7 @@ extern "C" DLOG_EXPORT void __cdecl LogE(const char* strFormat, ...)
         dlog_init();
     }
 
-    va_list arg_ptr = NULL;
+    va_list arg_ptr;
     va_start(arg_ptr, strFormat);
     Debug::GetInst()->Log_va(spdlog::level::level_enum::err, strFormat, arg_ptr);
     va_end(arg_ptr);
@@ -289,7 +289,7 @@ extern "C" DLOG_EXPORT void __cdecl LogD(const char* strFormat, ...)
         dlog_init();
     }
 
-    va_list arg_ptr = NULL;
+    va_list arg_ptr;
     va_start(arg_ptr, strFormat);
     Debug::GetInst()->Log_va(spdlog::level::level_enum::debug, strFormat, arg_ptr);
     va_end(arg_ptr);

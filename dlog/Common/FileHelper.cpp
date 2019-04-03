@@ -49,7 +49,21 @@ std::string FileHelper::getAppDir()
     }
     return std::string();
 }
+#elif defined(__linux__)
 
+std::string FileHelper::getModuleDir()
+{
+    char arg1[20];
+    char exepath[512 + 1] = {0};
+    sprintf(arg1, "/proc/%d/exe", getpid());
+    readlink(arg1, exepath, sizeof(exepath));
+    return std::string(exepath);
+}
+
+std::string FileHelper::getAppDir()
+{
+    return std::string("~");
+}
 #endif
 
 void FileHelper::isExistsAndCreat(const std::wstring& dirPath)
@@ -65,7 +79,7 @@ void FileHelper::isExistsAndCreat(const std::string& sDir)
         //有查资料windows的cmd不支持-p命令
         std::string cmd = std::string("mkdir \"") + sDir + std::string("\"");
 #elif defined(__linux__)
-        std::string cmd = std::string("mkdir  -p \"") + sDir + std::string("\"");
+        std::string cmd = std::string("mkdir -p \"") + sDir + std::string("\"");
 #endif
         system(cmd.c_str()); //创建文件夹
     }

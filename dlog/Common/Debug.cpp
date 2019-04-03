@@ -48,10 +48,7 @@ void Debug::init(const char* program, const char* logDir, INIT_RELATIVE rel)
                 this->logDirPath = (appDir / inputDir).string();
             }
         }
-        if (!FileHelper::dirExists(logDirPath)) { //如果文件夹路径不存在
-            string cmd = std::string("mkdir \"") + logDirPath + std::string("\"");
-            system(cmd.c_str()); //创建文件夹
-        }
+        FileHelper::isExistsAndCreat(logDirPath);//如果文件夹不存在就创建
 
         string logFileName = (boost::format("%s.%s.log") % program % secTimeStr()).str();
         logFilePath = (fs::path(logDirPath) / logFileName).string();
@@ -180,7 +177,11 @@ void Debug::setIsConsoleEnable(bool enable)
 
         auto console_sink = dynamic_cast<spdlog::sinks::stdout_color_sink_mt*>(consolelogger->sinks().back().get());
         //console_sink->set_color(spdlog::level::debug, console_sink->CYAN);
+#if defined(_WIN32) || defined(_WIN64)
         console_sink->set_color(spdlog::level::info, console_sink->WHITE);
+#else
+        console_sink->set_color(spdlog::level::info, console_sink->white);
+#endif
         //console_sink->set_color(spdlog::level::warn, console_sink->YELLOW);
         //console_sink->set_color(spdlog::level::err, console_sink->RED);
     }

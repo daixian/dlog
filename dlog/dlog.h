@@ -10,14 +10,18 @@
 #pragma comment(lib, "dlog.lib")
 #define DLOG_EXPORT __declspec(dllimport)
 #endif
+#define DLOG__LOCAL
 
 #elif defined(__linux__)
-/* Linux. --------------------------------------------------- */
+
+#define __stdcall
+#define __cdecl
 #if __GNUC__ >= 4
 #define DLOG_EXPORT __attribute__((visibility("default")))
-//#define DLL_LOCAL __attribute__((visibility("hidden")))
+#define DLOG__LOCAL __attribute__((visibility("hidden")))
 #else
 #endif
+
 #endif
 
 //给用户使用的LogSeverity定义,目前和spdlog里的定义一致,但是只使用debug,info,warn,err
