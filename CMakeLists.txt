@@ -2,11 +2,11 @@
 #
 cmake_minimum_required (VERSION 3.0)
 
-#这种写法在windows下貌似无效 
+#设置一个工具链,如果进入设置了那么通常是能够正确工作,如果有被其他设置所覆盖那么可能无法工作
 if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
-  set(CMAKE_TOOLCHAIN_FILE "/home/dx/vcpkg/scripts/buildsystems/vcpkg.cmake"
+  set(CMAKE_TOOLCHAIN_FILE "/home/dx/vcpkg/scripts/buildsystems/vcpkg.cmake" 
       CACHE STRING "") 
-      message(STATUS "not defined CMAKE_TOOLCHAIN_FILE!") 
+      message(STATUS "not defined CMAKE_TOOLCHAIN_FILE !") 
 endif()
 
 message(STATUS "vcpkg.cmake = " ${CMAKE_TOOLCHAIN_FILE})
@@ -18,8 +18,8 @@ endif()
 
 #在上面设置工具链之后下面要立马project命令
 project(dlog
-		VERSION 2.1.2
-    LANGUAGES CXX)
+        VERSION 2.1.2
+        LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 14)
 

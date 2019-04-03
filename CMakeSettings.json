@@ -38,17 +38,7 @@
       "cmakeCommandArgs": "",
       "buildCommandArgs": "",
       "ctestCommandArgs": "",
-      "inheritEnvironments": [ "linux-x64" ],
-      "variables": [
-        {
-          "name": "CMAKE_TOOLCHAIN_FILE",
-          "value": "~/vcpkg/scripts/buildsystems/vcpkg.cmake"
-        },
-        {
-          "name": "VCPKG_TARGET_TRIPLET",
-          "value": "x64-linux"
-        }
-      ]
+      "inheritEnvironments": [ "linux-x64" ]
     }
   ]
 }
