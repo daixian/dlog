@@ -75,13 +75,14 @@ void FileHelper::isExistsAndCreat(const std::wstring& dirPath)
 void FileHelper::isExistsAndCreat(const std::string& sDir)
 {
     if (!dirExists(sDir)) { //如果文件夹路径不存在
-#if defined(_WIN32) || defined(_WIN64)
-        //有查资料windows的cmd不支持-p命令
-        std::string cmd = std::string("mkdir \"") + sDir + std::string("\"");
-#elif defined(__linux__)
-        std::string cmd = std::string("mkdir -p \"") + sDir + std::string("\"");
-#endif
-        system(cmd.c_str()); //创建文件夹
+        fs::create_directories(sDir);
+        //#if defined(_WIN32) || defined(_WIN64)
+        //        //有查资料windows的cmd不支持-p命令
+        //        std::string cmd = std::string("mkdir \"") + sDir + std::string("\"");
+        //#elif defined(__linux__)
+        //        std::string cmd = std::string("mkdir -p \"") + sDir + std::string("\"");
+        //#endif
+        //        system(cmd.c_str()); //创建文件夹
     }
 }
 

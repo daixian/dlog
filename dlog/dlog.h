@@ -6,11 +6,11 @@
 
 #if defined DLOG_EXPORTS
 #define DLOG_EXPORT __declspec(dllexport)
+#define DLOG__LOCAL
 #else
 #pragma comment(lib, "dlog.lib")
 #define DLOG_EXPORT __declspec(dllimport)
 #endif
-#define DLOG__LOCAL
 
 #elif defined(__linux__)
 
@@ -55,9 +55,10 @@ enum class dlog_init_relative
 /// </summary>
 ///
 /// <remarks>
-/// DLOG_INIT_RELATIVE_APPDATA: 相对于AppData文件夹.
-/// DLOG_INIT_RELATIVE_MODULE: 相对于dll文件自身文件夹.
-/// Dx, 2018/4/22.
+/// - DLOG_INIT_RELATIVE_APPDATA: 相对于AppData文件夹.
+/// - DLOG_INIT_RELATIVE_MODULE: 相对于dll文件自身文件夹.
+/// - 如果是在同一秒重复创建关闭日志文件,那么由于文件名一样,会被写入同一个日志文件.
+///     Dx, 2018/4/22.
 /// </remarks>
 ///
 /// <param name="logDir">      [in]日志文件夹路径名（相对模块目录）. </param>

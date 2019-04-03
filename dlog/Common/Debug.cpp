@@ -48,7 +48,7 @@ void Debug::init(const char* program, const char* logDir, INIT_RELATIVE rel)
                 this->logDirPath = (appDir / inputDir).string();
             }
         }
-        FileHelper::isExistsAndCreat(logDirPath);//如果文件夹不存在就创建
+        FileHelper::isExistsAndCreat(logDirPath); //如果文件夹不存在就创建
 
         string logFileName = (boost::format("%s.%s.log") % program % secTimeStr()).str();
         logFilePath = (fs::path(logDirPath) / logFileName).string();
@@ -148,7 +148,7 @@ void Debug::removeOldFile(long sec)
         vector<long> vFileSubTimeSort = vFileSubTime;
         std::sort(vFileSubTimeSort.begin(), vFileSubTimeSort.end());
         if (vFileSubTimeSort.size() < 50) {
-            LogI("\"%s\" 当前有%d个日志文件", programName.c_str(), vFileSubTimeSort.size());
+            LogI("dlog启动,\"%s\" 当前有%d个日志文件", programName.c_str(), vFileSubTimeSort.size());
         }
         else {
             int thr = vFileSubTimeSort[49]; //删除的时间门限

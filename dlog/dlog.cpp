@@ -32,9 +32,10 @@ extern "C" DLOG_EXPORT void* __stdcall dlog_global_ptr()
 /// </summary>
 ///
 /// <remarks>
-/// DLOG_INIT_RELATIVE_APPDATA: 相对于AppData文件夹.
-/// DLOG_INIT_RELATIVE_MODULE: 相对于dll文件自身文件夹.
-/// Dx, 2018/4/22.
+/// - DLOG_INIT_RELATIVE_APPDATA: 相对于AppData文件夹.
+/// - DLOG_INIT_RELATIVE_MODULE: 相对于dll文件自身文件夹.
+/// - 如果是在同一秒重复创建关闭日志文件,那么由于文件名一样,会被写入同一个日志文件.
+///     Dx, 2018/4/22.
 /// </remarks>
 ///
 /// <param name="logDir">      [in]日志文件夹路径名（相对模块目录）. </param>
@@ -77,6 +78,8 @@ extern "C" DLOG_EXPORT int __stdcall dlog_init(const char* logDir, const char* p
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT int __stdcall dlog_close()
 {
+    if (Debug::GetInst()->isInit)
+        Debug::GetInst()->LogI("dlog关闭!");
     Debug::GetInst()->clear();
     return 0;
 }
