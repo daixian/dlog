@@ -43,11 +43,18 @@ void Debug::init(const char* program, const char* logDir, INIT_RELATIVE rel)
                 this->logDirPath = (mdDir / inputDir).string();
             }
             else {
-                fs::path appDir = FileHelper::getAppDir(); //模块目录
+                fs::path appDir = FileHelper::getAppDir(); //app目录
                 this->logDirPath = (appDir / inputDir).string();
             }
         }
-        FileHelper::isExistsAndCreat(logDirPath); //如果文件夹不存在就创建
+        if (!FileHelper::dirExists(this->logDirPath)) //如果文件夹不存在
+        {
+            if (fs::is_regular_file(this->logDirPath)) {
+                //如果它又已经被一个文件占用了文件名,那就在这个文件夹下使用log文件夹
+                this->logDirPath = (fs::path(this->logDirPath).parent_path() / "log").string();
+            }
+            FileHelper::isExistsAndCreat(this->logDirPath); //如果文件夹不存在就创建
+        }
 
         string logFileName = (boost::format("%s.%s.log") % program % secTimeStr()).str();
         logFilePath = (fs::path(logDirPath) / logFileName).string();

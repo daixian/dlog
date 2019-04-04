@@ -1,7 +1,7 @@
 ﻿#include "FileHelper.h"
 
 #include <stdlib.h>
-
+#include "iostream"
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
 #include <ShlObj.h> //SHGetSpecialFolderPath
@@ -57,7 +57,10 @@ std::string FileHelper::getModuleDir()
     char exepath[512 + 1] = {0};
     sprintf(arg1, "/proc/%d/exe", getpid());
     readlink(arg1, exepath, sizeof(exepath));
-    return std::string(exepath);
+    std::string exeStr = std::string(exepath);
+    size_t pos = exeStr.find_last_of('/', exeStr.length());
+    moduleDir = exeStr.substr(0, pos); // Return the directory without the file name
+    return moduleDir;
 }
 
 std::string FileHelper::getAppDir()
@@ -74,8 +77,25 @@ void FileHelper::isExistsAndCreat(const std::wstring& dirPath)
 
 void FileHelper::isExistsAndCreat(const std::string& sDir)
 {
+    // #if defined(_WIN32) || defined(_WIN64)
+
+    // #elif defined(__linux__)
+    //     if (sDir.back() != '/') {
+    //         sDir.append('/');
+    //     }
+    // #endif
     if (!dirExists(sDir)) { //如果文件夹路径不存在
-        fs::create_directories(sDir);
+        try {
+            //fs::create_directories(sDir);
+              fs::create_directory(sDir);
+            // std::cerr << "is_directory: " << fs::is_directory(argv[1]) << '\n';
+            // std::cerr << "create_directory: " << fs::create_directory(argv[1]) << '\n';
+            // std::cerr << "create_directories: " << fs::create_directories(argv[1]) << '\n';
+        }
+        catch (const std::exception& ex) {
+            std::cerr << "FileHelper.isExistsAndCreat():"<< ex.what() << '\n';
+        }
+
         //#if defined(_WIN32) || defined(_WIN64)
         //        //有查资料windows的cmd不支持-p命令
         //        std::string cmd = std::string("mkdir \"") + sDir + std::string("\"");
@@ -88,12 +108,26 @@ void FileHelper::isExistsAndCreat(const std::string& sDir)
 
 bool FileHelper::dirExists(const std::string& dirName_in)
 {
-    return fs::exists(dirName_in);
+    //如果存在
+    if (fs::exists(dirName_in)) {
+        if (fs::is_directory(dirName_in)) {
+            return true;
+        }
+        //它还是存在一种是一个文件的可能
+    }
+    return false;
 }
 
 bool FileHelper::dirExists(const std::wstring& dirName_in)
 {
-    return fs::exists(dirName_in);
+    //如果存在
+    if (fs::exists(dirName_in)) {
+        if (fs::is_directory(dirName_in)) {
+            return true;
+        }
+        //它还是存在一种是一个文件的可能
+    }
+    return false;
 }
 
 } // namespace dxlib

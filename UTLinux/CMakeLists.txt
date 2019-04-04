@@ -4,14 +4,12 @@ cmake_minimum_required(VERSION 3.8 FATAL_ERROR)
 
 set(CMAKE_CXX_STANDARD 14)
 
-
 # Dependencies
 find_package(GTest MODULE REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS})
 
- 
-add_executable(utlinux main.cpp)
-target_link_libraries(utlinux dlog)
-#target_link_libraries(utcpp PRIVATE GTest::GTest GTest::Main)
+add_executable(utlinux.out main.cpp)
+target_link_libraries(utlinux.out dlog)
+# target_link_libraries(utcpp PRIVATE GTest::GTest GTest::Main)
 
-#add_test(AllTestsInUtcpp utcpp)
+# add_test(AllTestsInUtcpp utcpp

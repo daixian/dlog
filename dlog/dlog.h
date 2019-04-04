@@ -13,12 +13,16 @@
 #endif
 
 #elif defined(__linux__)
-
-#define __stdcall
-#define __cdecl
 #if __GNUC__ >= 4
+#if defined DLOG_EXPORTS
 #define DLOG_EXPORT __attribute__((visibility("default")))
 #define DLOG__LOCAL __attribute__((visibility("hidden")))
+#else
+#define DLOG_EXPORT
+#define DLOG__LOCAL
+#endif
+#define __stdcall
+#define __cdecl
 #else
 #endif
 

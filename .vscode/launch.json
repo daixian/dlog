@@ -8,10 +8,10 @@
             "name": "g++-7 build and debug active file",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${fileDirname}/${fileBasenameNoExtension}",
+            "program": "${workspaceFolder}/build/bin/utlinux.out",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
+            "cwd": "${workspaceFolder}/build/bin/",
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
@@ -22,7 +22,7 @@
                     "ignoreFailures": true
                 }
             ],
-            "preLaunchTask": "g++-7 build active file",
+            //"preLaunchTask": "g++-7 build active file", //之前的构建
             "miDebuggerPath": "/usr/bin/gdb"
         }
     ]
