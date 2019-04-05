@@ -2,9 +2,12 @@
 #include "../dlog/Common/MemoryLog.h"
 #include "../dlog/Common/Debug.h"
 #include "../dlog/dlog.h"
-#include  "../dlog/Common/FileHelper.h"
+#include "../dlog/Common/FileHelper.h"
 
+#if defined(_WIN32) || defined(_WIN64)
 #pragma comment(lib, "dlog.lib")
+#elif defined(__linux__)
+#endif
 
 using namespace dxlib;
 using namespace std;
@@ -12,17 +15,18 @@ using namespace std;
 //测试MemoryLog类
 TEST(MemoryLog, ManyTest)
 {
+    dlog_close();
     for (size_t i = 0; i < 1024; i++) {
         MemoryLog::GetInst()->addLog(std::to_string(i));
     }
-    EXPECT_TRUE(MemoryLog::GetInst()->count() == 1024);
+    ASSERT_TRUE(MemoryLog::GetInst()->count() == 1024);
 
     //检查clear()函数
     MemoryLog::GetInst()->clear();
-    EXPECT_TRUE(MemoryLog::GetInst()->count() == 0);
+    ASSERT_TRUE(MemoryLog::GetInst()->count() == 0);
 
     //执行1024*10次
-    for (size_t runCount = 0; runCount < 1024 * 10; runCount++) {
+    for (size_t runCount = 0; runCount < 100; runCount++) {
         //向日志里写1024条
         for (size_t i = 0; i < 1024; i++) {
             MemoryLog::GetInst()->addLog(std::to_string(i));
@@ -32,9 +36,11 @@ TEST(MemoryLog, ManyTest)
         string log;
         for (size_t i = 0; i < 1024; i++) {
             bool res = MemoryLog::GetInst()->getLog(log);
-            EXPECT_TRUE(res);//1024条日志应该都成功
-            EXPECT_TRUE(log == std::to_string(i));
+            ASSERT_TRUE(res); //1024条日志应该都成功
+            ASSERT_TRUE(log == std::to_string(i));
         }
-        EXPECT_TRUE(MemoryLog::GetInst()->count() == 0);
+        ASSERT_TRUE(MemoryLog::GetInst()->count() == 0);
     }
+
+    MemoryLog::GetInst()->clear();
 }

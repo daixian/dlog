@@ -4,7 +4,11 @@
 #include "../dlog/dlog.h"
 #include  "../dlog/Common/FileHelper.h"
 
+#if defined(_WIN32) || defined(_WIN64)
 #pragma comment(lib, "dlog.lib")
+#elif defined(__linux__)
+#endif
+
 
 using namespace dxlib;
 using namespace std;

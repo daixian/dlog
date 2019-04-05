@@ -2,13 +2,15 @@
 #include "../dlog/Common/MemoryLog.h"
 #include "../dlog/Common/Debug.h"
 #include "../dlog/dlog.h"
-#include  "../dlog/Common/FileHelper.h"
+#include "../dlog/Common/FileHelper.h"
 
+#if defined(_WIN32) || defined(_WIN64)
 #pragma comment(lib, "dlog.lib")
+#elif defined(__linux__)
+#endif
 
 using namespace dxlib;
 using namespace std;
-
 
 TEST(dlog, memorylog)
 {
@@ -19,27 +21,35 @@ TEST(dlog, memorylog)
     dlog_set_console_thr(dlog_level::err);
     //LogI打印10W条，异步的，只要942毫秒
     //LogW打印10W条，也只要1秒的样子
-    for (size_t i = 0; i < 4096; i++) {
+    for (size_t i = 0; i < 4096; i++)
+    {
         LogW("测试日志%d !", i);
     }
 
     char msg[512];
     char msgCorr[512];
-    for (int i = 0; i < 4096; i++) {
-        if (dlog_get_memlog(msg, 0, 512) > 0) {
-            sprintf_s(msgCorr, 512, "测试日志%d !", i);//正确的消息应该是
-            EXPECT_TRUE(strcmp(msg, msgCorr) == 0) << "msg=" << msg;//比对提取的消息是否正确
+    for (int i = 0; i < 4096; i++)
+    {
+        if (dlog_get_memlog(msg, 0, 512) > 0)
+        {
+#if defined(_WIN32) || defined(_WIN64)
+            sprintf_s(msgCorr, 512, "测试日志%d !", i); //正确的消息应该是
+#elif defined(__linux__)
+            snprintf(msgCorr, 512, "测试日志%d !", i); //正确的消息应该是
+#endif
+            EXPECT_TRUE(strcmp(msg, msgCorr) == 0) << "msg=" << msg; //比对提取的消息是否正确
         }
-        else {
+        else
+        {
             FAIL();
         }
-
     }
 }
 
 TEST(dlog, init_close)
 {
-    for (size_t i = 0; i < 10; i++) {
+    for (size_t i = 0; i < 10; i++)
+    {
         dlog_close();
 
         //第一次创建
@@ -61,6 +71,5 @@ TEST(dlog, init_close)
         res = dlog_init("\\临时测试\\log", "创建测试2", dlog_init_relative::MODULE, true);
         EXPECT_TRUE(res == 2);
         LogI("132");
-
     }
 }

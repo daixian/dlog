@@ -5,6 +5,10 @@
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
 #include <ShlObj.h> //SHGetSpecialFolderPath
+#elif defined(__linux__)
+#include <unistd.h>
+#include <sys/types.h>
+#include <pwd.h>
 #endif
 
 #include <boost/filesystem.hpp>
@@ -65,7 +69,9 @@ std::string FileHelper::getModuleDir()
 
 std::string FileHelper::getAppDir()
 {
-    return std::string("~");
+    struct passwd* pw = getpwuid(getuid());
+    const char* homedir = pw->pw_dir;
+    return std::string(homedir);
 }
 #endif
 
@@ -86,14 +92,10 @@ void FileHelper::isExistsAndCreat(const std::string& sDir)
     // #endif
     if (!dirExists(sDir)) { //如果文件夹路径不存在
         try {
-            //fs::create_directories(sDir);
-              fs::create_directory(sDir);
-            // std::cerr << "is_directory: " << fs::is_directory(argv[1]) << '\n';
-            // std::cerr << "create_directory: " << fs::create_directory(argv[1]) << '\n';
-            // std::cerr << "create_directories: " << fs::create_directories(argv[1]) << '\n';
+            fs::create_directories(sDir);
         }
         catch (const std::exception& ex) {
-            std::cerr << "FileHelper.isExistsAndCreat():"<< ex.what() << '\n';
+            std::cerr << "FileHelper.isExistsAndCreat():" << ex.what() << '\n';
         }
 
         //#if defined(_WIN32) || defined(_WIN64)

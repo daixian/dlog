@@ -47,7 +47,7 @@ void Debug::init(const char* program, const char* logDir, INIT_RELATIVE rel)
                 this->logDirPath = (appDir / inputDir).string();
             }
         }
-        if (!FileHelper::dirExists(this->logDirPath)) //如果文件夹不存在
+         if (!FileHelper::dirExists(this->logDirPath)) //如果文件夹不存在
         {
             if (fs::is_regular_file(this->logDirPath)) {
                 //如果它又已经被一个文件占用了文件名,那就在这个文件夹下使用log文件夹
