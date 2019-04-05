@@ -4,6 +4,10 @@ cmake_minimum_required(VERSION 3.8 FATAL_ERROR)
 
 set(CMAKE_CXX_STANDARD 14)
 
+# 隐藏导出函数这个确实是有效的，但是目前看来隐藏它并没有什么意义，会导致测试工程找不到函数还
+# set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+# set(CMAKE_C_VISIBILITY_PRESET hidden)
+
 add_definitions(-D DLOG_EXPORTS)
 add_definitions(-D UNICODE)
 if(WIN32)
