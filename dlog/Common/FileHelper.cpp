@@ -96,6 +96,7 @@ void FileHelper::isExistsAndCreat(const std::string& sDir)
         }
         catch (const std::exception& ex) {
             std::cerr << "FileHelper.isExistsAndCreat():" << ex.what() << '\n';
+            throw ex;
         }
 
         //#if defined(_WIN32) || defined(_WIN64)

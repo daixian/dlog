@@ -4,6 +4,7 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/format.hpp>
 #include "Common.h"
+#include <iostream>
 
 namespace fs = boost::filesystem;
 using namespace std;
@@ -47,7 +48,7 @@ void Debug::init(const char* program, const char* logDir, INIT_RELATIVE rel)
                 this->logDirPath = (appDir / inputDir).string();
             }
         }
-         if (!FileHelper::dirExists(this->logDirPath)) //如果文件夹不存在
+        if (!FileHelper::dirExists(this->logDirPath)) //如果文件夹不存在
         {
             if (fs::is_regular_file(this->logDirPath)) {
                 //如果它又已经被一个文件占用了文件名,那就在这个文件夹下使用log文件夹
@@ -66,7 +67,7 @@ void Debug::init(const char* program, const char* logDir, INIT_RELATIVE rel)
         mt.unlock();
     }
     catch (const std::exception& e) {
-
+        std::cerr << "Debug.init():初始化失败!" << e.what() << '\n';
         isInitFail = true; //标记初始化失败过了
         mt.unlock();
         throw e;
@@ -74,9 +75,10 @@ void Debug::init(const char* program, const char* logDir, INIT_RELATIVE rel)
 
     //检查看看日志文件是否存在了
     if (filelogger == nullptr || !fs::is_regular_file(logFilePath)) {
-        string msg = "dlog creat log file fail! :" + logFilePath; //底下马上要clear(),所以这里先写了
+        string msg = "Debug.init():无法创建日志文件! -> " + logFilePath; //底下马上要clear(),所以这里先写了
         clear();
         isInitFail = true; //标记初始化失败过了
+        std::cerr << msg << '\n';
         throw std::invalid_argument(msg);
     }
     else {
