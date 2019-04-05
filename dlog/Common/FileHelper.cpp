@@ -57,9 +57,9 @@ std::string FileHelper::getAppDir()
 
 std::string FileHelper::getModuleDir()
 {
-    char arg1[20];
+    char arg1[32];
     char exepath[512 + 1] = {0};
-    sprintf(arg1, "/proc/%d/exe", getpid());
+    snprintf(arg1, sizeof(arg1), "/proc/%d/exe", getpid());
     readlink(arg1, exepath, sizeof(exepath));
     std::string exeStr = std::string(exepath);
     size_t pos = exeStr.find_last_of('/', exeStr.length());
