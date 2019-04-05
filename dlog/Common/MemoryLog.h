@@ -76,7 +76,8 @@ class MemoryLog
     void clear()
     {
         std::string first;
-        while (_memLogQueue.try_dequeue(first)) {
+        while (_memLogQueue.size_approx() != 0) {
+            _memLogQueue.try_dequeue(first);
         }
     }
 

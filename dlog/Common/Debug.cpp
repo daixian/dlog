@@ -83,6 +83,9 @@ void Debug::init(const char* program, const char* logDir, INIT_RELATIVE rel)
         //清空老文件
         removeOldFile();
     }
+
+    //成功初始化完毕之后清空一次内存日志(删除日志文件的多余日志)
+    MemoryLog::GetInst()->clear();
 }
 
 void Debug::clear()
