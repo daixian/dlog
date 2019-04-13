@@ -366,3 +366,7 @@ UnitTest1/Debug/
 /dlog/Debug
 /dlog/Release
 /build/
+/spdlog/
+/gtest/
+/googletest-release-1.8.1/
+/*.tar.gz
