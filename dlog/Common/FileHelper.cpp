@@ -60,11 +60,15 @@ std::string FileHelper::getModuleDir()
     char arg1[32];
     char exepath[512 + 1] = {0};
     snprintf(arg1, sizeof(arg1), "/proc/%d/exe", getpid());
-    readlink(arg1, exepath, sizeof(exepath));
-    std::string exeStr = std::string(exepath);
-    size_t pos = exeStr.find_last_of('/', exeStr.length());
-    moduleDir = exeStr.substr(0, pos); // Return the directory without the file name
-    return moduleDir;
+    ssize_t len = readlink(arg1, exepath, sizeof(exepath));
+    if (len > 0) {
+        std::string exeStr = std::string(exepath);
+        size_t pos = exeStr.find_last_of('/', exeStr.length());
+        moduleDir = exeStr.substr(0, pos); // Return the directory without the file name
+        return moduleDir;
+    }
+    //如果len=-1那么就是出错了
+    return "";
 }
 
 std::string FileHelper::getAppDir()
@@ -83,13 +87,6 @@ void FileHelper::isExistsAndCreat(const std::wstring& dirPath)
 
 void FileHelper::isExistsAndCreat(const std::string& sDir)
 {
-    // #if defined(_WIN32) || defined(_WIN64)
-
-    // #elif defined(__linux__)
-    //     if (sDir.back() != '/') {
-    //         sDir.append('/');
-    //     }
-    // #endif
     if (!dirExists(sDir)) { //如果文件夹路径不存在
         try {
             fs::create_directories(sDir);
@@ -98,14 +95,6 @@ void FileHelper::isExistsAndCreat(const std::string& sDir)
             std::cerr << "FileHelper.isExistsAndCreat():" << ex.what() << '\n';
             throw ex;
         }
-
-        //#if defined(_WIN32) || defined(_WIN64)
-        //        //有查资料windows的cmd不支持-p命令
-        //        std::string cmd = std::string("mkdir \"") + sDir + std::string("\"");
-        //#elif defined(__linux__)
-        //        std::string cmd = std::string("mkdir -p \"") + sDir + std::string("\"");
-        //#endif
-        //        system(cmd.c_str()); //创建文件夹
     }
 }
 

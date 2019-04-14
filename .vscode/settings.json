@@ -4,6 +4,6 @@
         //"VCPKG_TARGET_TRIPLET": "x64-linux"
     },
     "cmake.configureOnOpen": false,
-    "catch2TestExplorer.executables":["build/bin/utcpp.out"],
+    "catch2TestExplorer.executables":["build/bin/test.out"],
     "catch2TestExplorer.defaultCwd": "build/bin/",
 }

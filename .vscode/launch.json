@@ -8,7 +8,7 @@
             "name": "g++-7 build and debug active file",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/bin/utcpp.out",
+            "program": "${workspaceFolder}/build/bin/test.out",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/build/bin/",
