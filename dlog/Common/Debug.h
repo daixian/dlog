@@ -259,10 +259,10 @@ class Debug
     ///-------------------------------------------------------------------------------------------------
     void LogMsg(spdlog::level::level_enum logThr, const char* msg)
     {
-        if (logFileThr <= logThr) { //满足优先级才输出 - 文件
+        if (logFileThr <= logThr && filelogger != nullptr) { //满足优先级才输出 - 文件
             filelogger->log(logThr, msg);
         }
-        if (isConsoleEnable && logConsoleThr <= logThr) { //满足优先级才输出 - 控制台
+        if (isConsoleEnable && logConsoleThr <= logThr && consolelogger != nullptr) { //满足优先级才输出 - 控制台
             consolelogger->log(logThr, msg);
         }
         if (isMemLogEnable && logMemoryThr <= logThr) { //满足优先级才输出 - 内存队列
