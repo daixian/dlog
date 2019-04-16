@@ -21,7 +21,7 @@
 #define DLOG_EXPORT
 #define DLOG__LOCAL
 #endif
-#define __stdcall
+#define __cdecl
 #define __cdecl
 #else
 #endif
@@ -75,7 +75,7 @@ enum class dlog_init_relative
 /// 如果强制重设但是失败还是复用了那么返回3.
 /// </returns>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT int __stdcall dlog_init(const char* logDir = "log",
+extern "C" DLOG_EXPORT int __cdecl dlog_init(const char* logDir = "log",
                                                const char* program = "dlog",
                                                dlog_init_relative dir_relatvie = dlog_init_relative::APPDATA,
                                                bool isForceInit = false);
@@ -87,7 +87,7 @@ extern "C" DLOG_EXPORT int __stdcall dlog_init(const char* logDir = "log",
 ///
 /// <returns> An int. </returns>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT int __stdcall dlog_close();
+extern "C" DLOG_EXPORT int __cdecl dlog_close();
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary> 设置整个log使能. </summary>
@@ -96,7 +96,7 @@ extern "C" DLOG_EXPORT int __stdcall dlog_close();
 ///
 /// <param name="enable"> 设置为false之后Log函数会直接返回不作任何操作. </param>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void __stdcall dlog_enable(bool enable);
+extern "C" DLOG_EXPORT void __cdecl dlog_enable(bool enable);
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary> 设置控制台log是否使能. </summary>
@@ -105,7 +105,7 @@ extern "C" DLOG_EXPORT void __stdcall dlog_enable(bool enable);
 ///
 /// <param name="enable"> 设置为false之后Log函数会直接返回不作任何操作. </param>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void __stdcall dlog_console_log_enable(bool enable);
+extern "C" DLOG_EXPORT void __cdecl dlog_console_log_enable(bool enable);
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary> 设置Dlog的常规日志（非内存日志）门限,大于等于该优先级的日志都会写入. </summary>
@@ -114,7 +114,7 @@ extern "C" DLOG_EXPORT void __stdcall dlog_console_log_enable(bool enable);
 ///
 /// <param name="fileThr"> The usual thr. </param>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void __stdcall dlog_set_file_thr(dlog_level fileThr);
+extern "C" DLOG_EXPORT void __cdecl dlog_set_file_thr(dlog_level fileThr);
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary>
@@ -125,7 +125,7 @@ extern "C" DLOG_EXPORT void __stdcall dlog_set_file_thr(dlog_level fileThr);
 ///
 /// <returns> An int. </returns>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT int __stdcall dlog_get_file_thr();
+extern "C" DLOG_EXPORT int __cdecl dlog_get_file_thr();
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary> 设置Dlog的内存日志门限,大于等于该优先级的日志都会写入. </summary>
@@ -134,7 +134,7 @@ extern "C" DLOG_EXPORT int __stdcall dlog_get_file_thr();
 ///
 /// <param name="usualThr"> The usual thr. </param>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void __stdcall dlog_set_memory_thr(dlog_level memoryThr);
+extern "C" DLOG_EXPORT void __cdecl dlog_set_memory_thr(dlog_level memoryThr);
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary> 得到Dlog的内存日志门限,大于等于该优先级的日志都会写入. </summary>
@@ -143,7 +143,7 @@ extern "C" DLOG_EXPORT void __stdcall dlog_set_memory_thr(dlog_level memoryThr);
 ///
 /// <param name="usualThr"> The usual thr. </param>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT int __stdcall dlog_get_memory_thr();
+extern "C" DLOG_EXPORT int __cdecl dlog_get_memory_thr();
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary>
@@ -154,7 +154,7 @@ extern "C" DLOG_EXPORT int __stdcall dlog_get_memory_thr();
 ///
 /// <param name="LogSeverity"> 大于等于这一级的日志都会输出到控制台. </param>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void __stdcall dlog_set_console_thr(dlog_level LogSeverity);
+extern "C" DLOG_EXPORT void __cdecl dlog_set_console_thr(dlog_level LogSeverity);
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary> 得到Dlog的控制台日志门限,大于等于该优先级的日志都会写入. </summary>
@@ -163,7 +163,7 @@ extern "C" DLOG_EXPORT void __stdcall dlog_set_console_thr(dlog_level LogSeverit
 ///
 /// <param name="usualThr"> The usual thr. </param>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT int __stdcall dlog_get_console_thr();
+extern "C" DLOG_EXPORT int __cdecl dlog_get_console_thr();
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary> 设置立即刷新的flush on. </summary>
@@ -174,14 +174,14 @@ extern "C" DLOG_EXPORT int __stdcall dlog_get_console_thr();
 ///
 /// <returns> An int. </returns>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void __stdcall dlog_set_flush_on(dlog_level LogSeverity);
+extern "C" DLOG_EXPORT void __cdecl dlog_set_flush_on(dlog_level LogSeverity);
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary> 立即flush. </summary>
 ///
 /// <remarks> Dx, 2019/3/25. </remarks>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void __stdcall dlog_flush();
+extern "C" DLOG_EXPORT void __cdecl dlog_flush();
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary> Logs an info. </summary>
@@ -244,7 +244,7 @@ extern "C" DLOG_EXPORT void __cdecl LogD(const char* strFormat, ...);
 ///
 /// <param name="enable"> 设置为false之后Log函数会直接返回不作任何操作. </param>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void __stdcall dlog_memory_log_enable(bool enable);
+extern "C" DLOG_EXPORT void __cdecl dlog_memory_log_enable(bool enable);
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary> 提取一条内存日志. </summary>
@@ -257,7 +257,7 @@ extern "C" DLOG_EXPORT void __stdcall dlog_memory_log_enable(bool enable);
 ///
 /// <returns> 提取出的日志长度，如果为0表示没有提出日志来. </returns>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT int __stdcall dlog_get_memlog(char* buff, int offset, int count);
+extern "C" DLOG_EXPORT int __cdecl dlog_get_memlog(char* buff, int offset, int count);
 
 #pragma endregion
 
@@ -271,7 +271,7 @@ extern "C" DLOG_EXPORT int __stdcall dlog_get_memlog(char* buff, int offset, int
 ///
 /// <returns> 实际的字符串长度. </returns>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT int __stdcall dlog_get_appdata_dir(char* buff, int size);
+extern "C" DLOG_EXPORT int __cdecl dlog_get_appdata_dir(char* buff, int size);
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary> 得到模块的路径,目录末尾不带斜杠. </summary>
@@ -283,7 +283,7 @@ extern "C" DLOG_EXPORT int __stdcall dlog_get_appdata_dir(char* buff, int size);
 ///
 /// <returns> 实际的字符串长度. </returns>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT int __stdcall dlog_get_module_dir(char* buff, int size);
+extern "C" DLOG_EXPORT int __cdecl dlog_get_module_dir(char* buff, int size);
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary> 得到日志文件夹的路径. </summary>
@@ -295,7 +295,7 @@ extern "C" DLOG_EXPORT int __stdcall dlog_get_module_dir(char* buff, int size);
 ///
 /// <returns> 实际的字符串长度. </returns>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT int __stdcall dlog_get_log_dir(char* buff, int size);
+extern "C" DLOG_EXPORT int __cdecl dlog_get_log_dir(char* buff, int size);
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary> 得到日志文件的路径. </summary>
@@ -307,6 +307,6 @@ extern "C" DLOG_EXPORT int __stdcall dlog_get_log_dir(char* buff, int size);
 ///
 /// <returns> 实际的字符串长度. </returns>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT int __stdcall dlog_get_log_file_path(char* buff, int size);
+extern "C" DLOG_EXPORT int __cdecl dlog_get_log_file_path(char* buff, int size);
 
 #endif // !_DLOG_H_

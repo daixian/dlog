@@ -183,7 +183,13 @@ void Debug::setIsConsoleEnable(bool enable)
 {
     isConsoleEnable = enable;
 
-    if (isConsoleEnable && consolelogger == nullptr) {
+    //如果是设置为不使能,那么就直接退出
+    if (isConsoleEnable == false) {
+        return;
+    }
+
+    //如果是设置为使能,如果指针还没有初始化过
+    if (consolelogger == nullptr) {
         consolelogger = spdlog::stdout_color_mt("console");
 
         auto console_sink = dynamic_cast<spdlog::sinks::stdout_color_sink_mt*>(consolelogger->sinks().back().get());

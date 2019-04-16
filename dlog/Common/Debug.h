@@ -201,7 +201,7 @@ class Debug
         std::vector<char> buf(DEBUG_LOG_BUFF_SIZE);
 #if defined(_WIN32) || defined(_WIN64)
         int ret;
-        while ((ret = vsnprintf_s(&buf[0], buf.size() - 1, _TRUNCATE, strFormat, arg_ptr)) == -1) {
+        while ((ret = vsnprintf_s(buf.data(), buf.size() - 1, 1024, strFormat, arg_ptr)) == -1) {
             buf.resize(buf.size() * 2);
         }
 #else
@@ -214,16 +214,63 @@ class Debug
         buf[ret] = '\0';
 
         if (logFileThr <= logThr) { //满足优先级才输出 - 文件
-            filelogger->log(logThr, &buf[0]);
+            filelogger->log(logThr, buf.data());
         }
         if (isConsoleEnable && logConsoleThr <= logThr) { //满足优先级才输出 - 控制台
-            consolelogger->log(logThr, &buf[0]);
+            consolelogger->log(logThr, buf.data());
         }
         if (isMemLogEnable && logMemoryThr <= logThr) { //满足优先级才输出 - 内存队列
-            MemoryLog::GetInst()->addLog(&buf[0]);
+            MemoryLog::GetInst()->addLog(buf.data());
         }
     }
 
+    ///-------------------------------------------------------------------------------------------------
+    /// <summary> 判断是否需要输出日志,如果不需要那么就可以不进行字符格式化. </summary>
+    ///
+    /// <remarks> Dx, 2019/4/16. </remarks>
+    ///
+    /// <param name="logThr"> The log thr. </param>
+    ///
+    /// <returns> 如果需要才返回true. </returns>
+    ///-------------------------------------------------------------------------------------------------
+    bool isNeedLog(spdlog::level::level_enum logThr)
+    {
+        if (!isInit && !isInitFail) {
+            init(); //如果还没有初始化那么就初始化一次
+        }
+        if (!isEnable) {
+            return false; //如果控制是不输出日志
+        }
+        if (logFileThr > logThr &&
+            (!isConsoleEnable || logConsoleThr > logThr) &&
+            (!isMemLogEnable || logMemoryThr > logThr)) {
+            return false;
+        }
+        return true;
+    }
+
+    ///-------------------------------------------------------------------------------------------------
+    /// <summary> 直接输出一个完整日志. </summary>
+    ///
+    /// <remarks> Dx, 2019/4/16. </remarks>
+    ///
+    /// <param name="logThr"> The log thr. </param>
+    /// <param name="msg">    The message. </param>
+    ///-------------------------------------------------------------------------------------------------
+    void LogMsg(spdlog::level::level_enum logThr, const char* msg)
+    {
+        if (logFileThr <= logThr) { //满足优先级才输出 - 文件
+            filelogger->log(logThr, msg);
+        }
+        if (isConsoleEnable && logConsoleThr <= logThr) { //满足优先级才输出 - 控制台
+            consolelogger->log(logThr, msg);
+        }
+        if (isMemLogEnable && logMemoryThr <= logThr) { //满足优先级才输出 - 内存队列
+            MemoryLog::GetInst()->addLog(msg);
+        }
+    }
+
+    /// <summary> 老函数. </summary>
     void Log_va(spdlog::level::level_enum logThr, const char* strFormat, va_list& arg_ptr)
     {
         if (!isInit && !isInitFail) {
@@ -244,24 +291,24 @@ class Debug
         std::vector<char> buf(DEBUG_LOG_BUFF_SIZE);
 #if defined(_WIN32) || defined(_WIN64)
         int ret;
-        while ((ret = vsnprintf_s(&buf[0], buf.size() - 1, _TRUNCATE, strFormat, arg_ptr)) == -1) {
+        while ((ret = vsnprintf_s(buf.data(), buf.size() - 1, 1024, strFormat, arg_ptr)) == -1) {
             buf.resize(buf.size() * 2);
         }
 #else
         int ret;
-        while ((ret = vsnprintf(&buf[0], buf.size() - 1, strFormat, arg_ptr)) == -1) {
+        while ((ret = vsnprintf(buf.data(), buf.size() - 1, strFormat, arg_ptr)) == -1) {
             buf.resize(buf.size() * 2);
         }
 #endif
         buf[ret] = '\0';
         if (logFileThr <= logThr) { //满足优先级才输出 - 文件
-            filelogger->log(logThr, &buf[0]);
+            filelogger->log(logThr, buf.data());
         }
         if (isConsoleEnable && logConsoleThr <= logThr) { //满足优先级才输出 - 控制台
-            consolelogger->log(logThr, &buf[0]);
+            consolelogger->log(logThr, buf.data());
         }
         if (isMemLogEnable && logMemoryThr <= logThr) { //满足优先级才输出 - 内存队列
-            MemoryLog::GetInst()->addLog(&buf[0]);
+            MemoryLog::GetInst()->addLog(buf.data());
         }
     }
 

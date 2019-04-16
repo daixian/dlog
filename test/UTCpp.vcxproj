@@ -40,6 +40,9 @@
     <VcpkgTriplet>x86-windows-static-md</VcpkgTriplet>
     <VcpkgEnabled>true</VcpkgEnabled>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>../;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
   </ItemGroup>

@@ -17,7 +17,7 @@ using namespace dxlib;
 /// 直接返回全局的指针
 /// </returns>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void* __stdcall dlog_global_ptr()
+extern "C" DLOG_EXPORT void* __cdecl dlog_global_ptr()
 {
     return Debug::GetInst();
 }
@@ -48,7 +48,7 @@ extern "C" DLOG_EXPORT void* __stdcall dlog_global_ptr()
 /// 如果强制重设但是失败还是复用了那么返回3.
 /// </returns>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT int __stdcall dlog_init(const char* logDir, const char* program, dlog_init_relative dir_relatvie, bool isForceInit)
+extern "C" DLOG_EXPORT int __cdecl dlog_init(const char* logDir, const char* program, dlog_init_relative dir_relatvie, bool isForceInit)
 {
     if (isForceInit == false) {
         if (!Debug::GetInst()->isInit) {
@@ -76,7 +76,7 @@ extern "C" DLOG_EXPORT int __stdcall dlog_init(const char* logDir, const char* p
 ///
 /// <returns> An int. </returns>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT int __stdcall dlog_close()
+extern "C" DLOG_EXPORT int __cdecl dlog_close()
 {
     if (Debug::GetInst()->isInit)
         Debug::GetInst()->LogI("dlog关闭!");
@@ -91,7 +91,7 @@ extern "C" DLOG_EXPORT int __stdcall dlog_close()
 ///
 /// <param name="enable"> 设置为false之后Log函数会直接返回不作任何操作. </param>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void __stdcall dlog_enable(bool enable)
+extern "C" DLOG_EXPORT void __cdecl dlog_enable(bool enable)
 {
     Debug::GetInst()->isEnable = enable;
 }
@@ -103,7 +103,7 @@ extern "C" DLOG_EXPORT void __stdcall dlog_enable(bool enable)
 ///
 /// <param name="enable"> 设置为false之后Log函数会直接返回不作任何操作. </param>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void __stdcall dlog_console_log_enable(bool enable)
+extern "C" DLOG_EXPORT void __cdecl dlog_console_log_enable(bool enable)
 {
     Debug::GetInst()->setIsConsoleEnable(enable);
 }
@@ -115,7 +115,7 @@ extern "C" DLOG_EXPORT void __stdcall dlog_console_log_enable(bool enable)
 ///
 /// <param name="usualThr"> The usual thr. </param>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void __stdcall dlog_set_file_thr(dlog_level usualThr)
+extern "C" DLOG_EXPORT void __cdecl dlog_set_file_thr(dlog_level usualThr)
 {
     Debug::GetInst()->logFileThr = (spdlog::level::level_enum)usualThr;
 }
@@ -127,7 +127,7 @@ extern "C" DLOG_EXPORT void __stdcall dlog_set_file_thr(dlog_level usualThr)
 ///
 /// <param name="usualThr"> The usual thr. </param>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT int __stdcall dlog_get_file_thr()
+extern "C" DLOG_EXPORT int __cdecl dlog_get_file_thr()
 {
     return Debug::GetInst()->logFileThr;
 }
@@ -139,7 +139,7 @@ extern "C" DLOG_EXPORT int __stdcall dlog_get_file_thr()
 ///
 /// <param name="usualThr"> The usual thr. </param>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void __stdcall dlog_set_memory_thr(dlog_level memoryThr)
+extern "C" DLOG_EXPORT void __cdecl dlog_set_memory_thr(dlog_level memoryThr)
 {
     Debug::GetInst()->logMemoryThr = (spdlog::level::level_enum)memoryThr;
 }
@@ -151,7 +151,7 @@ extern "C" DLOG_EXPORT void __stdcall dlog_set_memory_thr(dlog_level memoryThr)
 ///
 /// <param name="usualThr"> The usual thr. </param>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT int __stdcall dlog_get_memory_thr()
+extern "C" DLOG_EXPORT int __cdecl dlog_get_memory_thr()
 {
     return Debug::GetInst()->logMemoryThr;
 }
@@ -165,7 +165,7 @@ extern "C" DLOG_EXPORT int __stdcall dlog_get_memory_thr()
 ///
 /// <param name="LogSeverity"> 大于等于这一级的日志都会输出到控制台. </param>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void __stdcall dlog_set_console_thr(dlog_level LogSeverity)
+extern "C" DLOG_EXPORT void __cdecl dlog_set_console_thr(dlog_level LogSeverity)
 {
     Debug::GetInst()->logConsoleThr = (spdlog::level::level_enum)LogSeverity; // 当日志级别大于等于此级别时，自动将此日志输出到标准错误(终端窗口)中
 }
@@ -177,7 +177,7 @@ extern "C" DLOG_EXPORT void __stdcall dlog_set_console_thr(dlog_level LogSeverit
 ///
 /// <param name="usualThr"> The usual thr. </param>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT int __stdcall dlog_get_console_thr()
+extern "C" DLOG_EXPORT int __cdecl dlog_get_console_thr()
 {
     return (int)Debug::GetInst()->logConsoleThr;
 }
@@ -191,7 +191,7 @@ extern "C" DLOG_EXPORT int __stdcall dlog_get_console_thr()
 ///
 /// <returns> An int. </returns>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void __stdcall dlog_set_flush_on(dlog_level LogSeverity)
+extern "C" DLOG_EXPORT void __cdecl dlog_set_flush_on(dlog_level LogSeverity)
 {
     Debug::GetInst()->setFlushOn((spdlog::level::level_enum)LogSeverity);
 }
@@ -201,7 +201,7 @@ extern "C" DLOG_EXPORT void __stdcall dlog_set_flush_on(dlog_level LogSeverity)
 ///
 /// <remarks> Dx, 2019/3/25. </remarks>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void __stdcall dlog_flush()
+extern "C" DLOG_EXPORT void __cdecl dlog_flush()
 {
     Debug::GetInst()->flush();
 }
@@ -223,10 +223,25 @@ extern "C" DLOG_EXPORT void __cdecl LogI(const char* strFormat, ...)
         dlog_init();
     }
 
-    va_list arg_ptr;
-    va_start(arg_ptr, strFormat);
-    Debug::GetInst()->Log_va(spdlog::level::level_enum::info, strFormat, arg_ptr);
-    va_end(arg_ptr);
+    if (Debug::GetInst()->isNeedLog(spdlog::level::level_enum::info)) {
+        std::vector<char> buf(DEBUG_LOG_BUFF_SIZE);
+        int ret = 0;
+        va_list arg_ptr;
+        va_start(arg_ptr, strFormat);
+#if defined(_WIN32) || defined(_WIN64)
+        while ((ret = vsnprintf_s(buf.data(), buf.size() - 1, 1024, strFormat, arg_ptr)) == -1) {
+            buf.resize(buf.size() * 2);
+        }
+#else
+        while ((ret = vsnprintf(buf.data(), buf.size() - 1, strFormat, arg_ptr)) == -1) {
+            buf.resize(buf.size() * 2);
+        }
+#endif
+        va_end(arg_ptr);
+        if (ret >= 0 && ret < buf.size())
+            buf[ret] = '\0';
+        Debug::GetInst()->LogMsg(spdlog::level::level_enum::info, buf.data());
+    }
 }
 
 ///-------------------------------------------------------------------------------------------------
@@ -246,10 +261,25 @@ extern "C" DLOG_EXPORT void __cdecl LogW(const char* strFormat, ...)
         dlog_init();
     }
 
-    va_list arg_ptr;
-    va_start(arg_ptr, strFormat);
-    Debug::GetInst()->Log_va(spdlog::level::level_enum::warn, strFormat, arg_ptr);
-    va_end(arg_ptr);
+    if (Debug::GetInst()->isNeedLog(spdlog::level::level_enum::warn)) {
+        std::vector<char> buf(DEBUG_LOG_BUFF_SIZE);
+        int ret = 0;
+        va_list arg_ptr;
+        va_start(arg_ptr, strFormat);
+#if defined(_WIN32) || defined(_WIN64)
+        while ((ret = vsnprintf_s(buf.data(), buf.size() - 1, 1024, strFormat, arg_ptr)) == -1) {
+            buf.resize(buf.size() * 2);
+        }
+#else
+        while ((ret = vsnprintf(buf.data(), buf.size() - 1, strFormat, arg_ptr)) == -1) {
+            buf.resize(buf.size() * 2);
+        }
+#endif
+        va_end(arg_ptr);
+        if (ret >= 0 && ret < buf.size())
+            buf[ret] = '\0';
+        Debug::GetInst()->LogMsg(spdlog::level::level_enum::warn, buf.data());
+    }
 }
 
 ///-------------------------------------------------------------------------------------------------
@@ -269,10 +299,25 @@ extern "C" DLOG_EXPORT void __cdecl LogE(const char* strFormat, ...)
         dlog_init();
     }
 
-    va_list arg_ptr;
-    va_start(arg_ptr, strFormat);
-    Debug::GetInst()->Log_va(spdlog::level::level_enum::err, strFormat, arg_ptr);
-    va_end(arg_ptr);
+    if (Debug::GetInst()->isNeedLog(spdlog::level::level_enum::err)) {
+        std::vector<char> buf(DEBUG_LOG_BUFF_SIZE);
+        int ret = 0;
+        va_list arg_ptr;
+        va_start(arg_ptr, strFormat);
+#if defined(_WIN32) || defined(_WIN64)
+        while ((ret = vsnprintf_s(buf.data(), buf.size() - 1, 1024, strFormat, arg_ptr)) == -1) {
+            buf.resize(buf.size() * 2);
+        }
+#else
+        while ((ret = vsnprintf(buf.data(), buf.size() - 1, strFormat, arg_ptr)) == -1) {
+            buf.resize(buf.size() * 2);
+        }
+#endif
+        va_end(arg_ptr);
+        if (ret >= 0 && ret < buf.size())
+            buf[ret] = '\0';
+        Debug::GetInst()->LogMsg(spdlog::level::level_enum::err, buf.data());
+    }
 }
 
 ///-------------------------------------------------------------------------------------------------
@@ -292,10 +337,25 @@ extern "C" DLOG_EXPORT void __cdecl LogD(const char* strFormat, ...)
         dlog_init();
     }
 
-    va_list arg_ptr;
-    va_start(arg_ptr, strFormat);
-    Debug::GetInst()->Log_va(spdlog::level::level_enum::debug, strFormat, arg_ptr);
-    va_end(arg_ptr);
+    if (Debug::GetInst()->isNeedLog(spdlog::level::level_enum::debug)) {
+        std::vector<char> buf(DEBUG_LOG_BUFF_SIZE);
+        int ret = 0;
+        va_list arg_ptr;
+        va_start(arg_ptr, strFormat);
+#if defined(_WIN32) || defined(_WIN64)
+        while ((ret = vsnprintf_s(buf.data(), buf.size() - 1, 1024, strFormat, arg_ptr)) == -1) {
+            buf.resize(buf.size() * 2);
+        }
+#else
+        while ((ret = vsnprintf(buf.data(), buf.size() - 1, strFormat, arg_ptr)) == -1) {
+            buf.resize(buf.size() * 2);
+        }
+#endif
+        va_end(arg_ptr);
+        if (ret >= 0 && ret < buf.size())
+            buf[ret] = '\0';
+        Debug::GetInst()->LogMsg(spdlog::level::level_enum::debug, buf.data());
+    }
 }
 
 #pragma region memory log
@@ -307,7 +367,7 @@ extern "C" DLOG_EXPORT void __cdecl LogD(const char* strFormat, ...)
 ///
 /// <param name="enable"> 设置为false之后内存日志函数会直接返回不作任何操作. </param>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT void __stdcall dlog_memory_log_enable(bool enable)
+extern "C" DLOG_EXPORT void __cdecl dlog_memory_log_enable(bool enable)
 {
     Debug::GetInst()->isMemLogEnable = enable;
 }
@@ -323,7 +383,7 @@ extern "C" DLOG_EXPORT void __stdcall dlog_memory_log_enable(bool enable)
 ///
 /// <returns> 提取出的日志char*的有效长度，如果为0表示没有提出日志来. </returns>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT int __stdcall dlog_get_memlog(char* buff, int offset, int length)
+extern "C" DLOG_EXPORT int __cdecl dlog_get_memlog(char* buff, int offset, int length)
 {
     std::string msg;
     int copyLen = 0;
@@ -352,7 +412,7 @@ extern "C" DLOG_EXPORT int __stdcall dlog_get_memlog(char* buff, int offset, int
 ///
 /// <returns> 实际的字符串长度. </returns>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT int __stdcall dlog_get_appdata_dir(char* buff, int size)
+extern "C" DLOG_EXPORT int __cdecl dlog_get_appdata_dir(char* buff, int size)
 {
     std::string dir = FileHelper::getAppDir();
     int copyLen = dir.size() < (size - 1) ? dir.size() : (size - 1); //这里string的size是否就等于字节的size???
@@ -371,7 +431,7 @@ extern "C" DLOG_EXPORT int __stdcall dlog_get_appdata_dir(char* buff, int size)
 ///
 /// <returns> 实际的字符串长度. </returns>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT int __stdcall dlog_get_module_dir(char* buff, int size)
+extern "C" DLOG_EXPORT int __cdecl dlog_get_module_dir(char* buff, int size)
 {
     std::string dir = FileHelper::getModuleDir();
     int copyLen = dir.size() < (size - 1) ? dir.size() : (size - 1); //这里string的size是否就等于字节的size???
@@ -390,7 +450,7 @@ extern "C" DLOG_EXPORT int __stdcall dlog_get_module_dir(char* buff, int size)
 ///
 /// <returns> 实际的字符串长度. </returns>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT int __stdcall dlog_get_log_dir(char* buff, int size)
+extern "C" DLOG_EXPORT int __cdecl dlog_get_log_dir(char* buff, int size)
 {
     std::string dir = Debug::GetInst()->logDirPath;
     int copyLen = dir.size() < (size - 1) ? dir.size() : (size - 1); //这里string的size是否就等于字节的size???
@@ -409,7 +469,7 @@ extern "C" DLOG_EXPORT int __stdcall dlog_get_log_dir(char* buff, int size)
 ///
 /// <returns> 实际的字符串长度. </returns>
 ///-------------------------------------------------------------------------------------------------
-extern "C" DLOG_EXPORT int __stdcall dlog_get_log_file_path(char* buff, int size)
+extern "C" DLOG_EXPORT int __cdecl dlog_get_log_file_path(char* buff, int size)
 {
     std::string dir = Debug::GetInst()->logFilePath;
     int copyLen = dir.size() < (size - 1) ? dir.size() : (size - 1); //这里string的size是否就等于字节的size???
