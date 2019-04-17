@@ -247,19 +247,12 @@ class Debug
         va_start(arg_ptr, strFormat);
 
         std::vector<char> buf(DEBUG_LOG_BUFF_SIZE);
-#if defined(_WIN32) || defined(_WIN64)
         int ret;
-        while ((ret = vsnprintf_s(buf.data(), buf.size() - 1, 1024, strFormat, arg_ptr)) == -1) {
-            buf.resize(buf.size() * 2);
+        //vsnprintf的返回是不包含\0的预留位置的
+        while ((ret = vsnprintf(buf.data(), buf.size(), strFormat, arg_ptr)) >= buf.size()) {
+            buf.resize(ret + 1, '\0');
         }
-#else
-        int ret;
-        while ((ret = vsnprintf(&buf[0], buf.size() - 1, strFormat, arg_ptr)) == -1) {
-            buf.resize(buf.size() * 2);
-        }
-#endif
         va_end(arg_ptr);
-        buf[ret] = '\0';
 
         if (logFileThr <= logThr) { //满足优先级才输出 - 文件
             filelogger->log(logThr, buf.data());
@@ -290,18 +283,11 @@ class Debug
         }
 
         std::vector<char> buf(DEBUG_LOG_BUFF_SIZE);
-#if defined(_WIN32) || defined(_WIN64)
         int ret;
-        while ((ret = vsnprintf_s(buf.data(), buf.size() - 1, 1024, strFormat, arg_ptr)) == -1) {
-            buf.resize(buf.size() * 2);
+        //vsnprintf的返回是不包含\0的预留位置的
+        while ((ret = vsnprintf(buf.data(), buf.size(), strFormat, arg_ptr)) >= buf.size()) {
+            buf.resize(ret + 1, '\0');
         }
-#else
-        int ret;
-        while ((ret = vsnprintf(buf.data(), buf.size() - 1, strFormat, arg_ptr)) == -1) {
-            buf.resize(buf.size() * 2);
-        }
-#endif
-        buf[ret] = '\0';
         if (logFileThr <= logThr) { //满足优先级才输出 - 文件
             filelogger->log(logThr, buf.data());
         }

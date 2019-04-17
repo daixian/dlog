@@ -34,7 +34,7 @@ TEST(dlog, memorylog)
 #elif defined(__linux__)
             snprintf(msgCorr, 512, "测试日志%d !", i); //正确的消息应该是
 #endif
-            EXPECT_TRUE(strcmp(msg, msgCorr) == 0) << "msg=" << msg; //比对提取的消息是否正确
+            ASSERT_TRUE(strcmp(msg, msgCorr) == 0) << "msg=" << msg; //比对提取的消息是否正确
         }
         else {
             FAIL();
@@ -67,4 +67,29 @@ TEST(dlog, init_close)
         EXPECT_TRUE(res == 2);
         LogI("132");
     }
+}
+
+TEST(dlog, logi)
+{
+    dlog_close();
+
+    //第一次创建
+    int res = dlog_init("临时测试/log", "LogI", dlog_init_relative::MODULE);
+    EXPECT_TRUE(res == 0);
+    for (size_t i = 0; i < 100; i++) {
+        string fp = "D:\\Work\\MRSystem\\x64\\Release\\images\\charuco\\dell-dual\\origin\\F3D0001\\20190416-170709.png";
+        fp += fp;
+        fp += fp;
+        fp += fp;
+        LogI("GC100CharucoCalib.searchImageInCharucoDir():找到一个charuco图片 %s", fp.c_str());
+    }
+
+    char msg[129];
+
+    for (size_t i = 0; i < sizeof(msg); i++) {
+        msg[i] = 'a';
+    }
+    msg[128] = '\0';
+    LogI(msg);
+    dlog_close();
 }

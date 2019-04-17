@@ -231,7 +231,7 @@ extern "C" DLOG_EXPORT void __cdecl dlog_flush()
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT void __cdecl LogI(const char* strFormat, ...)
 {
-    if (!Debug::GetInst()->isInit) { //如果还没有初始化过，那么就调用默认构造
+    if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
         dlog_init();
     }
 
@@ -240,18 +240,11 @@ extern "C" DLOG_EXPORT void __cdecl LogI(const char* strFormat, ...)
         int ret = 0;
         va_list arg_ptr;
         va_start(arg_ptr, strFormat);
-#if defined(_WIN32) || defined(_WIN64)
-        while ((ret = vsnprintf_s(buf.data(), buf.size() - 1, 1024, strFormat, arg_ptr)) == -1) {
-            buf.resize(buf.size() * 2);
+        //vsnprintf的返回是不包含\0的预留位置的
+        while ((ret = vsnprintf(buf.data(), buf.size(), strFormat, arg_ptr)) >= buf.size()) {
+            buf.resize(ret + 1, '\0');
         }
-#else
-        while ((ret = vsnprintf(buf.data(), buf.size() - 1, strFormat, arg_ptr)) == -1) {
-            buf.resize(buf.size() * 2);
-        }
-#endif
         va_end(arg_ptr);
-        if (ret >= 0 && ret < buf.size())
-            buf[ret] = '\0';
         Debug::GetInst()->LogMsg(spdlog::level::level_enum::info, buf.data());
     }
 }
@@ -269,7 +262,7 @@ extern "C" DLOG_EXPORT void __cdecl LogI(const char* strFormat, ...)
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT void __cdecl LogW(const char* strFormat, ...)
 {
-    if (!Debug::GetInst()->isInit) { //如果还没有初始化过，那么就调用默认构造
+    if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
         dlog_init();
     }
 
@@ -278,18 +271,11 @@ extern "C" DLOG_EXPORT void __cdecl LogW(const char* strFormat, ...)
         int ret = 0;
         va_list arg_ptr;
         va_start(arg_ptr, strFormat);
-#if defined(_WIN32) || defined(_WIN64)
-        while ((ret = vsnprintf_s(buf.data(), buf.size() - 1, 1024, strFormat, arg_ptr)) == -1) {
-            buf.resize(buf.size() * 2);
+        //vsnprintf的返回是不包含\0的预留位置的
+        while ((ret = vsnprintf(buf.data(), buf.size(), strFormat, arg_ptr)) >= buf.size()) {
+            buf.resize(ret + 1, '\0');
         }
-#else
-        while ((ret = vsnprintf(buf.data(), buf.size() - 1, strFormat, arg_ptr)) == -1) {
-            buf.resize(buf.size() * 2);
-        }
-#endif
         va_end(arg_ptr);
-        if (ret >= 0 && ret < buf.size())
-            buf[ret] = '\0';
         Debug::GetInst()->LogMsg(spdlog::level::level_enum::warn, buf.data());
     }
 }
@@ -307,7 +293,7 @@ extern "C" DLOG_EXPORT void __cdecl LogW(const char* strFormat, ...)
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT void __cdecl LogE(const char* strFormat, ...)
 {
-    if (!Debug::GetInst()->isInit) { //如果还没有初始化过，那么就调用默认构造
+    if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
         dlog_init();
     }
 
@@ -316,18 +302,11 @@ extern "C" DLOG_EXPORT void __cdecl LogE(const char* strFormat, ...)
         int ret = 0;
         va_list arg_ptr;
         va_start(arg_ptr, strFormat);
-#if defined(_WIN32) || defined(_WIN64)
-        while ((ret = vsnprintf_s(buf.data(), buf.size() - 1, 1024, strFormat, arg_ptr)) == -1) {
-            buf.resize(buf.size() * 2);
+        //vsnprintf的返回是不包含\0的预留位置的
+        while ((ret = vsnprintf(buf.data(), buf.size(), strFormat, arg_ptr)) >= buf.size()) {
+            buf.resize(ret + 1, '\0');
         }
-#else
-        while ((ret = vsnprintf(buf.data(), buf.size() - 1, strFormat, arg_ptr)) == -1) {
-            buf.resize(buf.size() * 2);
-        }
-#endif
         va_end(arg_ptr);
-        if (ret >= 0 && ret < buf.size())
-            buf[ret] = '\0';
         Debug::GetInst()->LogMsg(spdlog::level::level_enum::err, buf.data());
     }
 }
@@ -345,7 +324,7 @@ extern "C" DLOG_EXPORT void __cdecl LogE(const char* strFormat, ...)
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT void __cdecl LogD(const char* strFormat, ...)
 {
-    if (!Debug::GetInst()->isInit) { //如果还没有初始化过，那么就调用默认构造
+    if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
         dlog_init();
     }
 
@@ -354,18 +333,11 @@ extern "C" DLOG_EXPORT void __cdecl LogD(const char* strFormat, ...)
         int ret = 0;
         va_list arg_ptr;
         va_start(arg_ptr, strFormat);
-#if defined(_WIN32) || defined(_WIN64)
-        while ((ret = vsnprintf_s(buf.data(), buf.size() - 1, 1024, strFormat, arg_ptr)) == -1) {
-            buf.resize(buf.size() * 2);
+        //vsnprintf的返回是不包含\0的预留位置的
+        while ((ret = vsnprintf(buf.data(), buf.size(), strFormat, arg_ptr)) >= buf.size()) {
+            buf.resize(ret + 1, '\0');
         }
-#else
-        while ((ret = vsnprintf(buf.data(), buf.size() - 1, strFormat, arg_ptr)) == -1) {
-            buf.resize(buf.size() * 2);
-        }
-#endif
         va_end(arg_ptr);
-        if (ret >= 0 && ret < buf.size())
-            buf[ret] = '\0';
         Debug::GetInst()->LogMsg(spdlog::level::level_enum::debug, buf.data());
     }
 }
