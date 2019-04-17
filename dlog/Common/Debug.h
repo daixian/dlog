@@ -178,52 +178,6 @@ class Debug
 
 #pragma region LOGX
 
-    void Log(spdlog::level::level_enum logThr, const char* strFormat, ...)
-    {
-        if (!isInit && !isInitFail) {
-            init(); //如果还没有初始化那么就初始化一次
-        }
-        if (!isEnable) {
-            return; //如果控制是不输出日志
-        }
-        if (logFileThr > logThr &&
-            (!isConsoleEnable || logConsoleThr > logThr) &&
-            (!isMemLogEnable || logMemoryThr > logThr)) {
-            return; //如果控制是不输出DEBUG级别日志
-        }
-        if (NULL == strFormat) {
-            return; //如果输入参数为空
-        }
-
-        va_list arg_ptr;
-        va_start(arg_ptr, strFormat);
-
-        std::vector<char> buf(DEBUG_LOG_BUFF_SIZE);
-#if defined(_WIN32) || defined(_WIN64)
-        int ret;
-        while ((ret = vsnprintf_s(buf.data(), buf.size() - 1, 1024, strFormat, arg_ptr)) == -1) {
-            buf.resize(buf.size() * 2);
-        }
-#else
-        int ret;
-        while ((ret = vsnprintf(&buf[0], buf.size() - 1, strFormat, arg_ptr)) == -1) {
-            buf.resize(buf.size() * 2);
-        }
-#endif
-        va_end(arg_ptr);
-        buf[ret] = '\0';
-
-        if (logFileThr <= logThr) { //满足优先级才输出 - 文件
-            filelogger->log(logThr, buf.data());
-        }
-        if (isConsoleEnable && logConsoleThr <= logThr) { //满足优先级才输出 - 控制台
-            consolelogger->log(logThr, buf.data());
-        }
-        if (isMemLogEnable && logMemoryThr <= logThr) { //满足优先级才输出 - 内存队列
-            MemoryLog::GetInst()->addLog(buf.data());
-        }
-    }
-
     ///-------------------------------------------------------------------------------------------------
     /// <summary> 判断是否需要输出日志,如果不需要那么就可以不进行字符格式化. </summary>
     ///
@@ -270,7 +224,54 @@ class Debug
         }
     }
 
-    /// <summary> 老函数. </summary>
+#pragma endregion 老函数
+
+    void Log(spdlog::level::level_enum logThr, const char* strFormat, ...)
+    {
+        if (!isInit && !isInitFail) {
+            init(); //如果还没有初始化那么就初始化一次
+        }
+        if (!isEnable) {
+            return; //如果控制是不输出日志
+        }
+        if (logFileThr > logThr &&
+            (!isConsoleEnable || logConsoleThr > logThr) &&
+            (!isMemLogEnable || logMemoryThr > logThr)) {
+            return; //如果控制是不输出DEBUG级别日志
+        }
+        if (NULL == strFormat) {
+            return; //如果输入参数为空
+        }
+
+        va_list arg_ptr;
+        va_start(arg_ptr, strFormat);
+
+        std::vector<char> buf(DEBUG_LOG_BUFF_SIZE);
+#if defined(_WIN32) || defined(_WIN64)
+        int ret;
+        while ((ret = vsnprintf_s(buf.data(), buf.size() - 1, 1024, strFormat, arg_ptr)) == -1) {
+            buf.resize(buf.size() * 2);
+        }
+#else
+        int ret;
+        while ((ret = vsnprintf(&buf[0], buf.size() - 1, strFormat, arg_ptr)) == -1) {
+            buf.resize(buf.size() * 2);
+        }
+#endif
+        va_end(arg_ptr);
+        buf[ret] = '\0';
+
+        if (logFileThr <= logThr) { //满足优先级才输出 - 文件
+            filelogger->log(logThr, buf.data());
+        }
+        if (isConsoleEnable && logConsoleThr <= logThr) { //满足优先级才输出 - 控制台
+            consolelogger->log(logThr, buf.data());
+        }
+        if (isMemLogEnable && logMemoryThr <= logThr) { //满足优先级才输出 - 内存队列
+            MemoryLog::GetInst()->addLog(buf.data());
+        }
+    }
+
     void Log_va(spdlog::level::level_enum logThr, const char* strFormat, va_list& arg_ptr)
     {
         if (!isInit && !isInitFail) {
@@ -311,8 +312,6 @@ class Debug
             MemoryLog::GetInst()->addLog(buf.data());
         }
     }
-
-#pragma endregion
 
     void LogD(const char* strFormat, ...)
     {

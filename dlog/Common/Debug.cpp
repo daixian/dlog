@@ -62,6 +62,7 @@ void Debug::init(const char* program, const char* logDir, INIT_RELATIVE rel)
 
         filelogger = spdlog::basic_logger_mt(programName, logFilePath);
         filelogger->flush_on(spdlog::level::level_enum::warn);
+        spdlog::flush_every(std::chrono::seconds(1));//每秒自动刷新一次
         isInit = true; //标记已经初始化了
         isInitFail = false;
         mt.unlock();

@@ -177,6 +177,15 @@ extern "C" DLOG_EXPORT int __cdecl dlog_get_console_thr();
 extern "C" DLOG_EXPORT void __cdecl dlog_set_flush_on(dlog_level LogSeverity);
 
 ///-------------------------------------------------------------------------------------------------
+/// <summary> 设置每隔多长时间flush的间隔时间. </summary>
+///
+/// <remarks> Dx, 2019/4/17. </remarks>
+///
+/// <param name="sec"> 秒数. </param>
+///-------------------------------------------------------------------------------------------------
+extern "C" DLOG_EXPORT void __cdecl dlog_set_flush_every(int second);
+
+///-------------------------------------------------------------------------------------------------
 /// <summary> 立即flush. </summary>
 ///
 /// <remarks> Dx, 2019/3/25. </remarks>
