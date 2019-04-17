@@ -181,7 +181,7 @@ extern "C" DLOG_EXPORT void __cdecl dlog_set_flush_on(dlog_level LogSeverity);
 ///
 /// <remarks> Dx, 2019/4/17. </remarks>
 ///
-/// <param name="sec"> 秒数. </param>
+/// <param name="second"> 秒数. </param>
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT void __cdecl dlog_set_flush_every(int second);
 

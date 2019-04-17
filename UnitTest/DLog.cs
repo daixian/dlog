@@ -57,8 +57,8 @@ namespace xuexue
         /// 如果强制重设但是失败还是复用了那么返回3.
         /// </returns>
         ///-------------------------------------------------------------------------------------------------
-        [DllImport("dlog", CallingConvention = CallingConvention.StdCall)]
-        public static extern int dlog_init(string logDir = "\\log", string program = "dlog",
+        [DllImport("dlog", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int dlog_init(string logDir = "log", string program = "dlog",
             INIT_RELATIVE dir_relatvie = INIT_RELATIVE.APPDATA,
             bool isForceInit = false);
 
@@ -69,7 +69,7 @@ namespace xuexue
         ///
         /// <returns> An int. </returns>
         ///-------------------------------------------------------------------------------------------------
-        [DllImport("dlog", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("dlog", CallingConvention = CallingConvention.Cdecl)]
         public static extern int dlog_close();
 
         ///-------------------------------------------------------------------------------------------------
@@ -79,7 +79,7 @@ namespace xuexue
         ///
         /// <param name="enable"> 设置为false之后Log函数会直接返回不作任何操作. </param>
         ///-------------------------------------------------------------------------------------------------
-        [DllImport("dlog", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("dlog", CallingConvention = CallingConvention.Cdecl)]
         public static extern void dlog_enable(bool enable);
 
         ///-------------------------------------------------------------------------------------------------
@@ -89,7 +89,7 @@ namespace xuexue
         ///
         /// <param name="enable"> 设置为false之后Log函数会直接返回不作任何操作. </param>
         ///-------------------------------------------------------------------------------------------------
-        [DllImport("dlog", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("dlog", CallingConvention = CallingConvention.Cdecl)]
         public static extern void dlog_console_log_enable(bool enable);
 
         ///-------------------------------------------------------------------------------------------------
@@ -99,7 +99,7 @@ namespace xuexue
         ///
         /// <param name="fileThr"> The usual thr. </param>
         ///-------------------------------------------------------------------------------------------------
-        [DllImport("dlog", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("dlog", CallingConvention = CallingConvention.Cdecl)]
         public static extern void dlog_set_file_thr(LOG_THR fileThr);
 
         ///-------------------------------------------------------------------------------------------------
@@ -111,7 +111,7 @@ namespace xuexue
         ///
         /// <returns> An int. </returns>
         ///-------------------------------------------------------------------------------------------------
-        [DllImport("dlog", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("dlog", CallingConvention = CallingConvention.Cdecl)]
         public static extern int dlog_get_file_thr();
 
         ///-------------------------------------------------------------------------------------------------
@@ -121,7 +121,7 @@ namespace xuexue
         ///
         /// <param name="usualThr"> The usual thr. </param>
         ///-------------------------------------------------------------------------------------------------
-        [DllImport("dlog", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("dlog", CallingConvention = CallingConvention.Cdecl)]
         public static extern void dlog_set_memory_thr(LOG_THR memoryThr);
 
         ///-------------------------------------------------------------------------------------------------
@@ -131,7 +131,7 @@ namespace xuexue
         ///
         /// <param name="usualThr"> The usual thr. </param>
         ///-------------------------------------------------------------------------------------------------
-        [DllImport("dlog", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("dlog", CallingConvention = CallingConvention.Cdecl)]
         public static extern int dlog_get_memory_thr();
 
         ///-------------------------------------------------------------------------------------------------
@@ -141,7 +141,7 @@ namespace xuexue
         ///
         /// <param name="usualThr"> The usual thr. </param>
         ///-------------------------------------------------------------------------------------------------
-        [DllImport("dlog", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("dlog", CallingConvention = CallingConvention.Cdecl)]
         public static extern int dlog_get_console_thr();
 
         ///-------------------------------------------------------------------------------------------------
@@ -154,7 +154,7 @@ namespace xuexue
         ///
         /// <param name="LogSeverity"> 大于等于这一级的日志都会输出到控制台. </param>
         ///-------------------------------------------------------------------------------------------------
-        [DllImport("dlog", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("dlog", CallingConvention = CallingConvention.Cdecl)]
         public static extern void dlog_set_console_thr(LOG_THR LogSeverity);
 
         ///-------------------------------------------------------------------------------------------------
@@ -166,13 +166,23 @@ namespace xuexue
         ///
         /// <returns> An int. </returns>
         ///-------------------------------------------------------------------------------------------------
-        [DllImport("dlog", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("dlog", CallingConvention = CallingConvention.Cdecl)]
         public static extern void dlog_set_flush_on(LOG_THR LogSeverity);
+
+        ///-------------------------------------------------------------------------------------------------
+        /// <summary> 设置每隔多长时间flush的间隔时间. </summary>
+        ///
+        /// <remarks> Dx, 2019/4/17. </remarks>
+        ///
+        /// <param name="second"> 秒数. </param>
+        ///-------------------------------------------------------------------------------------------------
+        [DllImport("dlog", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void dlog_set_flush_every(int second);
 
         /// <summary>
         /// 立即刷新
         /// </summary>
-        [DllImport("dlog", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("dlog", CallingConvention = CallingConvention.Cdecl)]
         public static extern void dlog_flush();
 
         /// <summary>
@@ -210,7 +220,7 @@ namespace xuexue
         ///
         /// <param name="enable"> 设置为false之后Log函数会直接返回不作任何操作. </param>
         ///-------------------------------------------------------------------------------------------------
-        [DllImport("dlog", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("dlog", CallingConvention = CallingConvention.Cdecl)]
         public static extern void dlog_memory_log_enable(bool enable);
 
         /// <summary>
@@ -220,7 +230,7 @@ namespace xuexue
         /// <param name="offset"></param>
         /// <param name="count"></param>
         /// <returns>写入buff的的消息长度</returns>
-        [DllImport("dlog", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("dlog", CallingConvention = CallingConvention.Cdecl)]
         public static extern int dlog_get_memlog(StringBuilder buff, int offset, int count);
 
 
@@ -254,7 +264,7 @@ namespace xuexue
         ///
         /// <returns> 实际的字符串长度. </returns>
         ///-------------------------------------------------------------------------------------------------
-        [DllImport("dlog", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("dlog", CallingConvention = CallingConvention.Cdecl)]
         private static extern int dlog_get_appdata_dir(StringBuilder buff, int size);
 
         ///-------------------------------------------------------------------------------------------------
@@ -283,7 +293,7 @@ namespace xuexue
         ///
         /// <returns> 实际的字符串长度. </returns>
         ///-------------------------------------------------------------------------------------------------
-        [DllImport("dlog", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("dlog", CallingConvention = CallingConvention.Cdecl)]
         private static extern int dlog_get_module_dir(StringBuilder buff, int size);
 
         ///-------------------------------------------------------------------------------------------------
@@ -310,7 +320,7 @@ namespace xuexue
         ///
         /// <returns> 实际的字符串长度. </returns>
         ///-------------------------------------------------------------------------------------------------
-        [DllImport("dlog", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("dlog", CallingConvention = CallingConvention.Cdecl)]
         private static extern int dlog_get_log_dir(StringBuilder buff, int size);
 
         ///-------------------------------------------------------------------------------------------------
@@ -337,7 +347,7 @@ namespace xuexue
         ///
         /// <returns> 实际的字符串长度. </returns>
         ///-------------------------------------------------------------------------------------------------
-        [DllImport("dlog", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("dlog", CallingConvention = CallingConvention.Cdecl)]
         private static extern int dlog_get_log_file_path(StringBuilder buff, int size);
 
         ///-------------------------------------------------------------------------------------------------

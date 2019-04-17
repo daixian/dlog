@@ -313,7 +313,7 @@ namespace UnitTest
                 DLog.dlog_close();
 
                 int res;
-                res = DLog.dlog_init("\\log", "MRSystem");
+                res = DLog.dlog_init("log", "MRSystem");
                 Assert.IsTrue(res == 0);//c#部分成功复用
 
                 //调用DLL1里的函数
@@ -324,7 +324,7 @@ namespace UnitTest
                 Assert.IsTrue(res == 1);//dll2应该是成功复用
 
                 DLog.dlog_memory_log_enable(true);//使能内存日志(库默认不使能)
-                int res2 = DLog.dlog_init("\\log", "MRSystem");
+                int res2 = DLog.dlog_init("log", "MRSystem");
                 Assert.IsTrue(res2 == 1);//c#部分成功复用
 
                 DLog.LogI("这是第二条日志");//内存日志的第一条
