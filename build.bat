@@ -1,2 +1,3 @@
 python -V
-python build.py
+python3 -V
+python3 build.py
