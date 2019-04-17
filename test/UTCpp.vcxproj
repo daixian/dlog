@@ -39,6 +39,7 @@
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <VcpkgTriplet>x86-windows-static-md</VcpkgTriplet>
     <VcpkgEnabled>true</VcpkgEnabled>
+    <IncludePath>../;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>../;$(IncludePath)</IncludePath>
