@@ -55,6 +55,11 @@ enable_testing()
 add_subdirectory(dlog)
 
 # 这里要添加gtest，这样就会去编译gtest然后设置了一些变量
+# 添加gtest前尝试设置一下编译选项为MD
+#if(WIN32)
+#set(CMAKE_CXX_FLAGS_RELEASE "/MD")
+#set(CMAKE_CXX_FLAGS_DEBUG "/MDd")
+#endif()
 add_subdirectory(${CMAKE_SOURCE_DIR}/lib/gtest)
 
 include(CTest)
