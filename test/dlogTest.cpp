@@ -16,7 +16,7 @@ TEST(dlog, memorylog)
 {
     dlog_close();
 
-    dlog_init("log", "测试日志");
+    dlog_init("log", "memorylog",dlog_init_relative::MODULE);
     dlog_memory_log_enable(true);
     dlog_set_console_thr(dlog_level::err);
     //LogI打印10W条，异步的，只要942毫秒
@@ -48,22 +48,22 @@ TEST(dlog, init_close)
         dlog_close();
 
         //第一次创建
-        int res = dlog_init("log", "创建测试", dlog_init_relative::MODULE);
+        int res = dlog_init("log", "init_close", dlog_init_relative::MODULE);
         EXPECT_TRUE(res == 0);
         LogI("132");
 
         //复用
-        res = dlog_init("log", "创建测试", dlog_init_relative::MODULE, false);
+        res = dlog_init("log", "init_close", dlog_init_relative::MODULE, false);
         EXPECT_TRUE(res == 1);
         LogI("132");
 
         //强制创建,因为重名所以还是复用
-        res = dlog_init("log", "创建测试", dlog_init_relative::MODULE, true);
+        res = dlog_init("log", "init_close", dlog_init_relative::MODULE, true);
         EXPECT_TRUE(res == 3);
         LogI("132");
 
         //强制创建
-        res = dlog_init("log", "创建测试2", dlog_init_relative::MODULE, true);
+        res = dlog_init("log", "init_close2", dlog_init_relative::MODULE, true);
         EXPECT_TRUE(res == 2);
         LogI("132");
     }
