@@ -20,7 +20,7 @@ TEST(Debug, LogSeverity)
     EXPECT_FALSE(Debug::GetInst()->isInit); //应该还未初始化
     EXPECT_TRUE(Debug::GetInst()->filelogger == nullptr);
 
-    Debug::GetInst()->init();
+    Debug::GetInst()->init("dlog-test", "log", INIT_RELATIVE::MODULE);
     EXPECT_TRUE(Debug::GetInst()->isInit); //应该初始化成功
     EXPECT_TRUE(Debug::GetInst()->filelogger != nullptr);
 
@@ -89,17 +89,4 @@ TEST(FileHelper, getAppDir)
     EXPECT_TRUE(dir.size() > 0);
     dir = FileHelper::getModuleDir();
     EXPECT_TRUE(dir.size() > 0);
-}
-
-TEST(Debug, Flush)
-{
-    Debug::GetInst()->clear();
-    Debug::GetInst()->flush();
-    Debug::GetInst()->flush();
-
-    Debug::GetInst()->LogI("LogI");
-    Debug::GetInst()->LogI("LogI");
-
-    Debug::GetInst()->flush();
-    Debug::GetInst()->flush();
 }
