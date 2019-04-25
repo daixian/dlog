@@ -19,7 +19,13 @@ endif()
 # 设置dlog库的目录
 if(NOT DEFINED dlog_LIBRARIES)
   if(WIN32)
-    set(dlog_LIBRARIES ${CMAKE_SOURCE_DIR}/cryptopp/x64/Output/Release/cryptlib.lib)
+  set(dlog_OBJECTS ${CMAKE_BINARY_DIR}/dlog/dlog.dir/Release)
+  set(dlog_LIBRARIES ${LIBRARY_OUTPUT_PATH}/Release/dlog.lib 
+      ${dlog_OBJECTS}/Common.obj
+      ${dlog_OBJECTS}/Debug.obj
+      ${dlog_OBJECTS}/FileHelper.obj
+      ${dlog_OBJECTS}/MemoryLog.obj
+      )
   else()
     set(dlog_LIBRARIES ${LIBRARY_OUTPUT_PATH}/libdlog.so)
   endif()
@@ -30,14 +36,18 @@ message(STATUS "dlog_LIBRARIES = " ${dlog_LIBRARIES})
 
 # 设置spdlog库的目录
 if(NOT DEFINED spdlog_INCLUDE_DIRS)
-  set(spdlog_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/spdlog/include)
+  set(spdlog_INCLUDE_DIRS ${PROJECT_LIB_DIR}/spdlog/include)
 endif()
 # 输出spdlog库的目录看看
 message(STATUS "spdlog_INCLUDE_DIRS = " ${spdlog_INCLUDE_DIRS})
 
+find_package(Boost 1.70.0 REQUIRED COMPONENTS filesystem date_time)
+message(STATUS "Boost_INCLUDE_DIRS = " ${Boost_INCLUDE_DIRS})
+message(STATUS "Boost_LIBRARIES = " ${Boost_LIBRARIES})
+
 # Dependencies
-target_include_directories(test.out PRIVATE ${CMAKE_SOURCE_DIR} ${spdlog_INCLUDE_DIRS})
-target_link_libraries(test.out PRIVATE dlog ${dlog_LIBRARIES} gtest gtest_main)
+target_include_directories(test.out PRIVATE ${CMAKE_SOURCE_DIR} ${spdlog_INCLUDE_DIRS} ${PROJECT_LIB_DIR} ${Boost_INCLUDE_DIRS})
+target_link_libraries(test.out PRIVATE dlog ${dlog_LIBRARIES} ${Boost_LIBRARIES} gtest gtest_main)
 
 add_test(NAME AllCppTest COMMAND test.out)
 

@@ -372,3 +372,6 @@ UnitTest1/Debug/
 
 /googletest-release-1.8.1/
 /*.tar.gz
+
+download/
+lib/

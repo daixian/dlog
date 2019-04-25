@@ -28,12 +28,16 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 set(RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+# 设置工程外部库的文件夹
+set(PROJECT_LIB_DIR ${CMAKE_SOURCE_DIR}/lib)
+message(STATUS "PROJECT_LIB_DIR = " ${PROJECT_LIB_DIR})
+
 # 设置boost的库的位置
 if(WIN32)
-set(BOOST_ROOT $ENV{HOME}/sdk/boost/boost_1_69_0)
+set(BOOST_ROOT ${PROJECT_LIB_DIR}/boost_1_70_0)
 set(Boost_NO_SYSTEM_PATHS ON)
 set(Boost_USE_MULTITHREADED ON)
-set(Boost_USE_STATIC_LIBS OFF)
+set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
 set(BOOST_ALL_DYN_LINK OFF)
 else()
@@ -51,7 +55,7 @@ enable_testing()
 add_subdirectory(dlog)
 
 # 这里要添加gtest，这样就会去编译gtest然后设置了一些变量
-add_subdirectory(${CMAKE_SOURCE_DIR}/gtest)
+add_subdirectory(${CMAKE_SOURCE_DIR}/lib/gtest)
 
 include(CTest)
 #include(GoogleTest)

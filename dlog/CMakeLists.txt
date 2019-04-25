@@ -40,23 +40,25 @@ add_library(dlog
             Common/MemoryLog.cpp
             dlog.cpp
             stdafx.cpp
-            dllmain.cpp)
+            dllmain.cpp
+            dlog.rc)
+
 # target_compile_features(dlog PUBLIC cxx_std_14)
 
 # Dependencies
 
 # 设置spdlog库的目录
 if(NOT DEFINED spdlog_INCLUDE_DIRS)
-  set(spdlog_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/spdlog/include)
+  set(spdlog_INCLUDE_DIRS ${PROJECT_LIB_DIR}/spdlog/include)
 endif()
 # 输出spdlog库的目录看看
 message(STATUS "spdlog_INCLUDE_DIRS = " ${spdlog_INCLUDE_DIRS})
 
-find_package(Boost 1.69.0 REQUIRED COMPONENTS filesystem date_time)
+find_package(Boost 1.70.0 REQUIRED COMPONENTS filesystem date_time)
 message(STATUS "Boost_INCLUDE_DIRS = " ${Boost_INCLUDE_DIRS})
 message(STATUS "Boost_LIBRARIES = " ${Boost_LIBRARIES})
 
-target_include_directories(dlog PRIVATE ${Boost_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR} ${spdlog_INCLUDE_DIRS})
+target_include_directories(dlog PRIVATE ${Boost_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR} ${spdlog_INCLUDE_DIRS} ${PROJECT_LIB_DIR})
 target_link_libraries(dlog PRIVATE ${Boost_LIBRARIES})
 
  
