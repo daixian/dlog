@@ -5,20 +5,20 @@
 #include <stdlib.h>
 
 #if defined(_WIN32) || defined(_WIN64)
-#include <windows.h>
+#    include <windows.h>
 
 //一个windows下的实验的函数,设置控制台彩色的
-void setConsoleMode()
-{
-    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-    if (hOut != INVALID_HANDLE_VALUE) {
-        DWORD dwMode = 0;
-        GetConsoleMode(hOut, &dwMode);
-
-        dwMode |= 0x0004;
-        SetConsoleMode(hOut, dwMode);
-    }
-}
+//void setConsoleMode()
+//{
+//    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+//    if (hOut != INVALID_HANDLE_VALUE) {
+//        DWORD dwMode = 0;
+//        GetConsoleMode(hOut, &dwMode);
+//
+//        dwMode |= 0x0004;
+//        SetConsoleMode(hOut, dwMode);
+//    }
+//}
 
 #elif defined(__linux__)
 /* Linux. --------------------------------------------------- */

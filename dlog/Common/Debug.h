@@ -133,14 +133,15 @@ class Debug
     ///
     /// <remarks> Dx, 2019/3/17. </remarks>
     ///
-    /// <param name="program"> The program. </param>
-    /// <param name="logDir">  (Optional) The log dir. </param>
+    /// <param name="logDir">  (Optional) 日志文件目录. </param>
+    /// <param name="program"> (Optional) 日志程序名. </param>
+    /// <param name="rel">     (Optional) 如果是相对目录那么相对位置是. </param>
     ///-------------------------------------------------------------------------------------------------
-    void init(const char* program = "dlog", const char* logDir = "log",
+    void init(const char* logDir = "log", const char* program = "dlog",
               INIT_RELATIVE rel = INIT_RELATIVE::APPDATA);
 
     ///-------------------------------------------------------------------------------------------------
-    /// <summary> 重置设置回默认设置. </summary>
+    /// <summary> 重置设置回默认设置,并且会关掉所有的日志器. </summary>
     ///
     /// <remarks> Dx, 2019/3/17. </remarks>
     ///-------------------------------------------------------------------------------------------------

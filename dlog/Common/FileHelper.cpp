@@ -3,12 +3,12 @@
 #include <stdlib.h>
 #include "iostream"
 #if defined(_WIN32) || defined(_WIN64)
-#include <windows.h>
-#include <ShlObj.h> //SHGetSpecialFolderPath
+#    include <windows.h>
+#    include <ShlObj.h> //SHGetSpecialFolderPath
 #elif defined(__linux__)
-#include <unistd.h>
-#include <sys/types.h>
-#include <pwd.h>
+#    include <unistd.h>
+#    include <sys/types.h>
+#    include <pwd.h>
 #endif
 
 #include <boost/filesystem.hpp>

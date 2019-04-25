@@ -13,7 +13,7 @@ namespace dxlib {
 
 Debug* Debug::m_pInstance = NULL;
 
-void Debug::init(const char* program, const char* logDir, INIT_RELATIVE rel)
+void Debug::init(const char* logDir, const char* program, INIT_RELATIVE rel)
 {
     mt.lock();
     if (isInit) {
@@ -62,8 +62,8 @@ void Debug::init(const char* program, const char* logDir, INIT_RELATIVE rel)
 
         filelogger = spdlog::basic_logger_mt(programName, logFilePath);
         filelogger->flush_on(spdlog::level::level_enum::warn);
-        spdlog::flush_every(std::chrono::seconds(1));//每秒自动刷新一次
-        isInit = true; //标记已经初始化了
+        spdlog::flush_every(std::chrono::seconds(1)); //每秒自动刷新一次
+        isInit = true;                                //标记已经初始化了
         isInitFail = false;
         mt.unlock();
     }

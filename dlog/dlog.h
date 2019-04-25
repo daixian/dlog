@@ -1,32 +1,28 @@
 ﻿#pragma once
 #ifndef _DLOG_H_
-#define _DLOG_H_
+#    define _DLOG_H_
 
-#if defined(_WIN32) || defined(_WIN64)
+#    if defined(_WIN32) || defined(_WIN64)
+#        if defined DLOG_EXPORTS
+#            define DLOG_EXPORT __declspec(dllexport)
+#            define DLOG__LOCAL
+#        else
+#            pragma comment(lib, "dlog.lib")
+#            define DLOG_EXPORT __declspec(dllimport)
+#        endif
 
-#if defined DLOG_EXPORTS
-#define DLOG_EXPORT __declspec(dllexport)
-#define DLOG__LOCAL
-#else
-#pragma comment(lib, "dlog.lib")
-#define DLOG_EXPORT __declspec(dllimport)
-#endif
-
-#elif defined(__linux__)
-#if __GNUC__ >= 4
-#if defined DLOG_EXPORTS
-#define DLOG_EXPORT __attribute__((visibility("default")))
-#define DLOG__LOCAL __attribute__((visibility("hidden")))
-#else
-#define DLOG_EXPORT
-#define DLOG__LOCAL
-#endif
-#define __cdecl
-#define __cdecl
-#else
-#endif
-
-#endif
+#    elif defined(__linux__)
+#        if __GNUC__ >= 4
+#            if defined DLOG_EXPORTS
+#                define DLOG_EXPORT __attribute__((visibility("default")))
+#                define DLOG__LOCAL __attribute__((visibility("hidden")))
+#            else
+#                define DLOG_EXPORT
+#                define DLOG__LOCAL
+#            endif
+#        else
+#        endif
+#    endif
 
 //给用户使用的LogSeverity定义,目前和spdlog里的定义一致,但是只使用debug,info,warn,err
 enum class dlog_level
@@ -76,9 +72,9 @@ enum class dlog_init_relative
 /// </returns>
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT int __cdecl dlog_init(const char* logDir = "log",
-                                               const char* program = "dlog",
-                                               dlog_init_relative dir_relatvie = dlog_init_relative::APPDATA,
-                                               bool isForceInit = false);
+                                             const char* program = "dlog",
+                                             dlog_init_relative dir_relatvie = dlog_init_relative::APPDATA,
+                                             bool isForceInit = false);
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary> 关闭模块. </summary>
@@ -244,7 +240,7 @@ extern "C" DLOG_EXPORT void __cdecl LogE(const char* strFormat, ...);
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT void __cdecl LogD(const char* strFormat, ...);
 
-#pragma region 内存缓存日志相关
+#    pragma region 内存缓存日志相关
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary> 设置内存log是否使能. </summary>
@@ -268,7 +264,7 @@ extern "C" DLOG_EXPORT void __cdecl dlog_memory_log_enable(bool enable);
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT int __cdecl dlog_get_memlog(char* buff, int offset, int count);
 
-#pragma endregion
+#    pragma endregion
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary> 得到appdata的路径,目录末尾不带斜杠"C:\\Users\\dx\\AppData\\Roaming". </summary>

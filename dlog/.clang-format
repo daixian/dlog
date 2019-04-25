@@ -1,10 +1,5 @@
-﻿#https://github.com/yaoqi-github/clang-format/blob/master/.clang-format
-# Checkout config tool: https://zed0.co.uk/clang-format-configurator/
-# Or http://cf.monofraps.net/
-
-#说明文档:
-# https://clang.llvm.org/docs/ClangFormatStyleOptions.html
-# https://github.com/01org/parameter-framework/blob/master/.clang-format
+﻿#官方说明文档:
+# http://clang.llvm.org/docs/ClangFormatStyleOptions.html
 
 Language: Cpp
 
@@ -41,6 +36,9 @@ ColumnLimit: 0
 
 #注释对齐
 AlignTrailingComments: true
+
+#预处理缩进 BeforeHash更好看,需要clang9,目前只出到clang8
+IndentPPDirectives: AfterHash
 
 #If true, a space is inserted after C style casts.
 SpaceAfterCStyleCast: false

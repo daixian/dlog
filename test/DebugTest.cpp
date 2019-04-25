@@ -5,7 +5,7 @@
 #include "dlog/Common/FileHelper.h"
 
 #if defined(_WIN32) || defined(_WIN64)
-#pragma comment(lib, "dlog.lib")
+#    pragma comment(lib, "dlog.lib")
 #elif defined(__linux__)
 #endif
 
@@ -20,7 +20,7 @@ TEST(Debug, LogSeverity)
     EXPECT_FALSE(Debug::GetInst()->isInit); //应该还未初始化
     EXPECT_TRUE(Debug::GetInst()->filelogger == nullptr);
 
-    Debug::GetInst()->init("dlog-test", "log", INIT_RELATIVE::MODULE);
+    Debug::GetInst()->init("log", "dlog-test", INIT_RELATIVE::MODULE);
     EXPECT_TRUE(Debug::GetInst()->isInit); //应该初始化成功
     EXPECT_TRUE(Debug::GetInst()->filelogger != nullptr);
 

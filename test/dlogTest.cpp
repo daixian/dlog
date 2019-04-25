@@ -12,6 +12,8 @@
 using namespace dxlib;
 using namespace std;
 
+//注意,在微软的CI服务器上,APPDATA目录没有权限创建,同时不支持中文路径
+
 TEST(dlog, memorylog)
 {
     dlog_close();
