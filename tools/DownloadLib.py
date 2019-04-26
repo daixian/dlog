@@ -6,6 +6,7 @@ import sys
 import tarfile
 import zipfile
 import shutil
+import getopt
 
 # 临时下载文件夹
 dirDownload = "./download"
@@ -206,6 +207,20 @@ def download_boost():
     print("done!\r\n")
 
 
+def download_boost_linux():
+    '''下载库 boost'''
+    print("download boost linux ...")
+    url = "http://xuexuesoft.com/files/build/linux/x64/boost_1_70_0.zip"
+    downloadFile = dirDownload + "/boost_1_70_0.zip"
+    download_with_cache(url, downloadFile)
+
+    # if os.path.exists(dirLib+"/boost_1_70_0"):
+    #     shutil.rmtree(dirLib + "/boost_1_70_0")
+    print("extract start ...")
+    extract_zip(downloadFile, dirLib)
+    print("done!\r\n")
+
+
 def download_eigen():
     '''下载库 eigen'''
     print("download eigen ...")
@@ -313,21 +328,20 @@ def download_dotnet_utility():
     extract_zip(downloadFile, dirLib)
     print("done!\r\n")
 
-download_concurrentqueue()
-download_spdlog()
-download_gtest()
+# download_concurrentqueue()
+# download_spdlog()
+# download_gtest()
 # download_cryptopp()
 # download_dlog()
-download_boost()
+# download_boost()
 # download_eigen()
 # download_eventbus()
 # download_rapidjson()
 # download_fscore()
 # download_rclapi()
 
-
-#download_xuexueutility()
-#download_dotnet_utility()
+# download_xuexueutility()
+# download_dotnet_utility()
 
 # 包含目录
 # ../lib
@@ -339,3 +353,69 @@ download_boost()
 # ../lib/FSCore/x64
 # ../lib/RclAPI/x64
 # ../lib/FSCore/x64;../lib/dlog/x64;../lib/RclAPI/x64;
+
+
+def main(argv):
+    platform = "windows"
+    try:
+        # http://www.runoob.com/python/python-command-line-arguments.html?tdsourcetag=s_pcqq_aiomsg
+        # 返回值由两个元素组成：第一个是（选项，值）对的列表;第二个是剥离选项列表后留下的程序参数列表（这是第一个参数的尾部切片）。
+        # 返回的每个选项和值对都有选项作为其第一个元素，前缀为连字符（例如，' -  x'），
+        # 选项参数作为其第二个元素，如果选项没有参数，则为空字符串。选项以与查找顺序相同的顺序出现在列表中，从而允许多次出现。多头和空头选择可能是混合的。
+        opts, args = getopt.getopt(argv, "hp:", ["help", "platform="])
+    except getopt.GetoptError:
+        print("FileTree.py -p <platform>")
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt in ("-h", "--help"):
+            print("FileTree.py -p <platform>")
+            sys.exit()
+        elif opt in ("-p", "--platform"):
+            platform = arg
+
+    for arg in args:
+        if (arg == "concurrentqueue"):
+            download_concurrentqueue()
+
+        elif (arg == "spdlog"):
+            download_spdlog()
+
+        elif (arg == "gtest"):
+            download_gtest()
+
+        elif (arg == "cryptopp"):
+            download_cryptopp()
+
+        elif (arg == "dlog"):
+            download_dlog()
+
+        elif (arg == "boost"):
+            if (platform == "windows"):
+                download_boost()
+            elif (platform == "linux"):
+                download_boost_linux()
+
+        elif (arg == "eigen"):
+            download_eigen()
+
+        elif (arg == "eventbus"):
+            download_eventbus()
+
+        elif (arg == "rapidjson"):
+            download_rapidjson()
+
+        elif (arg == "fscore"):
+            download_fscore()
+
+        elif (arg == "rclapi"):
+            download_rclapi()
+
+        elif (arg == "xuexueutility"):
+            download_xuexueutility()
+
+        elif (arg == "dotnet_utility"):
+            download_dotnet_utility()
+
+
+if __name__ == "__main__":
+    main(sys.argv[1:])

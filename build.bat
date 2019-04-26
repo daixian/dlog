@@ -1,5 +1,5 @@
 python -V
-python ./tools/build.py
+python ./tools/DownloadLib.py "concurrentqueue" "spdlog" "gtest" "boost" 
 mkdir build
 cd build
 mkdir Win64
