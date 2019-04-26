@@ -1,5 +1,5 @@
 python -V
-python build.py
+python ./tools/build.py
 mkdir build
 cd build
 mkdir Win64
