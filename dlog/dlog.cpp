@@ -243,6 +243,9 @@ extern "C" DLOG_EXPORT void __cdecl LogI(const char* strFormat, ...)
         //vsnprintf的返回是不包含\0的预留位置的
         while ((ret = vsnprintf(buf.data(), buf.size(), strFormat, arg_ptr)) >= buf.size()) {
             buf.resize(ret + 1, '\0');
+            //在GCC平台需要重新生成一下arg_ptr
+            va_end(arg_ptr);
+            va_start(arg_ptr, strFormat);
         }
         va_end(arg_ptr);
         Debug::GetInst()->LogMsg(spdlog::level::level_enum::info, buf.data());
@@ -274,6 +277,9 @@ extern "C" DLOG_EXPORT void __cdecl LogW(const char* strFormat, ...)
         //vsnprintf的返回是不包含\0的预留位置的
         while ((ret = vsnprintf(buf.data(), buf.size(), strFormat, arg_ptr)) >= buf.size()) {
             buf.resize(ret + 1, '\0');
+            //在GCC平台需要重新生成一下arg_ptr
+            va_end(arg_ptr);
+            va_start(arg_ptr, strFormat);
         }
         va_end(arg_ptr);
         Debug::GetInst()->LogMsg(spdlog::level::level_enum::warn, buf.data());
@@ -305,6 +311,9 @@ extern "C" DLOG_EXPORT void __cdecl LogE(const char* strFormat, ...)
         //vsnprintf的返回是不包含\0的预留位置的
         while ((ret = vsnprintf(buf.data(), buf.size(), strFormat, arg_ptr)) >= buf.size()) {
             buf.resize(ret + 1, '\0');
+            //在GCC平台需要重新生成一下arg_ptr
+            va_end(arg_ptr);
+            va_start(arg_ptr, strFormat);
         }
         va_end(arg_ptr);
         Debug::GetInst()->LogMsg(spdlog::level::level_enum::err, buf.data());
@@ -336,6 +345,9 @@ extern "C" DLOG_EXPORT void __cdecl LogD(const char* strFormat, ...)
         //vsnprintf的返回是不包含\0的预留位置的
         while ((ret = vsnprintf(buf.data(), buf.size(), strFormat, arg_ptr)) >= buf.size()) {
             buf.resize(ret + 1, '\0');
+            //在GCC平台需要重新生成一下arg_ptr
+            va_end(arg_ptr);
+            va_start(arg_ptr, strFormat);
         }
         va_end(arg_ptr);
         Debug::GetInst()->LogMsg(spdlog::level::level_enum::debug, buf.data());
