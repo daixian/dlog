@@ -43,7 +43,12 @@ set(Boost_USE_STATIC_RUNTIME OFF)
 set(BOOST_ALL_DYN_LINK OFF)
 else()
 message(STATUS "Platform = Other")
-set(BOOST_ROOT $ENV{HOME}/sdk/boost/boost_1_69_0)
+set(BOOST_ROOT ${PROJECT_LIB_DIR}/boost_1_70_0)
+set(Boost_NO_SYSTEM_PATHS ON)
+set(Boost_USE_MULTITHREADED ON)
+set(Boost_USE_STATIC_LIBS ON)
+set(Boost_USE_STATIC_RUNTIME OFF)
+set(BOOST_ALL_DYN_LINK OFF)
 endif()
 
 

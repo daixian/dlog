@@ -23,6 +23,7 @@ endif()
 set(config_install_dir "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")
 
 # Library definition
+if(WIN32)
 add_library(dlog
             SHARED
             resource.h
@@ -42,7 +43,26 @@ add_library(dlog
             stdafx.cpp
             dllmain.cpp
             dlog.rc)
-
+else()
+add_library(dlog
+            STATIC
+            resource.h
+            stdafx.h
+            targetver.h
+            Common/Common.h
+            Common/Debug.h
+            Common/FileHelper.h
+            Common/stack_allocator.hpp
+            Common/MemoryLog.h
+            dlog.h
+            Common/Debug.cpp
+            Common/Common.cpp
+            Common/FileHelper.cpp
+            Common/MemoryLog.cpp
+            dlog.cpp
+            stdafx.cpp
+            dllmain.cpp)
+endif()
 # target_compile_features(dlog PUBLIC cxx_std_14)
 
 # Dependencies

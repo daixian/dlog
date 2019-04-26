@@ -27,7 +27,7 @@ if(NOT DEFINED dlog_LIBRARIES)
       ${dlog_OBJECTS}/MemoryLog.obj
       )
   else()
-    set(dlog_LIBRARIES ${LIBRARY_OUTPUT_PATH}/libdlog.so)
+    set(dlog_LIBRARIES ${LIBRARY_OUTPUT_PATH}/libdlog.a)
   endif()
 endif()
 # 输出dlog库的目录看看

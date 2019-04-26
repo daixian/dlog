@@ -20,6 +20,7 @@
 #                define DLOG_EXPORT
 #                define DLOG__LOCAL
 #            endif
+#            define __cdecl //默认是，加上了反而有warning __attribute__((__cdecl__))
 #        else
 #        endif
 #    endif
