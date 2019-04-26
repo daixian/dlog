@@ -61,14 +61,14 @@ message(STATUS "Boost_LIBRARIES = " ${Boost_LIBRARIES})
 target_include_directories(dlog PRIVATE ${Boost_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR} ${spdlog_INCLUDE_DIRS} ${PROJECT_LIB_DIR})
 target_link_libraries(dlog PRIVATE ${Boost_LIBRARIES})
 
- 
-# target_include_directories(dlog PUBLIC
-# $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/>
-# $<INSTALL_INTERFACE:include/> PRIVATE lib/src/ )
-
-# Add definitions for targets Values: * Debug:   -DEVENTBUS_DEBUG=1 * Release:
-# -DEVENTBUS_DEBUG=0 * other:   -DEVENTBUS_DEBUG=0
-# target_compile_definitions(dlog PUBLIC "EVENTBUS_DEBUG=$<CONFIG:Debug>")
+# 全都安装到根目录
+install(TARGETS dlog
+       RUNTIME DESTINATION "./"
+       LIBRARY DESTINATION "./"
+       ARCHIVE DESTINATION "./"
+)
+install(FILES "dlog.h" DESTINATION "./")
+install(FILES "../UnitTest/DLog.cs" DESTINATION "./")
 
 # Configuration
 set(generated_dir "${CMAKE_CURRENT_BINARY_DIR}/generated")
