@@ -22,6 +22,8 @@ set(CMAKE_CXX_STANDARD 14)
 
 option(ENABLE_TEST "Enable test" OFF)
 
+option(CROSS_COMPILE "Cross Compile" ON)
+
 enable_testing()
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
@@ -49,6 +51,11 @@ set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
 set(BOOST_ALL_DYN_LINK OFF)
+endif()
+
+# 使用编好的boost库
+if(CROSS_COMPILE) 
+set(BOOST_ROOT $ENV{HOME}/sdk/boost/boost_1_70_0_arm64)
 endif()
 
 
