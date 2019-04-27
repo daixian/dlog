@@ -90,3 +90,16 @@ TEST(FileHelper, getAppDir)
     dir = FileHelper::getModuleDir();
     EXPECT_TRUE(dir.size() > 0);
 }
+
+TEST(Debug, LogMsg)
+{
+    Debug::GetInst()->clear();
+    EXPECT_FALSE(Debug::GetInst()->isInit); //应该还未初始化
+    EXPECT_TRUE(Debug::GetInst()->filelogger == nullptr);
+
+    Debug::GetInst()->init("log", "LogMsg", INIT_RELATIVE::MODULE);
+    Debug::GetInst()->LogMsg(spdlog::level::level_enum::info, "试一试");
+    Debug::GetInst()->LogMsg(spdlog::level::level_enum::info, L"试一试");
+    Debug::GetInst()->LogMsg(spdlog::level::level_enum::info, L"试一试");
+    Debug::GetInst()->LogMsg(spdlog::level::level_enum::info, L"试一试");
+}

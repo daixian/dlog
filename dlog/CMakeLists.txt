@@ -14,6 +14,7 @@ if(WIN32)
   add_definitions(-D _WINDOWS)
   add_definitions(-D _USERDLL)
 endif()
+add_definitions(-D SPDLOG_WCHAR_TO_UTF8_SUPPORT)
 
 # Introduce variables: * CMAKE_INSTALL_LIBDIR * CMAKE_INSTALL_BINDIR *
 # CMAKE_INSTALL_INCLUDEDIR

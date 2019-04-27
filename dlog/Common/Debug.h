@@ -128,6 +128,9 @@ class Debug
     /// <summary> 是否初始化失败了. </summary>
     bool isInitFail = false;
 
+    /// <summary> 是否使用wchat来记录日志,其实只影响内部输出的日志内容. </summary>
+    bool isWchat = false;
+
     ///-------------------------------------------------------------------------------------------------
     /// <summary> 输入一个文件夹来初始化. </summary>
     ///
@@ -138,7 +141,7 @@ class Debug
     /// <param name="rel">     (Optional) 如果是相对目录那么相对位置是. </param>
     ///-------------------------------------------------------------------------------------------------
     void init(const char* logDir = "log", const char* program = "dlog",
-              INIT_RELATIVE rel = INIT_RELATIVE::APPDATA);
+              INIT_RELATIVE rel = INIT_RELATIVE::APPDATA, bool iswchat = false);
 
     ///-------------------------------------------------------------------------------------------------
     /// <summary> 重置设置回默认设置,并且会关掉所有的日志器. </summary>
@@ -213,6 +216,27 @@ class Debug
     /// <param name="msg">    The message. </param>
     ///-------------------------------------------------------------------------------------------------
     void LogMsg(spdlog::level::level_enum logThr, const char* msg)
+    {
+        if (logFileThr <= logThr && filelogger != nullptr) { //满足优先级才输出 - 文件
+            filelogger->log(logThr, msg);
+        }
+        if (isConsoleEnable && logConsoleThr <= logThr && consolelogger != nullptr) { //满足优先级才输出 - 控制台
+            consolelogger->log(logThr, msg);
+        }
+        if (isMemLogEnable && logMemoryThr <= logThr) { //满足优先级才输出 - 内存队列
+            MemoryLog::GetInst()->addLog(msg);
+        }
+    }
+
+    ///-------------------------------------------------------------------------------------------------
+    /// <summary> 直接输出一个完整日志. </summary>
+    ///
+    /// <remarks> Dx, 2019/4/16. </remarks>
+    ///
+    /// <param name="logThr"> The log thr. </param>
+    /// <param name="msg">    The message. </param>
+    ///-------------------------------------------------------------------------------------------------
+    void LogMsg(spdlog::level::level_enum logThr, const wchar_t* msg)
     {
         if (logFileThr <= logThr && filelogger != nullptr) { //满足优先级才输出 - 文件
             filelogger->log(logThr, msg);

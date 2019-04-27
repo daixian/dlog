@@ -13,7 +13,7 @@ namespace dxlib {
 
 Debug* Debug::m_pInstance = NULL;
 
-void Debug::init(const char* logDir, const char* program, INIT_RELATIVE rel)
+void Debug::init(const char* logDir, const char* program, INIT_RELATIVE rel, bool iswchat)
 {
     mt.lock();
     if (isInit) {
@@ -22,6 +22,8 @@ void Debug::init(const char* logDir, const char* program, INIT_RELATIVE rel)
     }
 
     try {
+        this->isWchat = iswchat;
+
         //设置日志输出格式
         spdlog::set_pattern(logPattern);
 

@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.8 FATAL_ERROR)
 # BUILD_SHARED_LIBS can controll build type!
 
 set(CMAKE_CXX_STANDARD 14)
+add_definitions(-D SPDLOG_WCHAR_TO_UTF8_SUPPORT)
 
 add_executable(test.out pch.h pch.cpp DebugTest.cpp dlogTest.cpp MemoryLogTest.cpp)
 

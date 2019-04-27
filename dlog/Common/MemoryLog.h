@@ -43,6 +43,23 @@ class MemoryLog
     }
 
     ///-------------------------------------------------------------------------------------------------
+    /// <summary> 写入一条日志. </summary>
+    ///
+    /// <remarks> Dx, 2018/5/11. </remarks>
+    ///
+    /// <param name="msg"> [in,out] If non-null, the
+    ///                    message. </param>
+    ///-------------------------------------------------------------------------------------------------
+    void addLog(const std::wstring& msg)
+    {
+        if (_memLogQueueW.size_approx() > maxLen) { //如果它实在是太长了，大概占用了20M
+            std::wstring first;
+            _memLogQueueW.try_dequeue(first); //移出最前的
+        }
+        _memLogQueueW.enqueue(msg);
+    }
+
+    ///-------------------------------------------------------------------------------------------------
     /// <summary> 获取一条日志. </summary>
     ///
     /// <remarks> Dx, 2018/5/11. </remarks>
@@ -54,6 +71,20 @@ class MemoryLog
     bool getLog(std::string& msg)
     {
         return _memLogQueue.try_dequeue(msg);
+    }
+
+    ///-------------------------------------------------------------------------------------------------
+    /// <summary> 获取一条日志. </summary>
+    ///
+    /// <remarks> Dx, 2018/5/11. </remarks>
+    ///
+    /// <param name="msg"> [out] 一条日志. </param>
+    ///
+    /// <returns> 如果成功提取返回true,提取失败返回false. </returns>
+    ///-------------------------------------------------------------------------------------------------
+    bool getLog(std::wstring& msg)
+    {
+        return _memLogQueueW.try_dequeue(msg);
     }
 
     ///-------------------------------------------------------------------------------------------------
@@ -69,6 +100,18 @@ class MemoryLog
     }
 
     ///-------------------------------------------------------------------------------------------------
+    /// <summary> 当前内存中缓存的日志条数. </summary>
+    ///
+    /// <remarks> Dx, 2018/5/11. </remarks>
+    ///
+    /// <returns> An int. </returns>
+    ///-------------------------------------------------------------------------------------------------
+    size_t countW()
+    {
+        return _memLogQueueW.size_approx();
+    }
+
+    ///-------------------------------------------------------------------------------------------------
     /// <summary> 清空内存日志. </summary>
     ///
     /// <remarks> Dx, 2018/11/15. </remarks>
@@ -79,10 +122,18 @@ class MemoryLog
         while (_memLogQueue.size_approx() != 0) {
             _memLogQueue.try_dequeue(first);
         }
+
+        std::wstring firstw;
+        while (_memLogQueueW.size_approx() != 0) {
+            _memLogQueueW.try_dequeue(firstw);
+        }
     }
 
     /// <summary> Queue of memory logs. </summary>
     moodycamel::ConcurrentQueue<std::string> _memLogQueue;
+
+    /// <summary> Queue of memory logs. </summary>
+    moodycamel::ConcurrentQueue<std::wstring> _memLogQueueW;
 
     /// <summary> 队列的最大长度. </summary>
     size_t maxLen = 1024 * 1024 / 5;

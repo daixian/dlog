@@ -21,18 +21,21 @@ project(dlog VERSION 2.1.2 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 14)
 
 option(ENABLE_TEST "Enable test" OFF)
+option(CROSS_COMPILE "Cross Compile" OFF)
 
-option(CROSS_COMPILE "Cross Compile" ON)
+# 设置工程外部库的文件夹 $ENV{HOME}
+if(WIN32)
+set(PROJECT_LIB_DIR "C:/dxlib/lib" CACHE STRING "dx's lib")
+else()
+set(PROJECT_LIB_DIR $ENV{HOME}/dxlib/lib CACHE STRING "dx's lib")
+endif()
+message(STATUS "PROJECT_LIB_DIR = " ${PROJECT_LIB_DIR})
 
 enable_testing()
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 set(RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
-# 设置工程外部库的文件夹
-set(PROJECT_LIB_DIR ${CMAKE_SOURCE_DIR}/lib)
-message(STATUS "PROJECT_LIB_DIR = " ${PROJECT_LIB_DIR})
 
 # 设置boost的库的位置
 if(WIN32)
@@ -57,6 +60,7 @@ endif()
 if(CROSS_COMPILE) 
 set(BOOST_ROOT $ENV{HOME}/sdk/boost/boost_1_70_0_arm64)
 endif()
+message(STATUS "BOOST_ROOT = " ${BOOST_ROOT})
 
 
 add_definitions(-DBOOST_ALL_NO_LIB)

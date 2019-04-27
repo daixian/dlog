@@ -10,14 +10,12 @@ import getopt
 
 # 临时下载文件夹
 dirDownload = "./download"
-if not os.path.exists(dirDownload):
-    os.makedirs(dirDownload)
 
 # 项目的依赖库文件夹
 dirLib = "./lib"
-if not os.path.exists(dirLib):
-    os.makedirs(dirLib)
 
+# 项目内部的依赖库文件夹(要使用cmake一起构建的库)
+dirInternalLib = "./lib"
 
 def extract_zip(zfile_path, unzip_dir):
     '''
@@ -146,11 +144,14 @@ def download_gtest():
     downloadFile = dirDownload + "/gtest-1.8.1.tar.gz"
     download_with_cache(url, downloadFile)
 
+    if not os.path.exists(dirInternalLib):
+        os.makedirs(dirInternalLib)
+
     print("extract start ...")
-    extract_tar(downloadFile, dirLib)
-    if os.path.exists(dirLib+"/gtest"):
-        shutil.rmtree(dirLib+"/gtest")
-    os.renames(dirLib+"/googletest-release-1.8.1", dirLib+"/gtest")
+    extract_tar(downloadFile, dirInternalLib)
+    if os.path.exists(dirInternalLib+"/gtest"):
+        shutil.rmtree(dirInternalLib+"/gtest")
+    os.renames(dirInternalLib+"/googletest-release-1.8.1", dirInternalLib+"/gtest")
     print("done!\r\n")
 
 
@@ -200,10 +201,12 @@ def download_boost():
     downloadFile = dirDownload + "/boost_1_70_0.zip"
     download_with_cache(url, downloadFile)
 
-    # if os.path.exists(dirLib+"/boost_1_70_0"):
-    #     shutil.rmtree(dirLib + "/boost_1_70_0")
-    print("extract start ...")
-    extract_zip(downloadFile, dirLib)
+    if os.path.exists(dirLib + "/boost_1_70_0"):
+        print("dir exists,don't extract!")
+    else:
+        # shutil.rmtree(dirLib + "/boost_1_70_0")
+        print("extract start ...")
+        extract_zip(downloadFile, dirLib)
     print("done!\r\n")
 
 
@@ -214,10 +217,28 @@ def download_boost_linux():
     downloadFile = dirDownload + "/boost_1_70_0.zip"
     download_with_cache(url, downloadFile)
 
-    # if os.path.exists(dirLib+"/boost_1_70_0"):
-    #     shutil.rmtree(dirLib + "/boost_1_70_0")
-    print("extract start ...")
-    extract_zip(downloadFile, dirLib)
+    if os.path.exists(dirLib + "/boost_1_70_0"):
+        print("dir exists,don't extract!")
+    else:
+        # shutil.rmtree(dirLib + "/boost_1_70_0")
+        print("extract start ...")
+        extract_zip(downloadFile, dirLib)
+    print("done!\r\n")
+
+
+def download_boost_arm():
+    '''下载库 boost'''
+    print("download boost linux ...")
+    url = "http://xuexuesoft.com/files/build/linux/arm/boost_1_70_0_arm64.zip"
+    downloadFile = dirDownload + "/boost_1_70_0_arm64.zip"
+    download_with_cache(url, downloadFile)
+
+    if os.path.exists(dirLib + "/boost_1_70_0_arm64"):
+        print("dir exists,don't extract!")
+    else:
+        # shutil.rmtree(dirLib + "/boost_1_70_0")
+        print("extract start ...")
+        extract_zip(downloadFile, dirLib)
     print("done!\r\n")
 
 
@@ -357,12 +378,15 @@ def download_dotnet_utility():
 
 def main(argv):
     platform = "windows"
+    global dirDownload
+    global dirLib
     try:
         # http://www.runoob.com/python/python-command-line-arguments.html?tdsourcetag=s_pcqq_aiomsg
         # 返回值由两个元素组成：第一个是（选项，值）对的列表;第二个是剥离选项列表后留下的程序参数列表（这是第一个参数的尾部切片）。
         # 返回的每个选项和值对都有选项作为其第一个元素，前缀为连字符（例如，' -  x'），
         # 选项参数作为其第二个元素，如果选项没有参数，则为空字符串。选项以与查找顺序相同的顺序出现在列表中，从而允许多次出现。多头和空头选择可能是混合的。
-        opts, args = getopt.getopt(argv, "hp:", ["help", "platform="])
+        opts, args = getopt.getopt(
+            argv, "hp:d:l:", ["help", "platform=", "download=", "lib="])
     except getopt.GetoptError:
         print("FileTree.py -p <platform>")
         sys.exit(2)
@@ -372,6 +396,17 @@ def main(argv):
             sys.exit()
         elif opt in ("-p", "--platform"):
             platform = arg
+        elif opt in ("-d", "--download"):
+            dirDownload = arg
+        elif opt in ("-l", "--lib"):
+            dirLib = arg
+
+    print("download lib: platform=" + platform +
+          " dirDownload=" + dirDownload+" dirLib=" + dirLib)
+    if not os.path.exists(dirDownload):
+        os.makedirs(dirDownload)
+    if not os.path.exists(dirLib):
+        os.makedirs(dirLib)
 
     for arg in args:
         if (arg == "concurrentqueue"):
@@ -394,6 +429,8 @@ def main(argv):
                 download_boost()
             elif (platform == "linux"):
                 download_boost_linux()
+            elif (platform == "arm"):
+                download_boost_arm()
 
         elif (arg == "eigen"):
             download_eigen()
