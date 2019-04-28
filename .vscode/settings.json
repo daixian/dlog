@@ -3,7 +3,25 @@
         //"CMAKE_TOOLCHAIN_FILE": "~/vcpkg/scripts/buildsystems/vcpkg.cmake",
         //"VCPKG_TARGET_TRIPLET": "x64-linux"
     },
+    "cmake.buildDirectory": "${workspaceRoot}/build/Win64",
     "cmake.configureOnOpen": false,
-    "catch2TestExplorer.executables":["build/bin/test.out"],
-    "catch2TestExplorer.defaultCwd": "build/bin/",
+    // "cmake.generator": "Visual Studio 15 2017 Win64",
+    // "cmake.preferredGenerators": [
+    //     "Visual Studio 15 2017 Win64",
+    //     "Ninja",
+    //     "Unix Makefiles"
+    // ],
+    "cmake.configureArgs": [
+        "-DBUILD_GMOCK:BOOL=0",
+        "-DINSTALL_GTEST:BOOL=0",
+        "-Dgtest_force_shared_crt:BOOL=1",
+        "-DBUILD_TESTING:BOOL=0",
+        "-DENABLE_TEST:BOOL=1",
+        "-DCMAKE_INSTALL_PREFIX:PATH=./install",
+    ],
+    // 安装插件"Catch2 and Google Test Explorer"
+    "catch2TestExplorer.executables": [
+        "build/Win64/bin/Release/test.out.exe",
+    ],
+    "catch2TestExplorer.defaultCwd": "build/Win64/bin/Release",
 }
