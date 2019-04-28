@@ -99,7 +99,10 @@ TEST(Debug, LogMsg)
 
     Debug::GetInst()->init("log", "LogMsg", INIT_RELATIVE::MODULE);
     Debug::GetInst()->LogMsg(spdlog::level::level_enum::info, "试一试");
+// 只有在windows上支持这个功能，暂时还是不要使用了
+#ifdef SPDLOG_WCHAR_TO_UTF8_SUPPORT
     Debug::GetInst()->LogMsg(spdlog::level::level_enum::info, L"试一试");
     Debug::GetInst()->LogMsg(spdlog::level::level_enum::info, L"试一试");
     Debug::GetInst()->LogMsg(spdlog::level::level_enum::info, L"试一试");
+#endif
 }

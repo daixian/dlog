@@ -128,8 +128,8 @@ class Debug
     /// <summary> 是否初始化失败了. </summary>
     bool isInitFail = false;
 
-    /// <summary> 是否使用wchat来记录日志,其实只影响内部输出的日志内容. </summary>
-    bool isWchat = false;
+    // /// <summary> 是否使用wchat来记录日志,其实只影响内部输出的日志内容. </summary>
+    // bool isWchat = false;
 
     ///-------------------------------------------------------------------------------------------------
     /// <summary> 输入一个文件夹来初始化. </summary>
@@ -141,7 +141,7 @@ class Debug
     /// <param name="rel">     (Optional) 如果是相对目录那么相对位置是. </param>
     ///-------------------------------------------------------------------------------------------------
     void init(const char* logDir = "log", const char* program = "dlog",
-              INIT_RELATIVE rel = INIT_RELATIVE::APPDATA, bool iswchat = false);
+              INIT_RELATIVE rel = INIT_RELATIVE::APPDATA);
 
     ///-------------------------------------------------------------------------------------------------
     /// <summary> 重置设置回默认设置,并且会关掉所有的日志器. </summary>
@@ -228,6 +228,8 @@ class Debug
         }
     }
 
+// 只有在windows上支持这个功能，暂时还是不要使用了
+#ifdef SPDLOG_WCHAR_TO_UTF8_SUPPORT
     ///-------------------------------------------------------------------------------------------------
     /// <summary> 直接输出一个完整日志. </summary>
     ///
@@ -248,6 +250,7 @@ class Debug
             MemoryLog::GetInst()->addLog(msg);
         }
     }
+#endif
 
 #pragma endregion 老函数
 

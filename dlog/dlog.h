@@ -201,7 +201,6 @@ extern "C" DLOG_EXPORT void __cdecl dlog_flush();
 ///                          information. </param>
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT void __cdecl LogI(const char* strFormat, ...);
-extern "C" DLOG_EXPORT void __cdecl LogwI(const wchar_t* strFormat, ...);
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary> Logs a warring. </summary>
@@ -215,7 +214,6 @@ extern "C" DLOG_EXPORT void __cdecl LogwI(const wchar_t* strFormat, ...);
 ///                          information. </param>
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT void __cdecl LogW(const char* strFormat, ...);
-extern "C" DLOG_EXPORT void __cdecl LogwW(const wchar_t* strFormat, ...);
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary> Logs an error. </summary>
@@ -229,7 +227,6 @@ extern "C" DLOG_EXPORT void __cdecl LogwW(const wchar_t* strFormat, ...);
 ///                          information. </param>
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT void __cdecl LogE(const char* strFormat, ...);
-extern "C" DLOG_EXPORT void __cdecl LogwE(const wchar_t* strFormat, ...);
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary> Logs a debug. </summary>
@@ -243,7 +240,14 @@ extern "C" DLOG_EXPORT void __cdecl LogwE(const wchar_t* strFormat, ...);
 ///                          information. </param>
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT void __cdecl LogD(const char* strFormat, ...);
+
+// 只有在windows上支持这个功能，暂时还是不要使用了
+#    ifdef SPDLOG_WCHAR_TO_UTF8_SUPPORT
+extern "C" DLOG_EXPORT void __cdecl LogwI(const wchar_t* strFormat, ...);
+extern "C" DLOG_EXPORT void __cdecl LogwW(const wchar_t* strFormat, ...);
+extern "C" DLOG_EXPORT void __cdecl LogwE(const wchar_t* strFormat, ...);
 extern "C" DLOG_EXPORT void __cdecl LogwD(const wchar_t* strFormat, ...);
+#    endif
 
 #    pragma region 内存缓存日志相关
 

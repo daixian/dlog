@@ -252,26 +252,6 @@ extern "C" DLOG_EXPORT void __cdecl LogI(const char* strFormat, ...)
     }
 }
 
-extern "C" DLOG_EXPORT void __cdecl LogwI(const wchar_t* strFormat, ...)
-{
-    if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
-        dlog_init();
-    }
-
-    if (Debug::GetInst()->isNeedLog(spdlog::level::level_enum::info)) {
-        std::vector<wchar_t> buf(DEBUG_LOG_BUFF_SIZE);
-        int ret = 0;
-        va_list arg_ptr;
-        va_start(arg_ptr, strFormat);
-        //vsnprintf的返回是不包含\0的预留位置的
-        while ((ret = vswprintf(buf.data(), buf.size(), strFormat, arg_ptr)) >= buf.size()) {
-            buf.resize(ret + 1, '\0');
-        }
-        va_end(arg_ptr);
-        Debug::GetInst()->LogMsg(spdlog::level::level_enum::info, buf.data());
-    }
-}
-
 ///-------------------------------------------------------------------------------------------------
 /// <summary> Logs a w. </summary>
 ///
@@ -300,26 +280,6 @@ extern "C" DLOG_EXPORT void __cdecl LogW(const char* strFormat, ...)
             //在GCC平台需要重新生成一下arg_ptr
             va_end(arg_ptr);
             va_start(arg_ptr, strFormat);
-        }
-        va_end(arg_ptr);
-        Debug::GetInst()->LogMsg(spdlog::level::level_enum::warn, buf.data());
-    }
-}
-
-extern "C" DLOG_EXPORT void __cdecl LogwW(const wchar_t* strFormat, ...)
-{
-    if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
-        dlog_init();
-    }
-
-    if (Debug::GetInst()->isNeedLog(spdlog::level::level_enum::warn)) {
-        std::vector<wchar_t> buf(DEBUG_LOG_BUFF_SIZE);
-        int ret = 0;
-        va_list arg_ptr;
-        va_start(arg_ptr, strFormat);
-        //vsnprintf的返回是不包含\0的预留位置的
-        while ((ret = vswprintf(buf.data(), buf.size(), strFormat, arg_ptr)) >= buf.size()) {
-            buf.resize(ret + 1, '\0');
         }
         va_end(arg_ptr);
         Debug::GetInst()->LogMsg(spdlog::level::level_enum::warn, buf.data());
@@ -360,26 +320,6 @@ extern "C" DLOG_EXPORT void __cdecl LogE(const char* strFormat, ...)
     }
 }
 
-extern "C" DLOG_EXPORT void __cdecl LogwE(const wchar_t* strFormat, ...)
-{
-    if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
-        dlog_init();
-    }
-
-    if (Debug::GetInst()->isNeedLog(spdlog::level::level_enum::err)) {
-        std::vector<wchar_t> buf(DEBUG_LOG_BUFF_SIZE);
-        int ret = 0;
-        va_list arg_ptr;
-        va_start(arg_ptr, strFormat);
-        //vsnprintf的返回是不包含\0的预留位置的
-        while ((ret = vswprintf(buf.data(), buf.size(), strFormat, arg_ptr)) >= buf.size()) {
-            buf.resize(ret + 1, '\0');
-        }
-        va_end(arg_ptr);
-        Debug::GetInst()->LogMsg(spdlog::level::level_enum::err, buf.data());
-    }
-}
-
 ///-------------------------------------------------------------------------------------------------
 /// <summary> Logs a debug. </summary>
 ///
@@ -414,6 +354,69 @@ extern "C" DLOG_EXPORT void __cdecl LogD(const char* strFormat, ...)
     }
 }
 
+// 只有在windows上支持这个功能，暂时还是不要使用了
+#ifdef SPDLOG_WCHAR_TO_UTF8_SUPPORT
+
+extern "C" DLOG_EXPORT void __cdecl LogwI(const wchar_t* strFormat, ...)
+{
+    if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
+        dlog_init();
+    }
+
+    if (Debug::GetInst()->isNeedLog(spdlog::level::level_enum::info)) {
+        std::vector<wchar_t> buf(DEBUG_LOG_BUFF_SIZE);
+        int ret = 0;
+        va_list arg_ptr;
+        va_start(arg_ptr, strFormat);
+        //vsnprintf的返回是不包含\0的预留位置的
+        while ((ret = vswprintf(buf.data(), buf.size(), strFormat, arg_ptr)) >= buf.size()) {
+            buf.resize(ret + 1, '\0');
+        }
+        va_end(arg_ptr);
+        Debug::GetInst()->LogMsg(spdlog::level::level_enum::info, buf.data());
+    }
+}
+
+extern "C" DLOG_EXPORT void __cdecl LogwW(const wchar_t* strFormat, ...)
+{
+    if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
+        dlog_init();
+    }
+
+    if (Debug::GetInst()->isNeedLog(spdlog::level::level_enum::warn)) {
+        std::vector<wchar_t> buf(DEBUG_LOG_BUFF_SIZE);
+        int ret = 0;
+        va_list arg_ptr;
+        va_start(arg_ptr, strFormat);
+        //vsnprintf的返回是不包含\0的预留位置的
+        while ((ret = vswprintf(buf.data(), buf.size(), strFormat, arg_ptr)) >= buf.size()) {
+            buf.resize(ret + 1, '\0');
+        }
+        va_end(arg_ptr);
+        Debug::GetInst()->LogMsg(spdlog::level::level_enum::warn, buf.data());
+    }
+}
+
+extern "C" DLOG_EXPORT void __cdecl LogwE(const wchar_t* strFormat, ...)
+{
+    if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
+        dlog_init();
+    }
+
+    if (Debug::GetInst()->isNeedLog(spdlog::level::level_enum::err)) {
+        std::vector<wchar_t> buf(DEBUG_LOG_BUFF_SIZE);
+        int ret = 0;
+        va_list arg_ptr;
+        va_start(arg_ptr, strFormat);
+        //vsnprintf的返回是不包含\0的预留位置的
+        while ((ret = vswprintf(buf.data(), buf.size(), strFormat, arg_ptr)) >= buf.size()) {
+            buf.resize(ret + 1, '\0');
+        }
+        va_end(arg_ptr);
+        Debug::GetInst()->LogMsg(spdlog::level::level_enum::err, buf.data());
+    }
+}
+
 extern "C" DLOG_EXPORT void __cdecl LogwD(const wchar_t* strFormat, ...)
 {
     if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
@@ -433,6 +436,7 @@ extern "C" DLOG_EXPORT void __cdecl LogwD(const wchar_t* strFormat, ...)
         Debug::GetInst()->LogMsg(spdlog::level::level_enum::debug, buf.data());
     }
 }
+#endif
 
 #pragma region memory log
 

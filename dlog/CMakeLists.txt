@@ -11,10 +11,11 @@ set(CMAKE_CXX_STANDARD 14)
 add_definitions(-D DLOG_EXPORTS)
 add_definitions(-D UNICODE)
 if(WIN32)
-  add_definitions(-D _WINDOWS)
-  add_definitions(-D _USERDLL)
+    add_definitions(-D _WINDOWS)
+    add_definitions(-D _USERDLL)
+    # 这个设置只支持windows，所以不要使用了
+    # add_definitions(-D SPDLOG_WCHAR_TO_UTF8_SUPPORT)
 endif()
-add_definitions(-D SPDLOG_WCHAR_TO_UTF8_SUPPORT)
 
 # Introduce variables: * CMAKE_INSTALL_LIBDIR * CMAKE_INSTALL_BINDIR *
 # CMAKE_INSTALL_INCLUDEDIR
@@ -25,44 +26,44 @@ set(config_install_dir "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")
 
 # Library definition
 if(WIN32)
-add_library(dlog
-            SHARED
-            resource.h
-            stdafx.h
-            targetver.h
-            Common/Common.h
-            Common/Debug.h
-            Common/FileHelper.h
-            Common/stack_allocator.hpp
-            Common/MemoryLog.h
-            dlog.h
-            Common/Debug.cpp
-            Common/Common.cpp
-            Common/FileHelper.cpp
-            Common/MemoryLog.cpp
-            dlog.cpp
-            stdafx.cpp
-            dllmain.cpp
-            dlog.rc)
+    add_library(dlog
+                SHARED
+                resource.h
+                stdafx.h
+                targetver.h
+                Common/Common.h
+                Common/Debug.h
+                Common/FileHelper.h
+                Common/stack_allocator.hpp
+                Common/MemoryLog.h
+                dlog.h
+                Common/Debug.cpp
+                Common/Common.cpp
+                Common/FileHelper.cpp
+                Common/MemoryLog.cpp
+                dlog.cpp
+                stdafx.cpp
+                dllmain.cpp
+                dlog.rc)
 else()
-add_library(dlog
-            STATIC
-            resource.h
-            stdafx.h
-            targetver.h
-            Common/Common.h
-            Common/Debug.h
-            Common/FileHelper.h
-            Common/stack_allocator.hpp
-            Common/MemoryLog.h
-            dlog.h
-            Common/Debug.cpp
-            Common/Common.cpp
-            Common/FileHelper.cpp
-            Common/MemoryLog.cpp
-            dlog.cpp
-            stdafx.cpp
-            dllmain.cpp)
+    add_library(dlog
+                STATIC
+                resource.h
+                stdafx.h
+                targetver.h
+                Common/Common.h
+                Common/Debug.h
+                Common/FileHelper.h
+                Common/stack_allocator.hpp
+                Common/MemoryLog.h
+                dlog.h
+                Common/Debug.cpp
+                Common/Common.cpp
+                Common/FileHelper.cpp
+                Common/MemoryLog.cpp
+                dlog.cpp
+                stdafx.cpp
+                dllmain.cpp)
 endif()
 # target_compile_features(dlog PUBLIC cxx_std_14)
 
@@ -70,7 +71,7 @@ endif()
 
 # 设置spdlog库的目录
 if(NOT DEFINED spdlog_INCLUDE_DIRS)
-  set(spdlog_INCLUDE_DIRS ${PROJECT_LIB_DIR}/spdlog/include)
+    set(spdlog_INCLUDE_DIRS ${PROJECT_LIB_DIR}/spdlog/include)
 endif()
 # 输出spdlog库的目录看看
 message(STATUS "spdlog_INCLUDE_DIRS = " ${spdlog_INCLUDE_DIRS})
