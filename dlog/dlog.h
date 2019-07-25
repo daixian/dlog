@@ -1,4 +1,6 @@
 ﻿#pragma once
+//仓库位置 https://github.com/daixian/dlog
+
 #ifndef _DLOG_H_
 #    define _DLOG_H_
 
