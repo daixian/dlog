@@ -1,4 +1,9 @@
 {
+    "files.watcherExclude": {
+        "**/build/**": true,
+        "**/x64/**": true,
+		"**/packages/**": true,	
+    },
     "cmake.configureSettings": {
         //"CMAKE_TOOLCHAIN_FILE": "~/vcpkg/scripts/buildsystems/vcpkg.cmake",
         //"VCPKG_TARGET_TRIPLET": "x64-linux"
