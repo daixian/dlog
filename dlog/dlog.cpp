@@ -478,6 +478,18 @@ extern "C" DLOG_EXPORT int __cdecl dlog_get_memlog(char* buff, int offset, int l
     return copyLen;
 }
 
+///-------------------------------------------------------------------------------------------------
+/// <summary> 设置内存日志的临时保存的最多条数. </summary>
+///
+/// <remarks> Dx, 2019/8/21. </remarks>
+///
+/// <param name="maxCount"> 临时保存的条数. </param>
+///-------------------------------------------------------------------------------------------------
+extern "C" DLOG_EXPORT void __cdecl dlog_set_memlog_save_limit(unsigned int maxCount)
+{
+    MemoryLog::GetInst()->maxLen = maxCount;
+}
+
 #pragma endregion
 
 #pragma region 其他辅助功能

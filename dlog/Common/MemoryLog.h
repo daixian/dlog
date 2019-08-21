@@ -35,7 +35,7 @@ class MemoryLog
     ///-------------------------------------------------------------------------------------------------
     void addLog(const std::string& msg)
     {
-        if (_memLogQueue.size_approx() > maxLen) { //如果它实在是太长了，大概占用了20M
+        if (_memLogQueue.size_approx() > maxLen) { //如果它实在是太长了
             std::string first;
             _memLogQueue.try_dequeue(first); //移出最前的
         }
@@ -52,7 +52,7 @@ class MemoryLog
     ///-------------------------------------------------------------------------------------------------
     void addLog(const std::wstring& msg)
     {
-        if (_memLogQueueW.size_approx() > maxLen) { //如果它实在是太长了，大概占用了20M
+        if (_memLogQueueW.size_approx() > maxLen) { //如果它实在是太长了
             std::wstring first;
             _memLogQueueW.try_dequeue(first); //移出最前的
         }
@@ -136,7 +136,7 @@ class MemoryLog
     moodycamel::ConcurrentQueue<std::wstring> _memLogQueueW;
 
     /// <summary> 队列的最大长度. </summary>
-    size_t maxLen = 1024 * 1024 / 5;
+    size_t maxLen = 1024 * 1024 / 64;
 
   private:
     /// <summary> The MemoryLog object. </summary>
