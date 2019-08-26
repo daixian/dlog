@@ -4,6 +4,8 @@
 #include "../dlog/dlog.h"
 #include "../dlog/Common/FileHelper.h"
 
+#pragma execution_character_set("utf-8")
+
 #if defined(_WIN32) || defined(_WIN64)
 #    pragma comment(lib, "dlog.lib")
 #elif defined(__linux__)
@@ -94,6 +96,7 @@ TEST(dlog, logi)
         fp += fp;
         fp += fp;
         LogI("GC100CharucoCalib.searchImageInCharucoDir():找到一个charuco图片 %s", fp.c_str());
+        LogI_w(L"试试❀❀❀❀❀❀❀❀❀");
     }
 
     char msg[129];

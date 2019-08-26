@@ -27,6 +27,10 @@
 #        endif
 #    endif
 
+#    ifdef DLOG_UTF8 //它是定义vs编译器使用utf-8,现在整个dlog统一应该使用utf-8作为输出.
+#        pragma execution_character_set("utf-8")
+#    endif // DLOG_UTF8
+
 //给用户使用的LogSeverity定义,目前和spdlog里的定义一致,但是只使用debug,info,warn,err
 enum class dlog_level
 {
@@ -244,12 +248,17 @@ extern "C" DLOG_EXPORT void __cdecl LogE(const char* strFormat, ...);
 extern "C" DLOG_EXPORT void __cdecl LogD(const char* strFormat, ...);
 
 // 只有在windows上支持这个功能，暂时还是不要使用了
-#    ifdef SPDLOG_WCHAR_TO_UTF8_SUPPORT
-extern "C" DLOG_EXPORT void __cdecl LogwI(const wchar_t* strFormat, ...);
-extern "C" DLOG_EXPORT void __cdecl LogwW(const wchar_t* strFormat, ...);
-extern "C" DLOG_EXPORT void __cdecl LogwE(const wchar_t* strFormat, ...);
-extern "C" DLOG_EXPORT void __cdecl LogwD(const wchar_t* strFormat, ...);
-#    endif
+//#    ifdef SPDLOG_WCHAR_TO_UTF8_SUPPORT
+//extern "C" DLOG_EXPORT void __cdecl LogwI(const wchar_t* strFormat, ...);
+//extern "C" DLOG_EXPORT void __cdecl LogwW(const wchar_t* strFormat, ...);
+//extern "C" DLOG_EXPORT void __cdecl LogwE(const wchar_t* strFormat, ...);
+//extern "C" DLOG_EXPORT void __cdecl LogwD(const wchar_t* strFormat, ...);
+//#    endif
+
+extern "C" DLOG_EXPORT void __cdecl LogI_w(const wchar_t* strFormat, ...);
+extern "C" DLOG_EXPORT void __cdecl LogW_w(const wchar_t* strFormat, ...);
+extern "C" DLOG_EXPORT void __cdecl LogE_w(const wchar_t* strFormat, ...);
+extern "C" DLOG_EXPORT void __cdecl LogD_w(const wchar_t* strFormat, ...);
 
 #    pragma region 内存缓存日志相关
 

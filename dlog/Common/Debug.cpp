@@ -189,6 +189,9 @@ void Debug::setIsConsoleEnable(bool enable)
         return;
     }
 
+    //设置控制台为UTF8输出
+    system("chcp 65001");//测试了在windows下有效
+
     //如果是设置为使能,如果指针还没有初始化过
     if (consolelogger == nullptr) {
         consolelogger = spdlog::stdout_color_mt("console");

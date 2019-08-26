@@ -12,6 +12,7 @@
 #include "spdlog/sinks/basic_file_sink.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 
+#pragma execution_character_set("utf-8")
 #include "MemoryLog.h"
 //#include "stack_allocator.hpp"
 

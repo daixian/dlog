@@ -36,6 +36,7 @@ if(WIN32)
                 Common/FileHelper.h
                 Common/stack_allocator.hpp
                 Common/MemoryLog.h
+                Common/JsonHelper.h
                 dlog.h
                 Common/Debug.cpp
                 Common/Common.cpp
@@ -56,6 +57,7 @@ else()
                 Common/FileHelper.h
                 Common/stack_allocator.hpp
                 Common/MemoryLog.h
+                Common/JsonHelper.h
                 dlog.h
                 Common/Debug.cpp
                 Common/Common.cpp
@@ -80,7 +82,12 @@ find_package(Boost 1.70.0 REQUIRED COMPONENTS filesystem date_time)
 message(STATUS "Boost_INCLUDE_DIRS = " ${Boost_INCLUDE_DIRS})
 message(STATUS "Boost_LIBRARIES = " ${Boost_LIBRARIES})
 
-target_include_directories(dlog PRIVATE ${Boost_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR} ${spdlog_INCLUDE_DIRS} ${PROJECT_LIB_DIR})
+# 设置rapidjson库
+if(NOT DEFINED rapidjson_INCLUDE_DIR)
+set(rapidjson_INCLUDE_DIR ${PROJECT_LIB_DIR}/rapidjson/include)
+endif()
+
+target_include_directories(dlog PRIVATE ${Boost_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR} ${spdlog_INCLUDE_DIRS} ${rapidjson_INCLUDE_DIR} ${PROJECT_LIB_DIR})
 target_link_libraries(dlog PRIVATE ${Boost_LIBRARIES})
 
 # 全都安装到根目录
