@@ -189,29 +189,64 @@ namespace xuexue
         /// Debug级别日志,它是一个varargs的函数
         /// </summary>
         /// <param name="strFormat"></param>
-        [DllImport("dlog", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void LogD(string str);
+        public static void LogD(string str)
+        {
+            int count = Encoding.UTF8.GetByteCount(str);
+            byte[] bytes = new byte[count + 1];//自动置0了
+            Encoding.UTF8.GetBytes(str, 0, str.Length, bytes, 0);
+            LogD(bytes);
+        }
 
         /// <summary>
         /// Info级别日志,它是一个varargs的函数
         /// </summary>
         /// <param name="strFormat"></param>
-        [DllImport("dlog", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void LogI(string str);
+        public static void LogI(string str)
+        {
+            int count = Encoding.UTF8.GetByteCount(str);
+            byte[] bytes = new byte[count + 1];
+            Encoding.UTF8.GetBytes(str, 0, str.Length, bytes, 0);
+            LogI(bytes);
+        }
 
         /// <summary>
         /// Warnning级别日志,它是一个varargs的函数
         /// </summary>
         /// <param name="strFormat"></param>
-        [DllImport("dlog", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void LogW(string str);
+        public static void LogW(string str)
+        {
+            int count = Encoding.UTF8.GetByteCount(str);
+            byte[] bytes = new byte[count + 1];
+            Encoding.UTF8.GetBytes(str, 0, str.Length, bytes, 0);
+            LogW(bytes);
+        }
 
         /// <summary>
         /// Error级别日志,它是一个varargs的函数
         /// </summary>
         /// <param name="strFormat"></param>
-        [DllImport("dlog", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void LogE(string str);
+        public static void LogE(string str)
+        {
+            int count = Encoding.UTF8.GetByteCount(str);
+            byte[] bytes = new byte[count + 1];
+            Encoding.UTF8.GetBytes(str, 0, str.Length, bytes, 0);
+            LogE(bytes);
+        }
+
+        [DllImport("dlog", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        private static extern void LogD(byte[] str);
+
+
+        [DllImport("dlog", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        private static extern void LogI(byte[] str);
+
+
+        [DllImport("dlog", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        private static extern void LogW(byte[] str);
+
+
+        [DllImport("dlog", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        private static extern void LogE(byte[] str);
 
         ///-------------------------------------------------------------------------------------------------
         /// <summary> 设置内存log是否使能. </summary>
