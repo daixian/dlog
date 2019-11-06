@@ -21,7 +21,7 @@ endif()
 if(NOT DEFINED dlog_LIBRARIES)
   if(WIN32)
   set(dlog_OBJECTS ${CMAKE_BINARY_DIR}/dlog/dlog.dir/Release)
-  set(dlog_LIBRARIES ${LIBRARY_OUTPUT_PATH}/Release/dlog.lib 
+  set(dlog_LIBRARIES ${LIBRARY_OUTPUT_PATH}/dlog.lib 
       ${dlog_OBJECTS}/Common.obj
       ${dlog_OBJECTS}/Debug.obj
       ${dlog_OBJECTS}/FileHelper.obj
@@ -31,27 +31,20 @@ if(NOT DEFINED dlog_LIBRARIES)
     set(dlog_LIBRARIES ${LIBRARY_OUTPUT_PATH}/libdlog.a)
   endif()
 endif()
-# 输出dlog库的目录看看
+# # 输出dlog库的目录看看
 message(STATUS "dlog_INCLUDE_DIRS = " ${CMAKE_SOURCE_DIR})
 message(STATUS "dlog_LIBRARIES = " ${dlog_LIBRARIES})
-
-# 设置spdlog库的目录
-if(NOT DEFINED spdlog_INCLUDE_DIRS)
-  set(spdlog_INCLUDE_DIRS ${PROJECT_LIB_DIR}/spdlog/include)
-endif()
-# 输出spdlog库的目录看看
-message(STATUS "spdlog_INCLUDE_DIRS = " ${spdlog_INCLUDE_DIRS})
-
-find_package(Boost 1.70.0 REQUIRED COMPONENTS filesystem date_time)
-message(STATUS "Boost_INCLUDE_DIRS = " ${Boost_INCLUDE_DIRS})
-message(STATUS "Boost_LIBRARIES = " ${Boost_LIBRARIES})
+message(STATUS "dlog_OBJECTS = " ${dlog_OBJECTS})
 
 # Dependencies
-target_include_directories(test.out PRIVATE ${CMAKE_SOURCE_DIR} ${spdlog_INCLUDE_DIRS} ${PROJECT_LIB_DIR} ${Boost_INCLUDE_DIRS})
-target_link_libraries(test.out PRIVATE dlog ${dlog_LIBRARIES} ${Boost_LIBRARIES} gtest gtest_main)
+target_include_directories(test.out PRIVATE ${CMAKE_SOURCE_DIR} ${PROJECT_LIB_DIR})
+
+#去掉这个可能引起错误的libboost_unit_test_framework
+# STRING(REGEX REPLACE "libboost_unit_test_framework " "" CONAN_LIBS_CUT ${CONAN_LIBS})
+list(REMOVE_ITEM CONAN_LIBS "libboost_unit_test_framework") 
+target_link_libraries(test.out PRIVATE dlog ${dlog_LIBRARIES} ${CONAN_LIBS} )
 
 add_test(NAME AllCppTest COMMAND test.out)
-
 
 # 这是vcpkg时候的写法
 # Dependencies

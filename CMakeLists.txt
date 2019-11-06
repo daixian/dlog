@@ -25,60 +25,38 @@ option(CROSS_COMPILE "Cross Compile" OFF)
 
 # 设置工程外部库的文件夹 $ENV{HOME}
 if(WIN32)
-set(PROJECT_LIB_DIR "C:/dxlib/lib" CACHE STRING "dx's lib")
-else()
-set(PROJECT_LIB_DIR $ENV{HOME}/dxlib/lib CACHE STRING "dx's lib")
+    set(PROJECT_LIB_DIR "C:/dxlib/lib" CACHE STRING "dx's lib")
+else() #linux
+    set(PROJECT_LIB_DIR $ENV{HOME}/dxlib/lib CACHE STRING "dx's lib")
 endif()
 message(STATUS "PROJECT_LIB_DIR = " ${PROJECT_LIB_DIR})
 
 enable_testing()
 
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
-set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
-set(RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
-# 设置boost的库的位置
 if(WIN32)
-message(STATUS "Platform = WIN32")
+# 设置编译选项为MT https://stackoverflow.com/questions/14172856/compile-with-mt-instead-of-md-using-cmake
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
-set(BOOST_ROOT ${PROJECT_LIB_DIR}/boost_1_70_0)
-set(Boost_NO_SYSTEM_PATHS ON)
-set(Boost_USE_MULTITHREADED ON)
-set(Boost_USE_STATIC_LIBS ON)
-set(Boost_USE_STATIC_RUNTIME ON)
-set(BOOST_ALL_DYN_LINK OFF)
+endif()
+
+
+if(ARCH_X86)
+  include(${CMAKE_SOURCE_DIR}/build/Win32/conanbuildinfo.cmake)
 else()
-    message(STATUS "Platform = Other")
-    set(BOOST_ROOT ${PROJECT_LIB_DIR}/boost_1_70_0)
-    set(Boost_NO_SYSTEM_PATHS ON)
-    set(Boost_USE_MULTITHREADED ON)
-    set(Boost_USE_STATIC_LIBS ON)
-    set(Boost_USE_STATIC_RUNTIME OFF)
-    set(BOOST_ALL_DYN_LINK OFF)
+  include(${CMAKE_SOURCE_DIR}/build/Win64/conanbuildinfo.cmake)
 endif()
-# 使用编好的boost库 $ENV{HOME}
-if(CROSS_COMPILE) 
-    set(BOOST_ROOT ${PROJECT_LIB_DIR}/boost_1_70_0_arm64)
-endif()
-message(STATUS "BOOST_ROOT = " ${BOOST_ROOT})
 
-add_definitions(-DBOOST_ALL_NO_LIB)
-
-set(Boost_DEBUG 0)
+conan_basic_setup()
+# conan_set_vs_runtime()
 
 # 使能测试
 enable_testing()
 
-add_subdirectory(dlog)
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
+set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
+set(RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-# 这里要添加gtest，这样就会去编译gtest然后设置了一些变量
-# 添加gtest前尝试设置一下编译选项为MD
-#if(WIN32)
-#set(CMAKE_CXX_FLAGS_RELEASE "/MD")
-#set(CMAKE_CXX_FLAGS_DEBUG "/MDd")
-#endif()
-add_subdirectory(${CMAKE_SOURCE_DIR}/lib/gtest)
+add_subdirectory(dlog)
 
 include(CTest)
 #include(GoogleTest)

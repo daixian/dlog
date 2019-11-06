@@ -1,7 +1,7 @@
 ﻿#pragma once
 
-#include "../../concurrentqueue/concurrentqueue.h"
-#include "../../concurrentqueue/blockingconcurrentqueue.h"
+#include "concurrentqueue/concurrentqueue.h"
+#include "concurrentqueue/blockingconcurrentqueue.h"
 
 namespace dxlib {
 ///-------------------------------------------------------------------------------------------------

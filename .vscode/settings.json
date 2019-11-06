@@ -29,4 +29,7 @@
         "build/Win64/bin/Release/test.out.exe",
     ],
     "catch2TestExplorer.defaultCwd": "build/Win64/bin/Release",
+    "files.associations": {
+        "*.ipp": "cpp"
+    },
 }

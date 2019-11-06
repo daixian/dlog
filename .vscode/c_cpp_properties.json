@@ -4,8 +4,7 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${vcpkgRoot}/x64-linux/include",
-                "${workspaceFolder}/spdlog/include"
+                "C:/dxlib/lib/**"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",

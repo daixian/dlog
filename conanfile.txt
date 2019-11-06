@@ -1,0 +1,16 @@
+[requires]
+spdlog/1.4.2@bincrafters/stable
+boost/1.71.0@conan/stable
+rapidjson/1.1.0@bincrafters/stable
+gtest/1.8.1@bincrafters/stable
+
+[generators]
+cmake
+
+[options]
+spdlog:shared=False
+boost:shared=False
+
+[imports]
+bin, *.dll -> ./bin
+lib, *.dylib* -> ./bin

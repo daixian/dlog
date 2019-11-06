@@ -71,24 +71,27 @@ endif()
 
 # Dependencies
 
-# 设置spdlog库的目录
-if(NOT DEFINED spdlog_INCLUDE_DIRS)
-    set(spdlog_INCLUDE_DIRS ${PROJECT_LIB_DIR}/spdlog/include)
-endif()
-# 输出spdlog库的目录看看
-message(STATUS "spdlog_INCLUDE_DIRS = " ${spdlog_INCLUDE_DIRS})
+# # 设置spdlog库的目录
+# if(NOT DEFINED spdlog_INCLUDE_DIRS)
+#     set(spdlog_INCLUDE_DIRS ${PROJECT_LIB_DIR}/spdlog/include)
+# endif()
+# # 输出spdlog库的目录看看
+# message(STATUS "spdlog_INCLUDE_DIRS = " ${spdlog_INCLUDE_DIRS})
 
-find_package(Boost 1.70.0 REQUIRED COMPONENTS filesystem date_time)
-message(STATUS "Boost_INCLUDE_DIRS = " ${Boost_INCLUDE_DIRS})
-message(STATUS "Boost_LIBRARIES = " ${Boost_LIBRARIES})
+# find_package(Boost 1.70.0 REQUIRED COMPONENTS filesystem date_time)
+# message(STATUS "Boost_INCLUDE_DIRS = " ${Boost_INCLUDE_DIRS})
+# message(STATUS "Boost_LIBRARIES = " ${Boost_LIBRARIES})
 
-# 设置rapidjson库
-if(NOT DEFINED rapidjson_INCLUDE_DIR)
-set(rapidjson_INCLUDE_DIR ${PROJECT_LIB_DIR}/rapidjson/include)
-endif()
+# # 设置rapidjson库
+# if(NOT DEFINED rapidjson_INCLUDE_DIR)
+# set(rapidjson_INCLUDE_DIR ${PROJECT_LIB_DIR}/rapidjson/include)
+# endif()
 
-target_include_directories(dlog PRIVATE ${Boost_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR} ${spdlog_INCLUDE_DIRS} ${rapidjson_INCLUDE_DIR} ${PROJECT_LIB_DIR})
-target_link_libraries(dlog PRIVATE ${Boost_LIBRARIES})
+# target_include_directories(dlog PRIVATE ${Boost_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR} ${spdlog_INCLUDE_DIRS} ${rapidjson_INCLUDE_DIR} ${PROJECT_LIB_DIR})
+# target_link_libraries(dlog PRIVATE ${Boost_LIBRARIES} ${CONAN_LIBS})
+
+target_include_directories(dlog PRIVATE  ${CMAKE_SOURCE_DIR} ${PROJECT_LIB_DIR})
+target_link_libraries(dlog PRIVATE ${CONAN_LIBS})
 
 # 全都安装到根目录
 install(TARGETS dlog
