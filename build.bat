@@ -1,6 +1,8 @@
 python -V
 python ./tools/DownloadLib.py -d"C:/dxlib/download" -l"C:/dxlib/lib" "concurrentqueue"
 
+pip3 install conan
+
 mkdir build
 cd build
 mkdir Win64
