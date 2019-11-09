@@ -1,5 +1,4 @@
 ﻿# CMakeList.txt: 顶层 CMake 项目文件，在此处执行全局配置
-#
 cmake_minimum_required(VERSION 3.0)
 
 # 设置一个工具链,如果进入设置了那么通常是能够正确工作,如果有被其他设置所覆盖那么可能无法工作
@@ -35,13 +34,15 @@ enable_testing()
 
 if(WIN32)
 # 设置编译选项为MT https://stackoverflow.com/questions/14172856/compile-with-mt-instead-of-md-using-cmake
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
-  if(ARCH_X86)
-    include(${CMAKE_SOURCE_DIR}/build/Win32/conanbuildinfo.cmake)
-  else()
-    include(${CMAKE_SOURCE_DIR}/build/Win64/conanbuildinfo.cmake)
-  endif()
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+
+    # x86使用Win32的路径
+    if(ARCH_X86)
+        include(${CMAKE_SOURCE_DIR}/build/Win32/conanbuildinfo.cmake)
+    else()
+        include(${CMAKE_SOURCE_DIR}/build/Win64/conanbuildinfo.cmake)
+    endif()
 endif()
 
 conan_basic_setup()
