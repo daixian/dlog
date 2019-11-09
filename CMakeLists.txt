@@ -43,6 +43,8 @@ if(WIN32)
     else()
         include(${CMAKE_SOURCE_DIR}/build/Win64/conanbuildinfo.cmake)
     endif()
+else()
+    include(${CMAKE_SOURCE_DIR}/build/Linux/conanbuildinfo.cmake)
 endif()
 
 conan_basic_setup()

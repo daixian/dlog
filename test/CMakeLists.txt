@@ -39,9 +39,14 @@ message(STATUS "dlog_OBJECTS = " ${dlog_OBJECTS})
 # Dependencies
 target_include_directories(test.out PRIVATE ${CMAKE_SOURCE_DIR} ${PROJECT_LIB_DIR})
 
-#去掉这个可能引起错误的libboost_unit_test_framework
-# STRING(REGEX REPLACE "libboost_unit_test_framework " "" CONAN_LIBS_CUT ${CONAN_LIBS})
-list(REMOVE_ITEM CONAN_LIBS "libboost_unit_test_framework") 
+if(WIN32)
+    #去掉这个可能引起错误的libboost_unit_test_framework
+    # STRING(REGEX REPLACE "libboost_unit_test_framework " "" CONAN_LIBS_CUT ${CONAN_LIBS})
+    list(REMOVE_ITEM CONAN_LIBS "libboost_unit_test_framework") 
+else()
+    list(REMOVE_ITEM CONAN_LIBS "boost_unit_test_framework") 
+endif()
+# message(STATUS "CONAN_LIBS = " ${CONAN_LIBS})
 target_link_libraries(test.out PRIVATE dlog ${dlog_LIBRARIES} ${CONAN_LIBS} )
 
 add_test(NAME AllCppTest COMMAND test.out)
