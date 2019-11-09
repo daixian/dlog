@@ -1,0 +1,30 @@
+toolchain=/usr/bin
+target_host=arm-linux-gnueabihf
+cc_compiler=gcc
+cxx_compiler=g++
+
+[env]
+CONAN_CMAKE_FIND_ROOT_PATH=$toolchain
+CHOST=$target_host
+AR=$target_host-ar
+AS=$target_host-as
+RANLIB=$target_host-ranlib
+CC=$target_host-$cc_compiler
+CXX=$target_host-$cxx_compiler
+STRIP=$target_host-strip
+# RC=$target_host-windres
+
+[settings]
+# We are building in Ubuntu Linux
+os_build=Linux
+arch_build=x86_64
+
+# We are cross-building to Windows
+os=Linux
+arch=armv7
+compiler=gcc
+
+# Adjust to the gcc version of your MinGW package
+compiler.version=7.4
+compiler.libcxx=libstdc++11
+build_type=Release

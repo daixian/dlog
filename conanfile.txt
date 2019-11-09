@@ -10,6 +10,8 @@ cmake
 [options]
 spdlog:shared=False
 boost:shared=False
+boost:without_test=True
+boost:header_only=True
 
 [imports]
 bin, *.dll -> ./bin

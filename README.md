@@ -43,3 +43,30 @@ StringBuilder buff = new StringBuilder(512);
 DLog.dlog_get_memlog(buff, 0, buff.Capacity);
 ```
 4、c++接口和上面的c#一致。
+
+
+
+
+### 其他记录
+
+boost的记录：
+    default_options = ["shared=False",
+                       "header_only=False",
+                       "error_code_header_only=False",
+                       "system_no_deprecated=False",
+                       "asio_no_deprecated=False",
+                       "filesystem_no_deprecated=False",
+                       "fPIC=True",
+                       "layout=system",
+                       "magic_autolink=False",
+                       "python_executable=None",
+                       "python_version=None",
+                       "namespace=boost",
+                       "namespace_alias=False",
+                       "zlib=True",
+                       "bzip2=True",
+                       "lzma=False",
+                       "zstd=False",
+                       "use_icu=False",
+                       "segmented_stacks=False",
+                       "extra_b2_flags=None"

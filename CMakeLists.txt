@@ -20,7 +20,7 @@ project(dlog VERSION 2.1.2 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 14)
 
 option(ENABLE_TEST "Enable test" OFF)
-option(CROSS_COMPILE "Cross Compile" OFF)
+option(ARCH_ARM64 "ARCH_ARM64" OFF)
 
 # 设置工程外部库的文件夹 $ENV{HOME}
 if(WIN32)
@@ -44,7 +44,11 @@ if(WIN32)
         include(${CMAKE_SOURCE_DIR}/build/Win64/conanbuildinfo.cmake)
     endif()
 else()
-    include(${CMAKE_SOURCE_DIR}/build/Linux/conanbuildinfo.cmake)
+    if(ARCH_ARM64)
+        include(${CMAKE_SOURCE_DIR}/build/ARM64/conanbuildinfo.cmake)
+    else()
+        include(${CMAKE_SOURCE_DIR}/build/Linux/conanbuildinfo.cmake)
+    endif()
 endif()
 
 conan_basic_setup()
