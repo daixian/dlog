@@ -8,9 +8,10 @@ import io
 
 os.system(" chcp 65001 ")
 
+
 class DlogConan(ConanFile):
     name = "dlog"
-    version = "2.1"
+    version = "2.4"
     license = "<Put the package license here>"
     author = "<Put your name here> <And your email here>"
     url = "<Package recipe repository url here, for issues about the package>"
@@ -18,9 +19,9 @@ class DlogConan(ConanFile):
     topics = ("<Put some tag here>", "<here>", "<and here>")
     settings = "os", "compiler", "build_type", "arch"
     requires = ("spdlog/1.4.2@bincrafters/stable",
-    "boost/1.71.0@conan/stable",
-    "rapidjson/1.1.0@bincrafters/stable",
-    "gtest/1.8.1@bincrafters/stable")
+                "boost/1.71.0@conan/stable",
+                "rapidjson/1.1.0@bincrafters/stable",
+                "gtest/1.8.1@bincrafters/stable")
     options = {"shared": [True, False]}
     default_options = {"shared": False, "boost:without_test": True}
     generators = "cmake"
