@@ -89,7 +89,7 @@ endif()
 
 # target_include_directories(dlog PRIVATE ${Boost_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR} ${spdlog_INCLUDE_DIRS} ${rapidjson_INCLUDE_DIR} ${PROJECT_LIB_DIR})
 # target_link_libraries(dlog PRIVATE ${Boost_LIBRARIES} ${CONAN_LIBS})
-
+message(STATUS "CONAN_LIBS = " ${CONAN_LIBS})
 target_include_directories(dlog PRIVATE  ${CMAKE_SOURCE_DIR} ${PROJECT_LIB_DIR})
 target_link_libraries(dlog PRIVATE ${CONAN_LIBS})
 

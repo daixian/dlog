@@ -1,5 +1,12 @@
+# coding: utf-8
 from conans import ConanFile, CMake, tools
 
+import os
+import sys
+import io
+# sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='gbk')
+
+os.system(" chcp 65001 ")
 
 class DlogConan(ConanFile):
     name = "dlog"
@@ -7,26 +14,21 @@ class DlogConan(ConanFile):
     license = "<Put the package license here>"
     author = "<Put your name here> <And your email here>"
     url = "<Package recipe repository url here, for issues about the package>"
-    description = "<Description of Dlog here>"
+    description = "<Description of Hello here>"
     topics = ("<Put some tag here>", "<here>", "<and here>")
     settings = "os", "compiler", "build_type", "arch"
+    requires = ("spdlog/1.4.2@bincrafters/stable",
+    "boost/1.71.0@conan/stable",
+    "rapidjson/1.1.0@bincrafters/stable",
+    "gtest/1.8.1@bincrafters/stable")
     options = {"shared": [True, False]}
-    default_options = {"shared": False}
+    default_options = {"shared": False, "boost:without_test": True}
     generators = "cmake"
-
-    def source(self):
-        self.run("git clone https://github.com/daixian/dlog.git")
-        # This small hack might be useful to guarantee proper /MT /MD linkage
-        # in MSVC if the packaged project doesn't have variables to set it
-        # properly
-#         tools.replace_in_file("hello/CMakeLists.txt", "PROJECT(HelloWorld)",
-#                               '''PROJECT(HelloWorld)
-# include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-# conan_basic_setup()''')
+    exports_sources = "src/*"
 
     def build(self):
         cmake = CMake(self)
-        cmake.configure(source_folder="dlog")
+        cmake.configure(source_folder="src")
         cmake.build()
 
         # Explicit way:
@@ -35,13 +37,12 @@ class DlogConan(ConanFile):
         # self.run("cmake --build . %s" % cmake.build_config)
 
     def package(self):
-        self.copy("*.h", dst="include", src="hello")
-        self.copy("*hello.lib", dst="lib", keep_path=False)
+        self.copy("*.h", dst="include", src="src")
+        self.copy("*.lib", dst="lib", keep_path=False)
         self.copy("*.dll", dst="bin", keep_path=False)
+        self.copy("*.dylib*", dst="lib", keep_path=False)
         self.copy("*.so", dst="lib", keep_path=False)
-        self.copy("*.dylib", dst="lib", keep_path=False)
         self.copy("*.a", dst="lib", keep_path=False)
 
     def package_info(self):
         self.cpp_info.libs = ["dlog"]
-
