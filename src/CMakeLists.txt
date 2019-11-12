@@ -20,7 +20,6 @@ project(dlog VERSION 2.1.2 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 14)
 
 option(ENABLE_TEST "Enable test" OFF)
-option(ARCH_ARM64 "ARCH_ARM64" OFF)
 
 # 设置工程外部库的文件夹 $ENV{HOME}
 if(WIN32)
