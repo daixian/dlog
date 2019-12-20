@@ -23,7 +23,7 @@ class DlogConan(ConanFile):
                 "rapidjson/1.1.0@bincrafters/stable",
                 "gtest/1.8.1@bincrafters/stable")
     options = {"shared": [True, False]}
-    default_options = {"shared": False, "boost:without_test": True}
+    default_options = {"shared": True, "boost:without_test": True}
     generators = "cmake"
     exports_sources = "src/*"
 

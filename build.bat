@@ -1,5 +1,6 @@
 set CONAN_REVISIONS_ENABLED=1
-conan create . daixian/stable -s compiler.runtime=MT -s arch=x86_64 --build missing
+REM conan create . daixian/stable -s compiler.runtime=MT -s arch=x86_64 --build missing
+conan create . daixian/stable -s compiler.runtime=MD -s arch=x86_64 --build missing
 conan upload dlog/2.4@daixian/stable --all -r=artifactory
 
 REM mkdir build
