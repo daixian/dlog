@@ -13,10 +13,10 @@ class DlogConan(ConanFile):
     name = "dlog"
     version = "2.4"
     license = "<Put the package license here>"
-    author = "<Put your name here> <And your email here>"
-    url = "<Package recipe repository url here, for issues about the package>"
-    description = "<Description of Hello here>"
-    topics = ("<Put some tag here>", "<here>", "<and here>")
+    author = "daixian,amano_tooko@qq.com"
+    url = "https://github.com/daixian/dlog"
+    description = "dx's log lib"
+    topics = ("log", "C++", "C#")
     settings = "os", "compiler", "build_type", "arch"
     requires = ("spdlog/1.4.2@bincrafters/stable",
                 "boost/1.71.0@conan/stable",
