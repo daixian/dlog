@@ -28,13 +28,14 @@ if(NOT DEFINED dlog_LIBRARIES)
       ${dlog_OBJECTS}/MemoryLog.obj
       )
   else()
-    set(dlog_LIBRARIES ${LIBRARY_OUTPUT_PATH}/libdlog.a)
+    # 寻找文件夹下的所有lib文件
+    file(GLOB dlog_LIBRARIES "${LIBRARY_OUTPUT_PATH}/*.*") 
   endif()
 endif()
 # # 输出dlog库的目录看看
-message(STATUS "dlog_INCLUDE_DIRS = " ${CMAKE_SOURCE_DIR})
-message(STATUS "dlog_LIBRARIES = " ${dlog_LIBRARIES})
-message(STATUS "dlog_OBJECTS = " ${dlog_OBJECTS})
+message(STATUS "dlog_INCLUDE_DIRS = ${CMAKE_SOURCE_DIR}")
+message(STATUS "dlog_LIBRARIES = ${dlog_LIBRARIES}")
+message(STATUS "dlog_OBJECTS = ${dlog_OBJECTS}")
 
 # Dependencies
 target_include_directories(test.out PRIVATE ${CMAKE_SOURCE_DIR} ${PROJECT_LIB_DIR})
