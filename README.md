@@ -1,7 +1,7 @@
 [![Build Status](https://dev.azure.com/daixian/dlogPipeline/_apis/build/status/dlogPipeline-x64?branchName=master)](https://dev.azure.com/daixian/dlogPipeline/_build/latest?definitionId=2&branchName=master)
 ### 构建相关
-* 1、 目前都是MT的编译方式，VS2017的运行时。
-* 2、 不再使用vcpkg，改成临时下载这些依赖库。
+* 1、 目前已经换成了conan的构建和包管理。
+* 2、 上传到github的CI待完成...
 * 3、 内部从glog换成的spdlog。
 
 [Release下载(x64,x86)](https://github.com/daixian/dlog/releases)

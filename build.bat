@@ -1,7 +1,9 @@
+chcp 65001
+REM windows平台编译项目
 set CONAN_REVISIONS_ENABLED=1
-REM conan create . daixian/stable -s compiler.runtime=MT -s arch=x86_64 --build missing
-conan create . daixian/stable -s compiler.runtime=MD -s arch=x86_64 --build missing
-conan upload dlog/2.4@daixian/stable --all -r=artifactory
+conan create . daixian/stable -s compiler.runtime=MT -s arch=x86_64 -s build_type=Release --build missing
+conan create . daixian/stable -s compiler.runtime=MD -s arch=x86_64 -s build_type=Release --build missing
+conan upload dlog/2.4.0@daixian/stable --all -r=artifactory
 
 REM mkdir build
 REM cd build

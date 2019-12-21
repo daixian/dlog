@@ -17,9 +17,22 @@ cmake_minimum_required(VERSION 3.0)
 # 在上面设置工具链之后下面要立马project命令
 project(dlog VERSION 2.1.2 LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 14)
+# set(CMAKE_CXX_STANDARD 14)
 
-option(ENABLE_TEST "Enable test" OFF)
+# 在有了project之后需要第一时间搞个conan设置吧
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
+# conan_set_vs_runtime()
+
+# 设置是否编译Test
+option(DLOG_BUILD_TESTS "DLOG_BUILD_TESTS" ON)
+message(STATUS "DLOG_BUILD_TESTS = ${DLOG_BUILD_TESTS}" )
+# 设置是否编译成共享库
+option(DLOG_BUILD_SHARED "DLOG BUILD SHARED" ON)
+message(STATUS "DLOG_BUILD_SHARED = ${DLOG_BUILD_SHARED}" )
+
+# 设置生成一个VS工程里的文件夹
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # 设置工程外部库的文件夹 $ENV{HOME}
 if(WIN32)
@@ -29,7 +42,6 @@ else() #linux
 endif()
 message(STATUS "PROJECT_LIB_DIR = " ${PROJECT_LIB_DIR})
 
-enable_testing()
 
 # 现在使用了conan库,这里并不需要了
 # if(WIN32)
@@ -38,23 +50,18 @@ enable_testing()
 #     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
 # endif()
 
-include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-conan_basic_setup()
-# conan_set_vs_runtime()
-
-message(STATUS "shared = " ${shared})
-
-# 使能测试
-enable_testing()
-
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
 set(RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 add_subdirectory(dlog)
 
-include(CTest)
-#include(GoogleTest)
-add_subdirectory(${CMAKE_SOURCE_DIR}/test)
+if(DLOG_BUILD_TESTS)
+    # 使能测试
+    enable_testing()
+    include(CTest)
+    #include(GoogleTest)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/test)
+endif()
 
 

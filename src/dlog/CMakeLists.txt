@@ -24,50 +24,63 @@ endif()
 # <prefix>/lib*/ * <prefix>/include/
 set(config_install_dir "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")
 
+set(SOURCE_LIST
+    resource.h
+    stdafx.h
+    targetver.h
+    Common/Common.h
+    Common/Debug.h
+    Common/FileHelper.h
+    Common/stack_allocator.hpp
+    Common/MemoryLog.h
+    Common/JsonHelper.h
+    dlog.h
+    Common/Debug.cpp
+    Common/Common.cpp
+    Common/FileHelper.cpp
+    Common/MemoryLog.cpp
+    dlog.cpp
+    stdafx.cpp
+    dllmain.cpp
+    dlog.rc
+)
+
+# 这个函数在VS工程里生成一个文件路径
+function(assign_source_group)
+    foreach(_source IN ITEMS ${ARGN})
+        if (IS_ABSOLUTE "${_source}")
+            file(RELATIVE_PATH _source_rel "${CMAKE_CURRENT_SOURCE_DIR}" "${_source}")
+        else()
+            set(_source_rel "${_source}")
+        endif()
+        get_filename_component(_source_path "${_source_rel}" PATH)
+        string(REPLACE "/" "\\" _source_path_msvc "${_source_path}")
+        #这个表示在VS里划分一个组
+        source_group("${_source_path_msvc}" FILES "${_source}")
+    endforeach()
+endfunction(assign_source_group)
+
+assign_source_group(${SOURCE_LIST})
+
+# message(STATUS "CMAKE_CURRENT_SOURCE_DIR = " ${CMAKE_CURRENT_SOURCE_DIR})
+# Create the source groups for source tree with root at CMAKE_CURRENT_SOURCE_DIR.
+# https://stackoverflow.com/questions/31422680/how-to-set-visual-studio-filters-for-nested-sub-directory-using-cmake
+# 但是这个不知道为什么不不管用
+# source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCE_LIST})
+
+message(STATUS "SOURCE_LIST = ${SOURCE_LIST}")
+
 # Library definition
-if(WIN32)
+if(DLOG_BUILD_SHARED)
     add_library(dlog
                 SHARED
-                resource.h
-                stdafx.h
-                targetver.h
-                Common/Common.h
-                Common/Debug.h
-                Common/FileHelper.h
-                Common/stack_allocator.hpp
-                Common/MemoryLog.h
-                Common/JsonHelper.h
-                dlog.h
-                Common/Debug.cpp
-                Common/Common.cpp
-                Common/FileHelper.cpp
-                Common/MemoryLog.cpp
-                dlog.cpp
-                stdafx.cpp
-                dllmain.cpp
-                dlog.rc)
+                ${SOURCE_LIST})
 else()
     add_library(dlog
                 STATIC
-                resource.h
-                stdafx.h
-                targetver.h
-                Common/Common.h
-                Common/Debug.h
-                Common/FileHelper.h
-                Common/stack_allocator.hpp
-                Common/MemoryLog.h
-                Common/JsonHelper.h
-                dlog.h
-                Common/Debug.cpp
-                Common/Common.cpp
-                Common/FileHelper.cpp
-                Common/MemoryLog.cpp
-                dlog.cpp
-                stdafx.cpp
-                dllmain.cpp)
+                ${SOURCE_LIST})
 endif()
-# target_compile_features(dlog PUBLIC cxx_std_14)
+
 
 # Dependencies
 
@@ -75,21 +88,10 @@ endif()
 # if(NOT DEFINED spdlog_INCLUDE_DIRS)
 #     set(spdlog_INCLUDE_DIRS ${PROJECT_LIB_DIR}/spdlog/include)
 # endif()
-# # 输出spdlog库的目录看看
-# message(STATUS "spdlog_INCLUDE_DIRS = " ${spdlog_INCLUDE_DIRS})
-
-# find_package(Boost 1.70.0 REQUIRED COMPONENTS filesystem date_time)
-# message(STATUS "Boost_INCLUDE_DIRS = " ${Boost_INCLUDE_DIRS})
-# message(STATUS "Boost_LIBRARIES = " ${Boost_LIBRARIES})
-
-# # 设置rapidjson库
-# if(NOT DEFINED rapidjson_INCLUDE_DIR)
-# set(rapidjson_INCLUDE_DIR ${PROJECT_LIB_DIR}/rapidjson/include)
-# endif()
 
 # target_include_directories(dlog PRIVATE ${Boost_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR} ${spdlog_INCLUDE_DIRS} ${rapidjson_INCLUDE_DIR} ${PROJECT_LIB_DIR})
 # target_link_libraries(dlog PRIVATE ${Boost_LIBRARIES} ${CONAN_LIBS})
-message(STATUS "CONAN_LIBS = " ${CONAN_LIBS})
+message(STATUS "CONAN_LIBS = ${CONAN_LIBS}")
 target_include_directories(dlog PRIVATE  ${CMAKE_SOURCE_DIR} ${PROJECT_LIB_DIR})
 target_link_libraries(dlog PRIVATE ${CONAN_LIBS})
 
