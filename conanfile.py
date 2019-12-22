@@ -35,7 +35,11 @@ class DlogConan(ConanFile):
         转换python的设置到CMake
         '''
         cmake = CMake(self)
-        cmake.definitions["DLOG_BUILD_SHARED"] = self.options.shared
+        # 在windows平台目前只支持动态库
+        if self.settings.os == "Windows":
+            cmake.definitions["DLOG_BUILD_SHARED"] = True
+        else:
+            cmake.definitions["DLOG_BUILD_SHARED"] = self.options.shared
         cmake.definitions["DLOG_BUILD_TESTS"] = self.options.build_test
         return cmake
 
@@ -51,7 +55,8 @@ class DlogConan(ConanFile):
         # self.run("cmake --build . %s" % cmake.build_config)
 
     def package(self):
-        self.copy("dlog.h", dst="include", src="src")
+        # 拷贝如果不带*那么不会搜索到下一级文件夹
+        self.copy("*dlog.h", dst="include", src="src")
         self.copy("*.lib", dst="lib", keep_path=False)
         self.copy("*.dll", dst="bin", keep_path=False)
         self.copy("*.dylib*", dst="lib", keep_path=False)

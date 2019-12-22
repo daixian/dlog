@@ -60,7 +60,6 @@ if(DLOG_BUILD_TESTS)
     # 使能测试
     enable_testing()
     include(CTest)
-    #include(GoogleTest)
     add_subdirectory(${CMAKE_SOURCE_DIR}/test)
 endif()
 
