@@ -6,7 +6,7 @@ python3 -V
 python3 ./tools/DownloadLib.py -d"$HOME/dxlib/download" -l"$HOME/dxlib/lib" -p"linux" "concurrentqueue"
 
 # pip3 install conan
-conan create . demo/testing --build missing
+conan create . daixian/stable --build missing
 
 
 # mkdir -p build/Linux
