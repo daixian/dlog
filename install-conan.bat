@@ -5,6 +5,6 @@ python ./tools/DownloadLib.py -d"C:/dxlib/download" -l"C:/dxlib/lib" "concurrent
 
 pip3 install conan
 REM 添加一个源
-conan remote add artifactory  http://mr.xuexuesoft.com:8081/artifactory/api/conan/conan-local
+conan remote add conan-local  http://mr.xuexuesoft.com:8081/artifactory/api/conan/conan-local
 REM 搜索一下玩玩
-conan search "*" -rartifactory
+conan search "*" -rconan-local
