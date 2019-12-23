@@ -55,6 +55,7 @@ class DlogConan(ConanFile):
         # self.run("cmake --build . %s" % cmake.build_config)
 
     def package(self):
+        # self.requires.clear()
         # 拷贝如果不带*那么不会搜索到下一级文件夹
         self.copy("*dlog.h", dst="include", src="src")
         self.copy("*.lib", dst="lib", keep_path=False)
