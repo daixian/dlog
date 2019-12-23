@@ -18,10 +18,6 @@ class DlogConan(ConanFile):
     description = "dx's log lib"
     topics = ("log", "C++", "C#")
     settings = "os", "compiler", "build_type", "arch"
-    requires = ("spdlog/1.4.2@bincrafters/stable",
-                "boost/1.71.0@conan/stable",
-                "rapidjson/1.1.0@bincrafters/stable",
-                "gtest/1.8.1@bincrafters/stable")
     options = {"shared": [True, False], "build_test": [True, False]}
     default_options = {"shared": True,
                        "build_test": True,
@@ -29,6 +25,15 @@ class DlogConan(ConanFile):
                        "boost:without_test": True}  # 这个"boost:without_test"的写法可能不被支持
     generators = "cmake"
     exports_sources = "src/*"
+
+    def requirements(self):
+        pass
+
+    def build_requirements(self):
+        self.build_requires("spdlog/1.4.2@bincrafters/stable")
+        self.build_requires("boost/1.71.0@conan/stable")
+        self.build_requires("rapidjson/1.1.0@bincrafters/stable")
+        self.build_requires("gtest/1.8.1@bincrafters/stable")
 
     def _configure_cmake(self):
         '''
@@ -55,7 +60,6 @@ class DlogConan(ConanFile):
         # self.run("cmake --build . %s" % cmake.build_config)
 
     def package(self):
-        # self.requires.clear()
         # 拷贝如果不带*那么不会搜索到下一级文件夹
         self.copy("*dlog.h", dst="include", src="src")
         self.copy("*.lib", dst="lib", keep_path=False)
