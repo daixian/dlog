@@ -9,7 +9,7 @@
         //"CMAKE_TOOLCHAIN_FILE": "~/vcpkg/scripts/buildsystems/vcpkg.cmake",
         //"VCPKG_TARGET_TRIPLET": "x64-linux"
     },
-    "cmake.buildDirectory": "${workspaceRoot}/build/Win64",
+    "cmake.buildDirectory": "${workspaceRoot}/build",
     "cmake.configureOnOpen": false,
     // "cmake.generator": "Visual Studio 15 2017 Win64",
     // "cmake.preferredGenerators": [
@@ -27,9 +27,9 @@
     ],
     // 安装插件"Catch2 and Google Test Explorer"
     "catch2TestExplorer.executables": [
-        "build/Win64/bin/Release/test.out.exe",
+        "build/bin/Release/test.out.exe",
     ],
-    "catch2TestExplorer.defaultCwd": "build/Win64/bin/Release",
+    "catch2TestExplorer.defaultCwd": "build/bin/Release",
     "files.associations": {
         "*.ipp": "cpp"
     },
