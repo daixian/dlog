@@ -108,3 +108,45 @@ TEST(dlog, logi)
     LogI(msg);
     dlog_close();
 }
+
+TEST(dlog, logD)
+{
+    dlog_close();
+
+    //第一次创建
+    int res = dlog_init("log", "LogD", dlog_init_relative::MODULE);
+    dlog_set_console_thr(dlog_level::debug);
+    dlog_set_file_thr(dlog_level::debug);
+    dlog_set_memory_thr(dlog_level::debug);
+    EXPECT_TRUE(res == 0);
+    // for (size_t i = 0; i < 5; i++) {
+    //     LogI("输出一个日志 %d", i);
+    // }
+    // LogI("输出一个日志 %s", "这是一段日志，测试%s");
+    // string str = "这是一段日志，测试string.c_str()";
+    // LogI("输出一个日志 %s", str.c_str());
+    // str = "D:/Work/MRSystem/x64/Release/";
+    // LogI("GC100CharucoCalib.searchImageInCharucoDir():找到一个charuco图片 %s", str.c_str());
+
+    for (size_t i = 0; i < 100; i++) {
+        string fp = "D:/Work/MRSystem/x64/Release/images\\charuco\\dell-dual\\origin\\F3D0001\\20190416-170709.png";
+        fp += fp;
+        fp += fp;
+        fp += fp;
+        LogD("GC100CharucoCalib.searchImageInCharucoDir():找到一个charuco图片 %s", fp.c_str());
+        LogD_w(L"试试❀❀❀❀❀❀❀❀❀");
+    }
+
+    char msg[129];
+
+    for (size_t i = 0; i < sizeof(msg); i++) {
+        msg[i] = 'a';
+    }
+    msg[128] = '\0';
+    LogI(msg);
+    LogD(msg);
+    LogW(msg);
+    LogE(msg);
+    dlog_flush();
+    dlog_close();
+}

@@ -7,7 +7,7 @@ python3 ./tools/DownloadLib.py -d"$HOME/dxlib/download" -l"$HOME/dxlib/lib" -p"l
 
 # pip3 install conan
 conan create . daixian/stable -o dlog:shared=True --build missing
-conan upload dlog/2.4.0@daixian/stable --all -r=conan-local
+conan upload dlog/2.4.1@daixian/stable --all -r=conan-local
 
 # mkdir -p build/Linux
 # cd build/Linux

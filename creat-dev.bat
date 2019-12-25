@@ -6,4 +6,4 @@ python ./tools/DownloadLib.py -d "C:/dxlib/download" -l "C:/dxlib/lib" "concurre
 mkdir build
 cd build
 conan install .. -s compiler.runtime=MD -s arch=x86_64 -s build_type=Release --build missing
-cmake ../src -G "Visual Studio 15 Win64" -DDLOG_BUILD_SHARED:BOOL="1" -DDLOG_BUILD_TESTS:BOOL="1" -DCMAKE_CONFIGURATION_TYPES:STRING="Release;RelWithDebInfo"
+cmake ../src -G "Visual Studio 15 Win64" -DDLOG_BUILD_SHARED:BOOL="1" -DDLOG_BUILD_TESTS:BOOL="1" -DCMAKE_CONFIGURATION_TYPES:STRING="Debug;Release;RelWithDebInfo"

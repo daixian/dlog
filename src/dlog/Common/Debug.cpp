@@ -61,8 +61,9 @@ void Debug::init(const char* logDir, const char* program, INIT_RELATIVE rel)
         logFilePath = (fs::path(logDirPath) / logFileName).string();
 
         filelogger = spdlog::basic_logger_mt(programName, logFilePath);
+        filelogger->set_level(spdlog::level::trace);
         filelogger->flush_on(spdlog::level::level_enum::warn);
-        spdlog::flush_every(std::chrono::seconds(1)); //每秒自动刷新一次
+        spdlog::flush_every(std::chrono::seconds(3)); //每秒自动刷新一次
         isInit = true;                                //标记已经初始化了
         isInitFail = false;
         mt.unlock();
@@ -104,9 +105,9 @@ void Debug::clear()
         isEnable = true;
         isMemLogEnable = false;
         isConsoleEnable = true;
-        logFileThr = spdlog::level::level_enum::info;
-        logMemoryThr = spdlog::level::level_enum::info;
-        logConsoleThr = spdlog::level::level_enum::info;
+        logFileThr = spdlog::level::level_enum::debug;
+        logMemoryThr = spdlog::level::level_enum::debug;
+        logConsoleThr = spdlog::level::level_enum::debug;
         MemoryLog::GetInst()->clear();
 
         logPattern = _logPattern;
@@ -160,7 +161,7 @@ void Debug::removeOldFile(long sec)
         vector<long> vFileSubTimeSort = vFileSubTime;
         std::sort(vFileSubTimeSort.begin(), vFileSubTimeSort.end());
         if (vFileSubTimeSort.size() < 50) {
-            LogI("dlog启动,\"%s\" 当前有%d个日志文件", programName.c_str(), vFileSubTimeSort.size());
+            LogMsg(spdlog::level::level_enum::info, (boost::format("dlog启动,\"%s\" 当前有%d个日志文件") % programName % vFileSubTimeSort.size()).str().c_str());
         }
         else {
             int thr = vFileSubTimeSort[49]; //删除的时间门限
@@ -170,13 +171,13 @@ void Debug::removeOldFile(long sec)
             for (size_t i = 0; i < vFileSubTime.size(); i++) {
                 if (vFileSubTime[i] > thr) {
                     fs::remove(vFilePath[i]);
-                    LogI("dlog移除过早的日志文件%s", vFilePath[i].string().c_str());
+                    LogMsg(spdlog::level::level_enum::info, (boost::format("dlog移除过早的日志文件%s") % vFilePath[i].string()).str().c_str());
                 }
             }
         }
     }
     catch (const std::exception& e) {
-        LogE("dlog移除过早的日志文件异常:%s", e.what());
+        LogMsg(spdlog::level::level_enum::err, (boost::format("dlog移除过早的日志文件异常:%s") % e.what()).str().c_str());
     }
 }
 
@@ -190,15 +191,21 @@ void Debug::setIsConsoleEnable(bool enable)
     }
 
     //设置控制台为UTF8输出
-    system("chcp 65001");//测试了在windows下有效
+#if defined(_WIN32) || defined(_WIN64)
+    system("chcp 65001"); //测试了在windows下有效
+#endif
 
     //如果是设置为使能,如果指针还没有初始化过
     if (consolelogger == nullptr) {
         consolelogger = spdlog::stdout_color_mt("console");
 
+        consolelogger->set_level(spdlog::level::trace);
         auto console_sink = dynamic_cast<spdlog::sinks::stdout_color_sink_mt*>(consolelogger->sinks().back().get());
-        //console_sink->set_color(spdlog::level::debug, console_sink->CYAN);
+
 #if defined(_WIN32) || defined(_WIN64)
+        //win下好像可以选择的颜色不多
+        console_sink->set_color(spdlog::level::trace, console_sink->BOLD);
+        console_sink->set_color(spdlog::level::debug, console_sink->CYAN);
         console_sink->set_color(spdlog::level::info, console_sink->WHITE);
 #else
         console_sink->set_color(spdlog::level::info, console_sink->white);

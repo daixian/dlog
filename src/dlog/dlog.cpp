@@ -81,7 +81,7 @@ extern "C" DLOG_EXPORT int __cdecl dlog_init(const char* logDir, const char* pro
 extern "C" DLOG_EXPORT int __cdecl dlog_close()
 {
     if (Debug::GetInst()->isInit)
-        Debug::GetInst()->LogI("dlog关闭!");
+        LogI("dlog关闭!");
     Debug::GetInst()->clear();
     return 0;
 }
@@ -119,7 +119,7 @@ extern "C" DLOG_EXPORT void __cdecl dlog_console_log_enable(bool enable)
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT void __cdecl dlog_set_file_thr(dlog_level usualThr)
 {
-    Debug::GetInst()->logFileThr = (spdlog::level::level_enum)usualThr;
+    Debug::GetInst()->logFileThr = static_cast<spdlog::level::level_enum>(usualThr);
 }
 
 ///-------------------------------------------------------------------------------------------------
@@ -143,7 +143,7 @@ extern "C" DLOG_EXPORT int __cdecl dlog_get_file_thr()
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT void __cdecl dlog_set_memory_thr(dlog_level memoryThr)
 {
-    Debug::GetInst()->logMemoryThr = (spdlog::level::level_enum)memoryThr;
+    Debug::GetInst()->logMemoryThr = static_cast<spdlog::level::level_enum>(memoryThr);
 }
 
 ///-------------------------------------------------------------------------------------------------
@@ -169,7 +169,7 @@ extern "C" DLOG_EXPORT int __cdecl dlog_get_memory_thr()
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT void __cdecl dlog_set_console_thr(dlog_level LogSeverity)
 {
-    Debug::GetInst()->logConsoleThr = (spdlog::level::level_enum)LogSeverity; // 当日志级别大于等于此级别时，自动将此日志输出到标准错误(终端窗口)中
+    Debug::GetInst()->logConsoleThr = static_cast<spdlog::level::level_enum>(LogSeverity); // 当日志级别大于等于此级别时，自动将此日志输出到标准错误(终端窗口)中
 }
 
 ///-------------------------------------------------------------------------------------------------
@@ -195,7 +195,7 @@ extern "C" DLOG_EXPORT int __cdecl dlog_get_console_thr()
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT void __cdecl dlog_set_flush_on(dlog_level LogSeverity)
 {
-    Debug::GetInst()->setFlushOn((spdlog::level::level_enum)LogSeverity);
+    Debug::GetInst()->setFlushOn(static_cast<spdlog::level::level_enum>(LogSeverity));
 }
 
 ///-------------------------------------------------------------------------------------------------
@@ -374,6 +374,7 @@ extern "C" DLOG_EXPORT void __cdecl LogI_w(const wchar_t* strFormat, ...)
         }
         va_end(arg_ptr);
 
+        //使用了json库的16->8 =。=
         std::string msg = JsonHelper::utf16To8(buf);
         Debug::GetInst()->LogMsg(spdlog::level::level_enum::info, msg.c_str());
     }
@@ -397,6 +398,7 @@ extern "C" DLOG_EXPORT void __cdecl LogW_w(const wchar_t* strFormat, ...)
         }
         va_end(arg_ptr);
 
+        //使用了json库的16->8 =。=
         std::string msg = JsonHelper::utf16To8(buf);
         Debug::GetInst()->LogMsg(spdlog::level::level_enum::warn, msg.c_str());
     }
@@ -420,6 +422,7 @@ extern "C" DLOG_EXPORT void __cdecl LogE_w(const wchar_t* strFormat, ...)
         }
         va_end(arg_ptr);
 
+        //使用了json库的16->8 =。=
         std::string msg = JsonHelper::utf16To8(buf);
         Debug::GetInst()->LogMsg(spdlog::level::level_enum::err, msg.c_str());
     }
@@ -443,6 +446,7 @@ extern "C" DLOG_EXPORT void __cdecl LogD_w(const wchar_t* strFormat, ...)
         }
         va_end(arg_ptr);
 
+        //使用了json库的16->8 =。=
         std::string msg = JsonHelper::utf16To8(buf);
         Debug::GetInst()->LogMsg(spdlog::level::level_enum::debug, msg.c_str());
     }
