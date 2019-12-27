@@ -11,12 +11,11 @@
 #    include <pwd.h>
 #endif
 
-#include <boost/filesystem.hpp>
+#include <Poco/Path.h>
+#include <Poco/File.h>
 
 #include "Common.h"
 #include <ctime>
-
-namespace fs = boost::filesystem;
 
 ////这个脚本可能会报错 语言->符合模式 "combaseapi.h(229): error C2187: syntax error: 'identifier' was unexpected here" when using /permissive-
 namespace dxlib {
@@ -57,6 +56,9 @@ std::string FileHelper::getAppDir()
 
 std::string FileHelper::getModuleDir()
 {
+    if (!moduleDir.empty()) {
+        return moduleDir; //只要有记录了就直接使用
+    }
     char arg1[32];
     char exepath[512 + 1] = {0};
     snprintf(arg1, sizeof(arg1), "/proc/%d/exe", getpid());
@@ -77,6 +79,19 @@ std::string FileHelper::getAppDir()
     const char* homedir = pw->pw_dir;
     return std::string(homedir);
 }
+#else
+std::string FileHelper::getModuleDir()
+{
+    if (!moduleDir.empty()) {
+        return moduleDir; //只要有记录了就直接使用
+    }
+    moduleDir = Poco::Path::current();
+    return moduleDir;
+}
+std::string FileHelper::getAppDir()
+{
+    return Poco::Path::dataHome();
+}
 #endif
 
 void FileHelper::isExistsAndCreat(const std::wstring& dirPath)
@@ -89,7 +104,8 @@ void FileHelper::isExistsAndCreat(const std::string& sDir)
 {
     if (!dirExists(sDir)) { //如果文件夹路径不存在
         try {
-            fs::create_directories(sDir);
+            Poco::File dir(sDir);
+            dir.createDirectories();
         }
         catch (const std::exception& ex) {
             std::cerr << "FileHelper.isExistsAndCreat():" << ex.what() << '\n';
@@ -100,9 +116,10 @@ void FileHelper::isExistsAndCreat(const std::string& sDir)
 
 bool FileHelper::dirExists(const std::string& dirName_in)
 {
+    Poco::File dir(dirName_in);
     //如果存在
-    if (fs::exists(dirName_in)) {
-        if (fs::is_directory(dirName_in)) {
+    if (dir.exists()) {
+        if (dir.isDirectory()) {
             return true;
         }
         //它还是存在一种是一个文件的可能
@@ -113,8 +130,9 @@ bool FileHelper::dirExists(const std::string& dirName_in)
 bool FileHelper::dirExists(const std::wstring& dirName_in)
 {
     //如果存在
-    if (fs::exists(dirName_in)) {
-        if (fs::is_directory(dirName_in)) {
+    Poco::File dir(ws2s(dirName_in));
+    if (dir.exists()) {
+        if (dir.isDirectory()) {
             return true;
         }
         //它还是存在一种是一个文件的可能

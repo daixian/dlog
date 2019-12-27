@@ -1,13 +1,18 @@
 ﻿#include "Debug.h"
 #include "FileHelper.h"
-#include <boost/filesystem.hpp>
-#include <boost/algorithm/string.hpp>
-#include <boost/format.hpp>
+
+#include <Poco/Path.h>
+#include <Poco/File.h>
+#include <Poco/DirectoryIterator.h>
+#include <Poco/Format.h>
+#include "Poco/Glob.h"
+
 #include "Common.h"
 #include <iostream>
+#include <regex>
 
-namespace fs = boost::filesystem;
 using namespace std;
+using namespace Poco;
 
 namespace dxlib {
 
@@ -32,33 +37,34 @@ void Debug::init(const char* logDir, const char* program, INIT_RELATIVE rel)
         //初始化控制台
         setIsConsoleEnable(isConsoleEnable);
 
-        fs::path inputDir = fs::path(logDir);
+        Path inputDir(logDir);
 
         //如果是绝对路径,就直接使用
-        if (inputDir.is_absolute()) {
+        if (inputDir.isAbsolute()) {
             this->logDirPath = logDir;
         }
         else { //如果是相对对路径,就从根目录去拼接
             if (rel == INIT_RELATIVE::MODULE) {
-                fs::path mdDir = FileHelper::getModuleDir(); //模块目录
-                this->logDirPath = (mdDir / inputDir).string();
+                Path mdDir = FileHelper::getModuleDir(); //模块目录
+                this->logDirPath = mdDir.append(logDir).toString();
             }
             else {
-                fs::path appDir = FileHelper::getAppDir(); //app目录
-                this->logDirPath = (appDir / inputDir).string();
+                Path appDir = FileHelper::getAppDir(); //app目录
+                this->logDirPath = appDir.append(inputDir).toString();
             }
         }
         if (!FileHelper::dirExists(this->logDirPath)) //如果文件夹不存在
         {
-            if (fs::is_regular_file(this->logDirPath)) {
+            Path wantPath(this->logDirPath);
+            if (wantPath.isFile()) {
                 //如果它又已经被一个文件占用了文件名,那就在这个文件夹下使用log文件夹
-                this->logDirPath = (fs::path(this->logDirPath).parent_path() / "log").string();
+                this->logDirPath = wantPath.parent().append("log").toString();
             }
             FileHelper::isExistsAndCreat(this->logDirPath); //如果文件夹不存在就创建
         }
 
-        string logFileName = (boost::format("%s.%s.log") % program % secTimeStr()).str();
-        logFilePath = (fs::path(logDirPath) / logFileName).string();
+        string logFileName = format("%s.%s.log", programName, secTimeStr());
+        logFilePath = Path(logDirPath).append(logFileName).toString();
 
         filelogger = spdlog::basic_logger_mt(programName, logFilePath);
         filelogger->set_level(spdlog::level::trace);
@@ -76,7 +82,7 @@ void Debug::init(const char* logDir, const char* program, INIT_RELATIVE rel)
     }
 
     //检查看看日志文件是否存在了
-    if (filelogger == nullptr || !fs::is_regular_file(logFilePath)) {
+    if (filelogger == nullptr || !File(logFilePath).exists()) {
         string msg = "Debug.init():无法创建日志文件! -> " + logFilePath; //底下马上要clear(),所以这里先写了
         clear();
         isInitFail = true; //标记初始化失败过了
@@ -140,44 +146,42 @@ void Debug::removeOldFile(long sec)
     using namespace std;
     try {
         vector<long> vFileSubTime;
-        vector<fs::path> vFilePath;
+        vector<string> vFiles;
+        File logDir(logDirPath);
 
-        fs::directory_iterator diR(logDirPath);
-        for (auto& de : diR) {
-            if (fs::is_regular_file(de.status())) { //如果这个是文件
-                string fname = de.path().filename().string();
-                string ext = de.path().extension().string();
-                std::vector<std::string> strs;
-                boost::split(strs, fname, boost::is_any_of("."));
-                if (strs[0] == programName && //起头是自己的名字
-                    ext == ".log") {
-                    auto t = fs::last_write_time(de.path());
-                    std ::time_t now = std::time(nullptr);
+        logDir.list(vFiles);
+        for (size_t i = 0; i < vFiles.size(); i++) {
+            Path filePath = vFiles[i];
+            if (filePath.isFile()) {
+                if (std::regex_search(filePath.getFileName(), regex(format("%s[0-9]+[-]{1}[0-9]+[.]{1}log", programName)))) {
+                    File file(filePath);
+                    Poco::Timestamp now;
+                    Poco::Timestamp t = file.getLastModified();
                     vFileSubTime.push_back(now - t); //记录所有文件的时间
-                    vFilePath.push_back(de.path());
                 }
             }
         }
+
         vector<long> vFileSubTimeSort = vFileSubTime;
         std::sort(vFileSubTimeSort.begin(), vFileSubTimeSort.end());
         if (vFileSubTimeSort.size() < 50) {
-            LogMsg(spdlog::level::level_enum::info, (boost::format("dlog启动,\"%s\" 当前有%d个日志文件") % programName % vFileSubTimeSort.size()).str().c_str());
+            LogMsg(spdlog::level::level_enum::info, format("dlog启动,\"%s\" 当前有%z个日志文件", programName, vFileSubTimeSort.size()).c_str());
         }
         else {
             int thr = vFileSubTimeSort[49]; //删除的时间门限
             if (thr < sec) {
                 thr = sec;
             }
-            for (size_t i = 0; i < vFileSubTime.size(); i++) {
-                if (vFileSubTime[i] > thr) {
-                    fs::remove(vFilePath[i]);
-                    LogMsg(spdlog::level::level_enum::info, (boost::format("dlog移除过早的日志文件%s") % vFilePath[i].string()).str().c_str());
-                }
-            }
+            //for (size_t i = 0; i < vFileSubTime.size(); i++) {
+            //    if (vFileSubTime[i] > thr) {
+            //        fs::remove(vFilePath[i]);
+            //        LogMsg(spdlog::level::level_enum::info, (boost::format("dlog移除过早的日志文件%s") % vFilePath[i].string()).str().c_str());
+            //    }
+            //}
         }
     }
     catch (const std::exception& e) {
-        LogMsg(spdlog::level::level_enum::err, (boost::format("dlog移除过早的日志文件异常:%s") % e.what()).str().c_str());
+        LogMsg(spdlog::level::level_enum::err, format("dlog移除过早的日志文件异常:%s", std::string(e.what())).c_str());
     }
 }
 

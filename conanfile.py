@@ -21,8 +21,7 @@ class DlogConan(ConanFile):
     options = {"shared": [True, False], "build_test": [True, False]}
     default_options = {"shared": True,
                        "build_test": True,
-                       "*:shared": False,
-                       "boost:without_test": True}  # 这个"boost:without_test"的写法可能不被支持
+                       "*:shared": False}
     generators = "cmake"
     exports_sources = "src/*"
 
@@ -31,7 +30,7 @@ class DlogConan(ConanFile):
 
     def build_requirements(self):
         self.build_requires("spdlog/1.4.2@bincrafters/stable")
-        self.build_requires("boost/1.71.0@conan/stable")
+        self.build_requires("Poco/1.9.4@pocoproject/stable")
         self.build_requires("rapidjson/1.1.0@bincrafters/stable")
         self.build_requires("gtest/1.8.1@bincrafters/stable")
 

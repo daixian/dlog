@@ -1,8 +1,14 @@
 ﻿#include <string>
 #include <locale.h>
 #include "Common.h"
-#include <boost/date_time/posix_time/posix_time.hpp>
 #include <stdlib.h>
+
+#include "Poco/LocalDateTime.h"
+#include "Poco/DateTime.h"
+#include "Poco/DateTimeFormat.h"
+#include "Poco/DateTimeFormatter.h"
+#include "Poco/DateTimeParser.h"
+#include "Poco/Format.h"
 
 #if defined(_WIN32) || defined(_WIN64)
 #    include <windows.h>
@@ -119,15 +125,9 @@ std::string byte2str(const void* data, int length)
 ///-------------------------------------------------------------------------------------------------
 std::string secTimeStr()
 {
-    std::string strTime = boost::posix_time::to_iso_string(
-        boost::posix_time::second_clock::local_time());
-
-    // 这时候strTime里存放时间的格式是YYYYMMDDTHHMMSS，日期和时间用大写字母T隔开了
-
-    size_t pos = strTime.find('T');
-    strTime.replace(pos, 1, std::string("-"));
-    //strTime.replace(pos + 3, 0, std::string(":")); //这个冒号加上不能用作文件名了
-    //strTime.replace(pos + 6, 0, std::string(":"));
-
-    return strTime;
+    //最后文件的形式如init_close.20191228-023549.log
+    using namespace Poco;
+    LocalDateTime now;
+    std::string str = DateTimeFormatter::format(now, "%Y%m%d-%H%M%S");
+    return str;
 }
