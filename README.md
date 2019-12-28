@@ -3,6 +3,7 @@
 * 1、 目前已经换成了conan的构建和包管理。
 * 2、 上传到github的CI待完成...
 * 3、 内部从glog换成的spdlog。
+* 4、 去掉了boost，换成了Poco库。
 
 [Release下载(x64,x86)](https://github.com/daixian/dlog/releases)
 

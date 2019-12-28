@@ -9,7 +9,7 @@ python3 ./tools/DownloadLib.py -d"$HOME/dxlib/download" -l"$HOME/dxlib/lib" -p"a
 
 # conan install .. --profile=../linux86_to_arm --build=missing
 conan create . daixian/stable --profile=./linux86_to_arm  -o dlog:shared=True  --build missing
-conan upload dlog/2.4.1@daixian/stable --all -r=conan-local
+conan upload dlog/2.5.0@daixian/stable --all -r=conan-local
 
 # mkdir -p build/linux/arm
 # cd build/linux/arm

@@ -6,6 +6,7 @@
 #include <Poco/DirectoryIterator.h>
 #include <Poco/Format.h>
 #include "Poco/Glob.h"
+#include "Poco/Timespan.h"
 
 #include "Common.h"
 #include <iostream>
@@ -145,39 +146,46 @@ void Debug::removeOldFile(long sec)
 {
     using namespace std;
     try {
-        vector<long> vFileSubTime;
-        vector<string> vFiles;
+        //这两个
+        vector<File> vFilesProgramLogs;
+        vector<Timestamp::TimeDiff> vFilesProgramLogDiffTime;
         File logDir(logDirPath);
 
+        vector<File> vFiles;
         logDir.list(vFiles);
         for (size_t i = 0; i < vFiles.size(); i++) {
-            Path filePath = vFiles[i];
-            if (filePath.isFile()) {
-                if (std::regex_search(filePath.getFileName(), regex(format("%s[0-9]+[-]{1}[0-9]+[.]{1}log", programName)))) {
-                    File file(filePath);
+            File& file = vFiles[i];
+            if (file.isFile() && file.exists()) {
+                Path filePath(vFiles[i].path());
+                string fileName = filePath.getFileName();
+                if (std::regex_search(fileName, regex(format("%s[.]\\d+[-]\\d+[.]log", programName)))) {
                     Poco::Timestamp now;
                     Poco::Timestamp t = file.getLastModified();
-                    vFileSubTime.push_back(now - t); //记录所有文件的时间
+                    Timestamp::TimeDiff diff = now - t; //microseconds
+                    Timespan ts(diff);
+                    vFilesProgramLogDiffTime.push_back(ts.totalSeconds()); //记录所有文件距离现在的时间秒
+                    vFilesProgramLogs.push_back(file);                     //和那个index一致的保存那个文件.
                 }
             }
         }
 
-        vector<long> vFileSubTimeSort = vFileSubTime;
+        vector<Timestamp::TimeDiff> vFileSubTimeSort = vFilesProgramLogDiffTime;
         std::sort(vFileSubTimeSort.begin(), vFileSubTimeSort.end());
         if (vFileSubTimeSort.size() < 50) {
             LogMsg(spdlog::level::level_enum::info, format("dlog启动,\"%s\" 当前有%z个日志文件", programName, vFileSubTimeSort.size()).c_str());
         }
         else {
-            int thr = vFileSubTimeSort[49]; //删除的时间门限
+            int thr = vFileSubTimeSort[49];
+            //删除的时间门限,如果超过50个文件那么保留50个文件,如果这50个文件都是最近产生的,那么还是以2天为准
             if (thr < sec) {
                 thr = sec;
             }
-            //for (size_t i = 0; i < vFileSubTime.size(); i++) {
-            //    if (vFileSubTime[i] > thr) {
-            //        fs::remove(vFilePath[i]);
-            //        LogMsg(spdlog::level::level_enum::info, (boost::format("dlog移除过早的日志文件%s") % vFilePath[i].string()).str().c_str());
-            //    }
-            //}
+            for (size_t i = 0; i < vFilesProgramLogDiffTime.size(); i++) {
+                if (vFilesProgramLogDiffTime[i] > thr) {
+                    vFilesProgramLogs[i].remove();
+                    LogMsg(spdlog::level::level_enum::info, (format("dlog移除过早的日志文件%s", vFilesProgramLogs[i].path())).c_str());
+                }
+            }
         }
     }
     catch (const std::exception& e) {
