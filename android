@@ -9,6 +9,6 @@ os=Android
 os.api_level=26
 build_type=Release
 [build_requires]
-android_ndk_installer/r20@bincrafters/stable
+android_ndk_installer/r20@daixian/stable
 [options]
 [env]

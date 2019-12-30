@@ -5,6 +5,9 @@
 * 3、 内部从glog换成的spdlog。
 * 4、 去掉了boost，换成了Poco库。
 
+## NDK
+* 会提示找不到-lpthread.[参考 ar cr libpthread.a](https://stackoverflow.com/questions/57289494/ndk-r20-ld-ld-error-cannot-find-lpthread)
+
 [Release下载(x64,x86)](https://github.com/daixian/dlog/releases)
 
 ### 使用示例
