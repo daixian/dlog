@@ -18,9 +18,11 @@ class DlogConan(ConanFile):
     description = "dx's log lib"
     topics = ("log", "C++", "C#")
     settings = "os", "compiler", "build_type", "arch"
-    options = {"shared": [True, False], "build_test": [True, False]}
+    options = {"shared": [True, False], "build_test": [
+        True, False], "fmt.fPIC": [True, False]}
     default_options = {"shared": True,
                        "build_test": True,
+                       "fmt.fPIC": False,
                        "*:shared": False}
     generators = "cmake"
     exports_sources = "src/*"
@@ -45,6 +47,7 @@ class DlogConan(ConanFile):
         else:
             cmake.definitions["DLOG_BUILD_SHARED"] = self.options.shared
         cmake.definitions["DLOG_BUILD_TESTS"] = self.options.build_test
+        cmake.definitions["LLVM_ENABLE_PIC"] = False
         return cmake
 
     def build(self):
