@@ -4,8 +4,6 @@
 
 # 目前试着安装了gcc-7-arm-linux-gnueabihf
 # gcc-8也已经出来了
-python3 -V
-python3 ./tools/DownloadLib.py -d"$HOME/dxlib/download" -l"$HOME/dxlib/lib" -p"arm" "concurrentqueue"
 
 # conan install .. --profile=../linux86_to_arm --build=missing
 conan create . daixian/stable --profile=./linux86_to_arm  -o dlog:shared=True  --build missing
