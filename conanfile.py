@@ -11,7 +11,7 @@ import io
 
 class DlogConan(ConanFile):
     name = "dlog"
-    version = "2.5.0"
+    version = "2.5.1"
     license = "WTFPL???"
     author = "daixian<amano_tooko@qq.com>"
     url = "https://github.com/daixian/dlog"
@@ -34,12 +34,10 @@ class DlogConan(ConanFile):
         self.build_requires("spdlog/1.5.0")
         self.build_requires("poco/1.9.4")
         self.build_requires("rapidjson/1.1.0")
-        self.build_requires("gtest/1.8.1@bincrafters/stable")
 
     def _configure_cmake(self):
-        '''
-        转换python的设置到CMake
-        '''
+        """转换python的设置到CMake"""
+        print("_configure_cmake():package_folder="+self.package_folder)
         cmake = CMake(self)
         # 在windows平台目前只支持动态库
         if self.settings.os == "Windows":
@@ -69,6 +67,27 @@ class DlogConan(ConanFile):
         self.copy("*.dylib*", dst="lib", keep_path=False)
         self.copy("*.so", dst="lib", keep_path=False)
         self.copy("*.a", dst="lib", keep_path=False)
+        self.copy_archive()
 
     def package_info(self):
         self.cpp_info.libs = ["dlog"]
+
+    def copy_archive(self):
+        """把安装文件拷贝到当前源文件目录来,方便在CI中上传"""
+        print("copy_archive():package_folder="+self.package_folder)
+        # if not os.environ["CONAN_ARCHIVE_PATH"] is None:
+        #     dest = os.environ["CONAN_ARCHIVE_PATH"]+os.sep
+        #     dest += self.settings["compiler"]+"_" + \
+        #         self.setting["compiler.version"]+"_"+self.settings["arch"]
+        #     if(self.settings["compiler"] is "Visual Studio"):
+        #         dest += "_"+self.settings["compiler.runtime"]
+        #     dest += os.sep
+        #     print("copy_archive():归档目录="+dest)
+        #     self.copy("*dlog.h", dst=dest+"include", src="src")
+        #     self.copy("*.lib", dst=dest+"lib", keep_path=False)
+        #     self.copy("*.dll", dst=dest+"bin", keep_path=False)
+        #     self.copy("*.dylib*", dst=dest+"lib", keep_path=False)
+        #     self.copy("*.so", dst=dest+"lib", keep_path=False)
+        #     self.copy("*.a", dst=dest+"lib", keep_path=False)
+        # else:
+        #     print("copy_archive():执行目录CONAN_ARCHIVE_PATH为空，不执行archive拷贝")

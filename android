@@ -8,6 +8,7 @@ compiler.version=8
 os=Android
 os.api_level=16
 [build_requires]
+make/4.2.1
 android_ndk_installer/r20@daixian/stable
 [options]
 [env]

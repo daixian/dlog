@@ -24,8 +24,6 @@ include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 # conan_set_vs_runtime()
 
-
-
 message(STATUS "CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}" )
 message(STATUS "CMAKE_C_FLAGS_DEBUG = ${CMAKE_C_FLAGS_DEBUG}" )
 message(STATUS "CMAKE_CXX_FLAGS_DEBUG = ${CMAKE_CXX_FLAGS_DEBUG}" )
@@ -37,9 +35,6 @@ message(STATUS "CMAKE_CXX_FLAGS_RELEASE = ${CMAKE_CXX_FLAGS_RELEASE}" )
 # set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -s" )
 # set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -s" )
 
-# 设置是否编译Test
-option(DLOG_BUILD_TESTS "DLOG_BUILD_TESTS" ON)
-message(STATUS "DLOG_BUILD_TESTS = ${DLOG_BUILD_TESTS}" )
 # 设置是否编译成共享库
 option(DLOG_BUILD_SHARED "DLOG BUILD SHARED" ON)
 message(STATUS "DLOG_BUILD_SHARED = ${DLOG_BUILD_SHARED}" )
@@ -47,35 +42,12 @@ message(STATUS "DLOG_BUILD_SHARED = ${DLOG_BUILD_SHARED}" )
 # 设置生成一个VS工程里的文件夹
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-# 设置工程外部库的文件夹 $ENV{HOME}
-if(WIN32)
-    set(PROJECT_LIB_DIR "C:/dxlib/lib" CACHE STRING "dx's lib")
-else() #linux
-    set(PROJECT_LIB_DIR $ENV{HOME}/dxlib/lib CACHE STRING "dx's lib")
-endif()
-message(STATUS "PROJECT_LIB_DIR = " ${PROJECT_LIB_DIR})
-
 add_definitions(-D DLOG_UTF8)
-
-# 现在使用了conan库,这里并不需要了
-if(WIN32)
-# # 设置编译选项为MT https://stackoverflow.com/questions/14172856/compile-with-mt-instead-of-md-using-cmake
-    # set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
-    # 控制一下调试时候Debug的VC编译方式
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MD")
- endif()
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
 set(RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 add_subdirectory(dlog)
-
-if(DLOG_BUILD_TESTS)
-    # 使能测试
-    enable_testing()
-    include(CTest)
-    add_subdirectory(${CMAKE_SOURCE_DIR}/test)
-endif()
 
 
