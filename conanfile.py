@@ -32,7 +32,7 @@ class DlogConan(ConanFile):
 
     def build_requirements(self):
         self.build_requires("spdlog/1.5.0")
-        self.build_requires("poco/1.9.4")
+        self.build_requires("poco/[>=1.9.4]")
         self.build_requires("rapidjson/1.1.0")
         self.build_requires("gtest/1.8.1@bincrafters/stable")
 
