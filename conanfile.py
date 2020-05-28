@@ -21,9 +21,8 @@ class DlogConan(ConanFile):
     options = {"shared": [True, False], "build_test": [
         True, False], "fmt.fPIC": [True, False]}
     default_options = {"shared": True,
-                       "build_test": True,
-                       "fmt.fPIC": False,
-                       "*:shared": False}
+                       "build_test": False,
+                       "fmt.fPIC": False}
     generators = "cmake"
     exports_sources = "src/*"
 

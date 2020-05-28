@@ -56,9 +56,7 @@ target_link_libraries(${SUB_NAME} PRIVATE ${CONAN_LIBS} ${CMAKE_THREAD_LIBS_INIT
 
 # if(WIN32)
 #     add_custom_command(TARGET ${SUB_NAME} POST_BUILD
-#     COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_BINARY_DIR}/src/bin/dlog.dll" ${EXECUTABLE_OUTPUT_PATH}) #拷贝整个文件夹算了
-#     # add_custom_command(TARGET ${SUB_NAME} POST_BUILD
-#     # COMMAND ${CMAKE_COMMAND} -E copy_directory "${CONAN_BIN_DIRS_WXSQLITE3}" ${EXECUTABLE_OUTPUT_PATH}) #拷贝整个文件夹算了
+#     COMMAND ${CMAKE_COMMAND} -E copy_directory "${CONAN_BIN_DIRS_DLOG}" ${EXECUTABLE_OUTPUT_PATH}) #拷贝整个文件夹算了
 # endif()
 
 # gtest_discover_tests(${SUB_NAME})

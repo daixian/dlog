@@ -9,7 +9,7 @@ class DLogTestConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     generators = "cmake"
     default_options = {"dlog:shared": False}
-    
+
     def requirements(self):
         self.requires("spdlog/1.5.0")
         self.requires("poco/[>=1.10.1]@daixian/stable")
@@ -33,4 +33,4 @@ class DLogTestConan(ConanFile):
     def test(self):
         if not tools.cross_building(self.settings):
             os.chdir("bin")
-            self.run('.%stest --gtest_output="xml:gtest_report.xml"' % os.sep)
+            self.run('.%spackage_test --gtest_output="xml:gtest_report.xml"' % os.sep)
