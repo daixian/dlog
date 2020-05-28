@@ -1,11 +1,43 @@
 cmake_minimum_required(VERSION 3.8 FATAL_ERROR)
 
 # BUILD_SHARED_LIBS can controll build type!
+set(SUB_NAME "dlog_test")
 
 set(CMAKE_CXX_STANDARD 14)
 # add_definitions(-D SPDLOG_WCHAR_TO_UTF8_SUPPORT)
 
-add_executable(test.out pch.h pch.cpp DebugTest.cpp dlogTest.cpp MemoryLogTest.cpp)
+#去掉dlog的dllexport
+add_definitions(-D DLOG_STATIC)
+
+#这里会搜索到build文件夹下面的一个cpp文件,所以增加一个*Test.cpp的约束
+message(STATUS "CMAKE_SOURCE_DIR = ${CMAKE_SOURCE_DIR}")
+FILE(GLOB_RECURSE SOURCE_LIST "${CMAKE_CURRENT_SOURCE_DIR}/*Test.cpp" 
+                              "${CMAKE_SOURCE_DIR}/src/dlog/*.h" 
+                              "${CMAKE_SOURCE_DIR}/src/dlog/*.cpp"
+                              "${CMAKE_SOURCE_DIR}/src/dlog/*.hpp"
+
+)
+message(STATUS "SOURCE_LIST = ${SOURCE_LIST}")
+
+# 这个函数在VS工程里生成一个文件路径
+function(assign_source_group)
+    foreach(_source IN ITEMS ${ARGN})
+        if (IS_ABSOLUTE "${_source}")
+            file(RELATIVE_PATH _source_rel "${CMAKE_CURRENT_SOURCE_DIR}" "${_source}")
+        else()
+            set(_source_rel "${_source}")
+        endif()
+        get_filename_component(_source_path "${_source_rel}" PATH)
+        string(REPLACE "/" "\\" _source_path_msvc "${_source_path}")
+        #这个表示在VS里划分一个组
+        source_group("${_source_path_msvc}" FILES "${_source}")
+    endforeach()
+endfunction(assign_source_group)
+
+assign_source_group(${SOURCE_LIST})
+
+add_executable(${SUB_NAME}
+               ${SOURCE_LIST})
 
 # Prevent GoogleTest from overriding our compiler/linker options
 # when building with Visual Studio
@@ -17,44 +49,12 @@ if (CMAKE_VERSION  VERSION_LESS 2.8.11)
                         "${gmock_SOURCE_DIR}/include")
 endif()
 
-# 设置dlog库的目录
-if(NOT DEFINED dlog_LIBRARIES)
-  if(WIN32)
-  set(dlog_OBJECTS ${CMAKE_BINARY_DIR}/dlog/dlog.dir/Release)
-  set(dlog_LIBRARIES ${LIBRARY_OUTPUT_PATH}/dlog.lib 
-      ${dlog_OBJECTS}/Common.obj
-      ${dlog_OBJECTS}/Debug.obj
-      ${dlog_OBJECTS}/FileHelper.obj
-      ${dlog_OBJECTS}/MemoryLog.obj
-      )
-  else()
-    # 寻找文件夹下的所有lib文件
-    file(GLOB dlog_LIBRARIES "${LIBRARY_OUTPUT_PATH}/*.*") 
-  endif()
-endif()
 # # 输出dlog库的目录看看
 message(STATUS "dlog_INCLUDE_DIRS = ${CMAKE_SOURCE_DIR}")
-message(STATUS "dlog_LIBRARIES = ${dlog_LIBRARIES}")
-message(STATUS "dlog_OBJECTS = ${dlog_OBJECTS}")
 
 # Dependencies
-target_include_directories(test.out PRIVATE ${CMAKE_SOURCE_DIR} ${PROJECT_LIB_DIR})
+target_include_directories(${SUB_NAME} PRIVATE ${CMAKE_SOURCE_DIR})
 
-# if(WIN32)
-#     #去掉这个可能引起错误的libboost_unit_test_framework
-#     # STRING(REGEX REPLACE "libboost_unit_test_framework " "" CONAN_LIBS_CUT ${CONAN_LIBS})
-#     list(REMOVE_ITEM CONAN_LIBS "libboost_unit_test_framework") 
-# else()
-#     list(REMOVE_ITEM CONAN_LIBS "boost_unit_test_framework") 
-# endif()
-# message(STATUS "CONAN_LIBS = " ${CONAN_LIBS})
-target_link_libraries(test.out PRIVATE dlog ${dlog_LIBRARIES} ${CONAN_LIBS} )
+target_link_libraries(${SUB_NAME} PRIVATE dlog ${CONAN_LIBS})
 
-add_test(NAME AllCppTest COMMAND test.out)
-
-# 这是vcpkg时候的写法
-# Dependencies
-# find_package(GTest MODULE REQUIRED)
-# include_directories(${GTEST_INCLUDE_DIRS})
-# target_link_libraries(utcpp.out PRIVATE dlog GTest::GTest GTest::Main)
-#add_test(NAME TestsInUTCpp COMMAND utcpp.out)
+add_test(NAME AllCppTest COMMAND ${SUB_NAME})

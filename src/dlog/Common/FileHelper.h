@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <Poco/Path.h>
 
 namespace dxlib {
 
@@ -20,5 +21,16 @@ class FileHelper
     //如果文件夹不存在就直接创建文件夹（确保创建文件夹）
     static void isExistsAndCreat(const std::string& sDir);
     static void isExistsAndCreat(const std::wstring& dirPath);
+
+    /**
+     * 判断一个目录是否是绝对路径,如果不是绝对路径就用base和它拼接.
+     *
+     * @author daixian
+     * @date 2020/4/22
+     *
+     * @param          base base路径.
+     * @param [in,out] path 要拼接的路径.
+     */
+    static void makeAbsolute(const Poco::Path& base, Poco::Path& path);
 };
 } // namespace dxlib

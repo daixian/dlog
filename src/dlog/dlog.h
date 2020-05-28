@@ -4,15 +4,31 @@
 #ifndef _DLOG_H_
 #    define _DLOG_H_
 
+// --------------------- windows ---------------------
 #    if defined(_WIN32) || defined(_WIN64)
-#        if defined DLOG_EXPORTS
+// 如果是库自身构建时
+#        if defined(DLOG_DLL_EXPORTS) //库使用dll模式
 #            define DLOG_EXPORT __declspec(dllexport)
 #            define DLOG__LOCAL
+
+#        elif defined(DLOG_STATIC)
+#            define DLOG_EXPORT
+#            define DLOG__LOCAL
+// 如果是用户,在使用的时候定义DLOG_STATIC表示静态链接,DLOG_DLL表示动态链接
 #        else
-#            pragma comment(lib, "dlog.lib")
-#            define DLOG_EXPORT __declspec(dllimport)
+#            if defined(DLOG_STATIC)
+#                pragma comment(lib, "dlog.lib")
+#                define DLOG_EXPORT
+#            elif defined(DLOG_DLL)
+#                pragma comment(lib, "dlog.lib")
+#                define DLOG_EXPORT __declspec(dllimport)
+#            else
+#                pragma comment(lib, "dlog.lib")
+#                define DLOG_EXPORT __declspec(dllimport)
+#            endif
 #        endif
 
+// --------------------- linux ---------------------
 #    elif defined(__linux__)
 #        if __GNUC__ >= 4
 #            if defined DLOG_EXPORTS
@@ -55,7 +71,7 @@ enum class dlog_init_relative
 ///-------------------------------------------------------------------------------------------------
 /// <summary>
 /// 模块初始化,日志文件夹路径可以使用绝对目录也可以使用相对目录(第三个参数进行相对位置的设置),
-/// 如果使用相对目录,那么程序会将它理解为相对模块目录,路径例如 char* logDir = "\\log",char* program = "dlog".
+/// 如果使用相对目录,那么程序会将它理解为相对模块目录,路径例如 char* logDir = "log",char* program = "dlog".
 /// isForceInit如果为false，那么就可以不强制初始化模块，理论上整个程序都共用一个日志.
 /// 如果之前未被初始化返回0,如果成功复用那么就返回1,如果强制重设成功那么返回2,
 /// 如果强制重设但是失败还是复用了那么返回3.

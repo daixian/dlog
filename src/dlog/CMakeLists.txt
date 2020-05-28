@@ -8,11 +8,25 @@ set(CMAKE_CXX_STANDARD 14)
 # set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 # set(CMAKE_C_VISIBILITY_PRESET hidden)
 
-add_definitions(-D DLOG_EXPORTS)
+#ZPCORE
+set(SUB_NAME "dlog")
+
+# 先自动添加算了
+FILE(GLOB_RECURSE SOURCE_LIST "*.cpp" "*.h" "*.hpp" "*.c")
+
+#windows下添加资源文件
+if(WIN32)
+    list(APPEND SOURCE_LIST "${CMAKE_CURRENT_SOURCE_DIR}/${SUB_NAME}.rc")
+endif()
+
 add_definitions(-D UNICODE)
 if(WIN32)
     add_definitions(-D _WINDOWS)
-    add_definitions(-D _USERDLL)
+    if(DLOG_BUILD_SHARED)
+        # _USERDLL是和dllmain函数相关的
+        add_definitions(-D _USERDLL)
+    endif()
+
     # 这个设置只支持windows，所以不要使用了
     # add_definitions(-D SPDLOG_WCHAR_TO_UTF8_SUPPORT)
 endif()
@@ -23,27 +37,6 @@ endif()
 # Layout. This works for all platforms: * <prefix>/lib*/cmake/<PROJECT-NAME> *
 # <prefix>/lib*/ * <prefix>/include/
 set(config_install_dir "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")
-
-set(SOURCE_LIST
-    resource.h
-    stdafx.h
-    targetver.h
-    Common/Common.h
-    Common/Debug.h
-    Common/FileHelper.h
-    Common/stack_allocator.hpp
-    Common/MemoryLog.h
-    Common/JsonHelper.h
-    dlog.h
-    Common/Debug.cpp
-    Common/Common.cpp
-    Common/FileHelper.cpp
-    Common/MemoryLog.cpp
-    dlog.cpp
-    stdafx.cpp
-    dllmain.cpp
-    dlog.rc
-)
 
 # 这个函数在VS工程里生成一个文件路径
 function(assign_source_group)
@@ -72,15 +65,17 @@ message(STATUS "SOURCE_LIST = ${SOURCE_LIST}")
 
 # Library definition
 if(DLOG_BUILD_SHARED)
-    add_library(dlog
+    add_definitions(-D DLOG_DLL)
+    add_definitions(-D DLOG_DLL_EXPORTS)
+    add_library(${SUB_NAME}
                 SHARED
                 ${SOURCE_LIST})
 else()
-    add_library(dlog
+    add_definitions(-D DLOG_STATIC)
+    add_library(${SUB_NAME}
                 STATIC
                 ${SOURCE_LIST})
 endif()
-
 
 # Dependencies
 

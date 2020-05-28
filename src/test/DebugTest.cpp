@@ -1,19 +1,14 @@
-﻿#include "pch.h"
-#include "dlog/Common/MemoryLog.h"
-#include "dlog/Common/Debug.h"
-#include "dlog/dlog.h"
-#include "dlog/Common/FileHelper.h"
+﻿#include "gtest/gtest.h"
+#include "../dlog/Common/MemoryLog.h"
+#include "../dlog/Common/Debug.h"
+#include "../dlog/dlog.h"
+#include "../dlog/Common/FileHelper.h"
 
 #include "Poco/LocalDateTime.h"
 #include "Poco/DateTime.h"
 #include "Poco/DateTimeFormat.h"
 #include "Poco/DateTimeFormatter.h"
 #include "Poco/DateTimeParser.h"
-
-#if defined(_WIN32) || defined(_WIN64)
-#    pragma comment(lib, "dlog.lib")
-#elif defined(__linux__)
-#endif
 
 using namespace dxlib;
 using namespace std;

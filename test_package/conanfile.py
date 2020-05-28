@@ -8,10 +8,11 @@ from conans import ConanFile, CMake, tools
 class DLogTestConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     generators = "cmake"
-
+    default_options = {"dlog:shared": False}
+    
     def requirements(self):
         self.requires("spdlog/1.5.0")
-        self.requires("poco/1.9.4")
+        self.requires("poco/[>=1.10.1]@daixian/stable")
         self.requires("rapidjson/1.1.0")
 
     def build_requirements(self):

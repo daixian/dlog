@@ -11,7 +11,7 @@ import io
 
 class DlogConan(ConanFile):
     name = "dlog"
-    version = "2.5.1"
+    version = "2.5.2"
     license = "WTFPL???"
     author = "daixian<amano_tooko@qq.com>"
     url = "https://github.com/daixian/dlog"
@@ -28,22 +28,30 @@ class DlogConan(ConanFile):
     exports_sources = "src/*"
 
     def requirements(self):
-        pass
+        if self.options.shared:
+            pass
+        else:
+            self.requires("spdlog/1.5.0")
+            self.requires("poco/[>=1.10.1]@daixian/stable")
+            self.requires("rapidjson/1.1.0")
 
     def build_requirements(self):
-        self.build_requires("spdlog/1.5.0")
-        self.build_requires("poco/[>=1.9.4]")
-        self.build_requires("rapidjson/1.1.0")
+        if self.options.shared:
+            self.build_requires("spdlog/1.5.0")
+            self.build_requires("poco/[>=1.10.1]@daixian/stable")
+            self.build_requires("rapidjson/1.1.0")
+        if self.options.build_test:
+            self.build_requires("gtest/1.8.1@bincrafters/stable")
 
     def _configure_cmake(self):
         """转换python的设置到CMake"""
         print("_configure_cmake():package_folder="+self.package_folder)
         cmake = CMake(self)
         # 在windows平台目前只支持动态库
-        if self.settings.os == "Windows":
-            cmake.definitions["DLOG_BUILD_SHARED"] = True
-        else:
-            cmake.definitions["DLOG_BUILD_SHARED"] = self.options.shared
+        # if self.settings.os == "Windows":
+        #     cmake.definitions["DLOG_BUILD_SHARED"] = True
+        # else:
+        cmake.definitions["DLOG_BUILD_SHARED"] = self.options.shared
         cmake.definitions["DLOG_BUILD_TESTS"] = self.options.build_test
         cmake.definitions["LLVM_ENABLE_PIC"] = False
         return cmake
@@ -71,6 +79,13 @@ class DlogConan(ConanFile):
 
     def package_info(self):
         self.cpp_info.libs = ["dlog"]
+        self.cpp_info.defines.append("DLOG_UTF8")
+
+        if self.settings.os == "Windows":
+            if self.options.shared:
+                self.cpp_info.defines.append("DLOG_DLL")
+            else:
+                self.cpp_info.defines.append("DLOG_STATIC")
 
     def copy_archive(self):
         """把安装文件拷贝到当前源文件目录来,方便在CI中上传"""

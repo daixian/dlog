@@ -3,6 +3,8 @@
 #include "../concurrentqueue/concurrentqueue.h"
 #include "../concurrentqueue/blockingconcurrentqueue.h"
 
+#include <string>
+
 namespace dxlib {
 ///-------------------------------------------------------------------------------------------------
 /// <summary>

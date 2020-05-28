@@ -38,20 +38,20 @@ void Debug::init(const char* logDir, const char* program, INIT_RELATIVE rel)
         //初始化控制台
         setIsConsoleEnable(isConsoleEnable);
 
-        Path inputDir(logDir);
+        Path inputDir = Path::forDirectory(logDir);
 
         //如果是绝对路径,就直接使用
         if (inputDir.isAbsolute()) {
-            this->logDirPath = logDir;
+            this->logDirPath = inputDir.toString();
         }
         else { //如果是相对对路径,就从根目录去拼接
             if (rel == INIT_RELATIVE::MODULE) {
-                Path mdDir = FileHelper::getModuleDir(); //模块目录
-                this->logDirPath = mdDir.append(logDir).toString();
+                FileHelper::makeAbsolute(Path(FileHelper::getModuleDir()), inputDir); //模块目录
+                this->logDirPath = inputDir.toString();
             }
             else {
-                Path appDir = FileHelper::getAppDir(); //app目录
-                this->logDirPath = appDir.append(inputDir).toString();
+                FileHelper::makeAbsolute(Path(FileHelper::getAppDir()), inputDir); //app目录
+                this->logDirPath = inputDir.toString();
             }
         }
         if (!FileHelper::dirExists(this->logDirPath)) //如果文件夹不存在

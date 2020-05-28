@@ -1,13 +1,8 @@
-﻿#include "pch.h"
+﻿#include "gtest/gtest.h"
 #include "../dlog/Common/MemoryLog.h"
 #include "../dlog/Common/Debug.h"
 #include "../dlog/dlog.h"
 #include "../dlog/Common/FileHelper.h"
-
-#if defined(_WIN32) || defined(_WIN64)
-#pragma comment(lib, "dlog.lib")
-#elif defined(__linux__)
-#endif
 
 using namespace dxlib;
 using namespace std;

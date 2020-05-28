@@ -140,4 +140,24 @@ bool FileHelper::dirExists(const std::wstring& dirName_in)
     return false;
 }
 
+void FileHelper::makeAbsolute(const Poco::Path& base, Poco::Path& path)
+{
+#if WIN32
+    //在windows下如果是相对地址,或者是没有盘符
+    if (path.isRelative() || path.getDevice().empty()) {
+        std::string strPath = path.toString();
+        //如果是windows下,没有盘符,那么这个路径应该就是相对地址.
+        //如果开头存在/,\\,那么移除掉这开头的
+        if (strPath.front() == '/' ||
+            strPath.front() == '\\') {
+            strPath.erase(0, 1);
+            path = Poco::Path(strPath);
+        }
+#else
+    if (root.isRelative()) {
+#endif
+        //这个函数会忽略相对路径的
+        path.makeAbsolute(base);
+    }
+} // namespace dxlib
 } // namespace dxlib

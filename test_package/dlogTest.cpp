@@ -1,17 +1,8 @@
 ﻿#include "pch.h"
-#include "../dlog/Common/MemoryLog.h"
-#include "../dlog/Common/Debug.h"
-#include "../dlog/dlog.h"
-#include "../dlog/Common/FileHelper.h"
+#include "dlog/dlog.h"
 
 #pragma execution_character_set("utf-8")
 
-#if defined(_WIN32) || defined(_WIN64)
-#    pragma comment(lib, "dlog.lib")
-#elif defined(__linux__)
-#endif
-
-using namespace dxlib;
 using namespace std;
 
 //注意,在微软的CI服务器上,APPDATA目录没有权限创建,同时不支持中文路径
@@ -150,3 +141,37 @@ TEST(dlog, logD)
     dlog_flush();
     dlog_close();
 }
+
+#if WIN32
+
+TEST(dlog, path)
+{
+    dlog_close();
+
+    //第一次创建
+    int res = dlog_init("C:\\ProgramData\\log", "LogD", dlog_init_relative::MODULE);
+    dlog_set_console_thr(dlog_level::debug);
+    dlog_set_file_thr(dlog_level::debug);
+    dlog_set_memory_thr(dlog_level::debug);
+    EXPECT_TRUE(res == 0);
+    char path[245];
+    dlog_get_log_dir(path, 245);
+
+    int strcres = strcmp("C:\\ProgramData\\log\\", path);
+    EXPECT_TRUE(strcres == 0);
+
+    char msg[129];
+
+    for (size_t i = 0; i < sizeof(msg); i++) {
+        msg[i] = 'a';
+    }
+    msg[128] = '\0';
+    LogI(msg);
+    LogD(msg);
+    LogW(msg);
+    LogE(msg);
+    dlog_flush();
+    dlog_close();
+}
+
+#endif
