@@ -15,7 +15,7 @@
 using namespace std;
 using namespace Poco;
 
-namespace dxlib {
+namespace dlog {
 
 Debug* Debug::m_pInstance = NULL;
 
@@ -227,4 +227,4 @@ void Debug::setIsConsoleEnable(bool enable)
     }
 }
 
-} // namespace dxlib
+} // namespace dlog

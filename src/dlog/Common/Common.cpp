@@ -33,6 +33,8 @@
 
 using namespace std;
 
+namespace dlog {
+
 string ws2s(const wstring& ws)
 {
     string curLocale = setlocale(LC_ALL, NULL); // curLocale = "C";
@@ -131,3 +133,5 @@ std::string secTimeStr()
     std::string str = DateTimeFormatter::format(now, "%Y%m%d-%H%M%S");
     return str;
 }
+
+} // namespace dlog

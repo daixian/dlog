@@ -2,6 +2,8 @@
 #include <string>
 #include <locale.h>
 
+namespace dlog {
+
 ///-------------------------------------------------------------------------------------------------
 /// <summary> wstring2string. </summary>
 ///
@@ -44,3 +46,5 @@ std::string byte2str(const void* data, int length);
 /// <returns> The time. </returns>
 ///-------------------------------------------------------------------------------------------------
 std::string secTimeStr();
+
+} // namespace dlog

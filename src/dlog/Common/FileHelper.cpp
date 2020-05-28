@@ -18,7 +18,7 @@
 #include <ctime>
 
 ////这个脚本可能会报错 语言->符合模式 "combaseapi.h(229): error C2187: syntax error: 'identifier' was unexpected here" when using /permissive-
-namespace dxlib {
+namespace dlog {
 
 //只需要使用api获得一次就行了
 std::string moduleDir;
@@ -159,5 +159,6 @@ void FileHelper::makeAbsolute(const Poco::Path& base, Poco::Path& path)
         //这个函数会忽略相对路径的
         path.makeAbsolute(base);
     }
-} // namespace dxlib
-} // namespace dxlib
+}
+
+} // namespace dlog

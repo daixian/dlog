@@ -19,6 +19,10 @@ project(dlog VERSION 2.1.2 LANGUAGES CXX)
 
 # set(CMAKE_CXX_STANDARD 14)
 
+# 设置是否编译成共享库
+option(DLOG_BUILD_SHARED "DLOG BUILD SHARED" OFF)
+option(DLOG_BUILD_TESTS "DLOG BUILD TESTS" ON)
+
 # 在有了project之后需要第一时间搞个conan设置吧
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
@@ -35,9 +39,8 @@ message(STATUS "CMAKE_CXX_FLAGS_RELEASE = ${CMAKE_CXX_FLAGS_RELEASE}" )
 # set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -s" )
 # set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -s" )
 
-# 设置是否编译成共享库
-option(DLOG_BUILD_SHARED "DLOG BUILD SHARED" OFF)
 message(STATUS "DLOG_BUILD_SHARED = ${DLOG_BUILD_SHARED}")
+message(STATUS "DLOG_BUILD_TESTS = ${DLOG_BUILD_TESTS}")
 
 # 设置生成一个VS工程里的文件夹
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -50,7 +53,6 @@ set(RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 add_subdirectory(dlog)
 
-option(DLOG_BUILD_TESTS "DLOG BUILD TESTS" ON)
 if(DLOG_BUILD_TESTS)
 add_subdirectory(test)
 endif()

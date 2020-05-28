@@ -4,7 +4,7 @@
 #include "../dlog/dlog.h"
 #include "../dlog/Common/FileHelper.h"
 
-using namespace dxlib;
+using namespace dlog;
 using namespace std;
 
 //测试MemoryLog类

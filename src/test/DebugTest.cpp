@@ -10,7 +10,7 @@
 #include "Poco/DateTimeFormatter.h"
 #include "Poco/DateTimeParser.h"
 
-using namespace dxlib;
+using namespace dlog;
 using namespace std;
 
 using Poco::DateTime;

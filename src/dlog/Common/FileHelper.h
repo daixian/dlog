@@ -4,7 +4,7 @@
 #include <vector>
 #include <Poco/Path.h>
 
-namespace dxlib {
+namespace dlog {
 
 class FileHelper
 {
@@ -33,4 +33,4 @@ class FileHelper
      */
     static void makeAbsolute(const Poco::Path& base, Poco::Path& path);
 };
-} // namespace dxlib
+} // namespace dlog

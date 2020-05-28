@@ -1,5 +1,5 @@
 ﻿#include "MemoryLog.h"
 
-namespace dxlib {
+namespace dlog {
 MemoryLog* MemoryLog::m_pInstance = nullptr;
 }

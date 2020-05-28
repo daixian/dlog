@@ -5,7 +5,8 @@
 
 #include <string>
 
-namespace dxlib {
+namespace dlog {
+
 ///-------------------------------------------------------------------------------------------------
 /// <summary>
 /// 内存中缓存的日志，它一般用来给C#部分的程序轮询提取，然后在UI界面上显示.
@@ -145,4 +146,4 @@ class MemoryLog
     static MemoryLog* m_pInstance;
 };
 
-} // namespace dxlib
+} // namespace dlog

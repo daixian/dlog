@@ -22,7 +22,7 @@ typedef GenericStringBuffer<UTF16<>> StringBufferW;
 
 //注.如果定义了#pragma execution_character_set("utf-8"),那么文件内容是UTF-8
 
-namespace dxlib {
+namespace dlog {
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary> 转换到Json的公共方法..</summary>
@@ -390,4 +390,4 @@ class JsonHelper
         return doc;
     }
 };
-} // namespace dxlib
+} // namespace dlog

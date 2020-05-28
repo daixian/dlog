@@ -8,7 +8,7 @@
 #include "./Common/FileHelper.h"
 #include "./Common/JsonHelper.h"
 
-using namespace dxlib;
+using namespace dlog;
 
 ///-------------------------------------------------------------------------------------------------
 /// <summary> 去得到一个全局指针的值，如果c++的值和c#的值相等那么应该是共用log模块了. </summary>

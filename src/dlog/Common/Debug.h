@@ -25,7 +25,7 @@
 //一条日志的默认预估长度
 #define DEBUG_LOG_BUFF_SIZE 128
 
-namespace dxlib {
+namespace dlog {
 
 /// <summary> 初始化的相对位置 </summary>
 enum class INIT_RELATIVE
@@ -389,4 +389,4 @@ class Debug
     }
 };
 
-} // namespace dxlib
+} // namespace dlog
