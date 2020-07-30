@@ -1,4 +1,4 @@
-﻿// dlog.cpp : 定义 DLL 应用程序的导出函数。
+// dlog.cpp : 定义 DLL 应用程序的导出函数。
 //
 #pragma execution_character_set("utf-8")
 #include "dlog.h"
@@ -363,20 +363,23 @@ extern "C" DLOG_EXPORT void __cdecl LogI_w(const wchar_t* strFormat, ...)
     }
 
     if (Debug::GetInst()->isNeedLog(spdlog::level::level_enum::info)) {
-        std::wstring buf;
-        buf.resize(DEBUG_LOG_BUFF_SIZE, '\0');
+        //这个函数原来使用的是vswprintf，但是跨平台有问题，如果包含中文则失败。
+        std::string strFormatUTF8 = JsonHelper::utf16To8(std::wstring(strFormat));
+
+        std::vector<char> buf(DEBUG_LOG_BUFF_SIZE);
         int ret = 0;
         va_list arg_ptr;
         va_start(arg_ptr, strFormat);
         //vsnprintf的返回是不包含\0的预留位置的
-        while ((ret = vswprintf((wchar_t*)buf.data(), buf.size(), strFormat, arg_ptr)) >= buf.size()) {
+        while ((ret = vsnprintf(buf.data(), buf.size(), strFormatUTF8.c_str(), arg_ptr)) >= buf.size()) {
             buf.resize(ret + 1, '\0');
+            //在GCC平台需要重新生成一下arg_ptr
+            va_end(arg_ptr);
+            va_start(arg_ptr, strFormat);
         }
         va_end(arg_ptr);
 
-        //使用了json库的16->8 =。=
-        std::string msg = JsonHelper::utf16To8(buf);
-        Debug::GetInst()->LogMsg(spdlog::level::level_enum::info, msg.c_str());
+        Debug::GetInst()->LogMsg(spdlog::level::level_enum::info, buf.data());
     }
 }
 
@@ -386,21 +389,24 @@ extern "C" DLOG_EXPORT void __cdecl LogW_w(const wchar_t* strFormat, ...)
         dlog_init();
     }
 
-    if (Debug::GetInst()->isNeedLog(spdlog::level::level_enum::info)) {
-        std::wstring buf;
-        buf.resize(DEBUG_LOG_BUFF_SIZE, '\0');
+    if (Debug::GetInst()->isNeedLog(spdlog::level::level_enum::warn)) {
+        //这个函数原来使用的是vswprintf，但是跨平台有问题，如果包含中文则失败。
+        std::string strFormatUTF8 = JsonHelper::utf16To8(std::wstring(strFormat));
+
+        std::vector<char> buf(DEBUG_LOG_BUFF_SIZE);
         int ret = 0;
         va_list arg_ptr;
         va_start(arg_ptr, strFormat);
         //vsnprintf的返回是不包含\0的预留位置的
-        while ((ret = vswprintf((wchar_t*)buf.data(), buf.size(), strFormat, arg_ptr)) >= buf.size()) {
+        while ((ret = vsnprintf(buf.data(), buf.size(), strFormatUTF8.c_str(), arg_ptr)) >= buf.size()) {
             buf.resize(ret + 1, '\0');
+            //在GCC平台需要重新生成一下arg_ptr
+            va_end(arg_ptr);
+            va_start(arg_ptr, strFormat);
         }
         va_end(arg_ptr);
 
-        //使用了json库的16->8 =。=
-        std::string msg = JsonHelper::utf16To8(buf);
-        Debug::GetInst()->LogMsg(spdlog::level::level_enum::warn, msg.c_str());
+        Debug::GetInst()->LogMsg(spdlog::level::level_enum::warn, buf.data());
     }
 }
 
@@ -410,21 +416,24 @@ extern "C" DLOG_EXPORT void __cdecl LogE_w(const wchar_t* strFormat, ...)
         dlog_init();
     }
 
-    if (Debug::GetInst()->isNeedLog(spdlog::level::level_enum::info)) {
-        std::wstring buf;
-        buf.resize(DEBUG_LOG_BUFF_SIZE, '\0');
+    if (Debug::GetInst()->isNeedLog(spdlog::level::level_enum::err)) {
+        //这个函数原来使用的是vswprintf，但是跨平台有问题，如果包含中文则失败。
+        std::string strFormatUTF8 = JsonHelper::utf16To8(std::wstring(strFormat));
+
+        std::vector<char> buf(DEBUG_LOG_BUFF_SIZE);
         int ret = 0;
         va_list arg_ptr;
         va_start(arg_ptr, strFormat);
         //vsnprintf的返回是不包含\0的预留位置的
-        while ((ret = vswprintf((wchar_t*)buf.data(), buf.size(), strFormat, arg_ptr)) >= buf.size()) {
+        while ((ret = vsnprintf(buf.data(), buf.size(), strFormatUTF8.c_str(), arg_ptr)) >= buf.size()) {
             buf.resize(ret + 1, '\0');
+            //在GCC平台需要重新生成一下arg_ptr
+            va_end(arg_ptr);
+            va_start(arg_ptr, strFormat);
         }
         va_end(arg_ptr);
 
-        //使用了json库的16->8 =。=
-        std::string msg = JsonHelper::utf16To8(buf);
-        Debug::GetInst()->LogMsg(spdlog::level::level_enum::err, msg.c_str());
+        Debug::GetInst()->LogMsg(spdlog::level::level_enum::err, buf.data());
     }
 }
 
@@ -434,21 +443,24 @@ extern "C" DLOG_EXPORT void __cdecl LogD_w(const wchar_t* strFormat, ...)
         dlog_init();
     }
 
-    if (Debug::GetInst()->isNeedLog(spdlog::level::level_enum::info)) {
-        std::wstring buf;
-        buf.resize(DEBUG_LOG_BUFF_SIZE, '\0');
+    if (Debug::GetInst()->isNeedLog(spdlog::level::level_enum::debug)) {
+        //这个函数原来使用的是vswprintf，但是跨平台有问题，如果包含中文则失败。
+        std::string strFormatUTF8 = JsonHelper::utf16To8(std::wstring(strFormat));
+
+        std::vector<char> buf(DEBUG_LOG_BUFF_SIZE);
         int ret = 0;
         va_list arg_ptr;
         va_start(arg_ptr, strFormat);
         //vsnprintf的返回是不包含\0的预留位置的
-        while ((ret = vswprintf((wchar_t*)buf.data(), buf.size(), strFormat, arg_ptr)) >= buf.size()) {
+        while ((ret = vsnprintf(buf.data(), buf.size(), strFormatUTF8.c_str(), arg_ptr)) >= buf.size()) {
             buf.resize(ret + 1, '\0');
+            //在GCC平台需要重新生成一下arg_ptr
+            va_end(arg_ptr);
+            va_start(arg_ptr, strFormat);
         }
         va_end(arg_ptr);
 
-        //使用了json库的16->8 =。=
-        std::string msg = JsonHelper::utf16To8(buf);
-        Debug::GetInst()->LogMsg(spdlog::level::level_enum::debug, msg.c_str());
+        Debug::GetInst()->LogMsg(spdlog::level::level_enum::debug, buf.data());
     }
 }
 

@@ -50,6 +50,7 @@ class DlogConan(ConanFile):
         # if self.settings.os == "Windows":
         #     cmake.definitions["DLOG_BUILD_SHARED"] = True
         # else:
+        print("python脚本设置DLOG_BUILD_SHARED="+self.options.shared)
         cmake.definitions["DLOG_BUILD_SHARED"] = self.options.shared
         cmake.definitions["DLOG_BUILD_TESTS"] = self.options.build_test
         cmake.definitions["LLVM_ENABLE_PIC"] = False

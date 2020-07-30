@@ -29,6 +29,14 @@ endif()
 
 add_definitions(-D DLOG_STATIC)
 
+if(APPLE)
+    #在mac上去构造so文件而不是dylib,下面这句看起来只是改变了后缀,没有改变文件实际类型
+    # set(CMAKE_SHARED_LIBRARY_SUFFIX ".so")
+endif()
+
+# 这里只能在调试工程里定义,在python里定义是没有执行build的
+option(DLOG_BUILD_SHARED "DLOG BUILD SHARED" ON)
+
 message(STATUS "总工程的CMAKE_BINARY_DIR = ${CMAKE_BINARY_DIR}")
 add_subdirectory("src")
 add_subdirectory("test_package")

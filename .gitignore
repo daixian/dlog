@@ -376,3 +376,4 @@ UnitTest1/Debug/
 download/
 lib/
 .vscode/
+.DS_Store

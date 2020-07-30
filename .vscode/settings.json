@@ -11,8 +11,10 @@
     },
     "cmake.buildDirectory": "${workspaceRoot}/build",
     "cmake.configureOnOpen": false,
-    // "cmake.generator": "Visual Studio 15 2017 Win64",
+    // 这个设置可以在vscode的设置的json里设置
+    //  "cmake.generator": "Ninja",
     // "cmake.preferredGenerators": [
+    //     "Xcode",
     //     "Visual Studio 15 2017 Win64",
     //     "Ninja",
     //     "Unix Makefiles"
@@ -33,5 +35,5 @@
     "files.associations": {
         "*.ipp": "cpp"
     },
-    "python.pythonPath": "C:\\Users\\dx\\AppData\\Local\\Programs\\Python\\Python37-32\\python.exe",
+    "python.pythonPath": "/usr/local/bin/python3",
 }

@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include "dlog/dlog.h"
 
 #pragma execution_character_set("utf-8")
@@ -26,7 +26,7 @@ TEST(dlog, memorylog)
         if (dlog_get_memlog(msg, 0, 512) > 0) {
 #if defined(_WIN32) || defined(_WIN64)
             sprintf_s(msgCorr, 512, "测试日志%d !", i); //正确的消息应该是
-#elif defined(__linux__)
+#else
             snprintf(msgCorr, 512, "测试日志%d !", i); //正确的消息应该是
 #endif
             ASSERT_TRUE(strcmp(msg, msgCorr) == 0) << "msg=" << msg; //比对提取的消息是否正确

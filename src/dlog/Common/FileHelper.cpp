@@ -1,4 +1,4 @@
-﻿#include "FileHelper.h"
+#include "FileHelper.h"
 
 #include <stdlib.h>
 #include "iostream"
@@ -154,7 +154,7 @@ void FileHelper::makeAbsolute(const Poco::Path& base, Poco::Path& path)
             path = Poco::Path(strPath);
         }
 #else
-    if (root.isRelative()) {
+    if (path.isRelative()) {
 #endif
         //这个函数会忽略相对路径的
         path.makeAbsolute(base);

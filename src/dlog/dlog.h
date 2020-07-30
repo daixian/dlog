@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 //仓库位置 https://github.com/daixian/dlog
 
 #ifndef _DLOG_H_
@@ -27,20 +27,12 @@
 #                define DLOG_EXPORT __declspec(dllimport)
 #            endif
 #        endif
-
-// --------------------- linux ---------------------
-#    elif defined(__linux__)
-#        if __GNUC__ >= 4
-#            if defined DLOG_EXPORTS
-#                define DLOG_EXPORT __attribute__((visibility("default")))
-#                define DLOG__LOCAL __attribute__((visibility("hidden")))
-#            else
-#                define DLOG_EXPORT
-#                define DLOG__LOCAL
-#            endif
-#            define __cdecl //默认是，加上了反而有warning __attribute__((__cdecl__))
-#        else
-#        endif
+// ---------- 非VC的编译器那么先不区分dllimport ---------------
+#    else
+#        define DLOG_EXPORT __attribute__((visibility("default")))
+#        define DLOG__LOCAL __attribute__((visibility("hidden")))
+#
+#        define __cdecl //默认是，加上了反而有warning __attribute__((__cdecl__))
 #    endif
 
 #    ifdef DLOG_UTF8 //它是定义vs编译器使用utf-8,现在整个dlog统一应该使用utf-8作为输出.

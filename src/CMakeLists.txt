@@ -19,14 +19,21 @@ project(dlog VERSION 2.1.2 LANGUAGES CXX)
 
 # set(CMAKE_CXX_STANDARD 14)
 
-# 设置是否编译成共享库
-option(DLOG_BUILD_SHARED "DLOG BUILD SHARED" OFF)
-option(DLOG_BUILD_TESTS "DLOG BUILD TESTS" ON)
-
 # 在有了project之后需要第一时间搞个conan设置吧
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 # conan_set_vs_runtime()
+
+# 设置是否编译成共享库,如果没有人配置过那么就配置一下
+if(NOT DEFINED DLOG_BUILD_SHARED)
+    message(STATUS "NOT DEFINED DLOG_BUILD_SHARED!")
+    option(DLOG_BUILD_SHARED "DLOG BUILD SHARED" OFF)
+endif()
+# 设置是否编译Test
+if(NOT DEFINED DLOG_BUILD_TESTS)
+    message(STATUS "NOT DEFINED DLOG_BUILD_TESTS!")
+    option(DLOG_BUILD_TESTS "DLOG BUILD TESTS" ON)
+endif()
 
 message(STATUS "CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}" )
 message(STATUS "CMAKE_C_FLAGS_DEBUG = ${CMAKE_C_FLAGS_DEBUG}" )
