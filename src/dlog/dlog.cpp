@@ -238,16 +238,29 @@ extern "C" DLOG_EXPORT void __cdecl LogI(const char* strFormat, ...)
     }
 
     if (Debug::GetInst()->isNeedLog(spdlog::level::level_enum::info)) {
-        std::vector<char> buf(DEBUG_LOG_BUFF_SIZE);
+        std::vector<char> buf(DEBUG_LOG_BUFF_SIZE, '\0');
         int ret = 0;
         va_list arg_ptr;
         va_start(arg_ptr, strFormat);
-        //vsnprintf的返回是不包含\0的预留位置的
-        while ((ret = vsnprintf(buf.data(), buf.size(), strFormat, arg_ptr)) >= buf.size()) {
-            buf.resize(ret + 1, '\0');
-            //在GCC平台需要重新生成一下arg_ptr
-            va_end(arg_ptr);
-            va_start(arg_ptr, strFormat);
+        //最多执行4次增加buff长度
+        for (size_t count = 0; count < 4; count++) {
+            //vsnprintf的返回是不包含\0的预留位置的
+            ret = vsnprintf(buf.data(), buf.size(), strFormat, arg_ptr);
+            if (ret <= 0) {
+                //编码失败
+                break;
+            }
+            else if (ret >= buf.size()) {
+                //buff长度不够
+                buf.resize(ret * 2, '\0');
+                //在GCC平台需要重新生成一下arg_ptr
+                va_end(arg_ptr);
+                va_start(arg_ptr, strFormat);
+            }
+            else {
+                //编码成功
+                break;
+            }
         }
         va_end(arg_ptr);
         Debug::GetInst()->LogMsg(spdlog::level::level_enum::info, buf.data());
@@ -272,16 +285,29 @@ extern "C" DLOG_EXPORT void __cdecl LogW(const char* strFormat, ...)
     }
 
     if (Debug::GetInst()->isNeedLog(spdlog::level::level_enum::warn)) {
-        std::vector<char> buf(DEBUG_LOG_BUFF_SIZE);
+        std::vector<char> buf(DEBUG_LOG_BUFF_SIZE, '\0');
         int ret = 0;
         va_list arg_ptr;
         va_start(arg_ptr, strFormat);
-        //vsnprintf的返回是不包含\0的预留位置的
-        while ((ret = vsnprintf(buf.data(), buf.size(), strFormat, arg_ptr)) >= buf.size()) {
-            buf.resize(ret + 1, '\0');
-            //在GCC平台需要重新生成一下arg_ptr
-            va_end(arg_ptr);
-            va_start(arg_ptr, strFormat);
+        //最多执行4次增加buff长度
+        for (size_t count = 0; count < 4; count++) {
+            //vsnprintf的返回是不包含\0的预留位置的
+            ret = vsnprintf(buf.data(), buf.size(), strFormat, arg_ptr);
+            if (ret <= 0) {
+                //编码失败
+                break;
+            }
+            else if (ret >= buf.size()) {
+                //buff长度不够
+                buf.resize(ret * 2, '\0');
+                //在GCC平台需要重新生成一下arg_ptr
+                va_end(arg_ptr);
+                va_start(arg_ptr, strFormat);
+            }
+            else {
+                //编码成功
+                break;
+            }
         }
         va_end(arg_ptr);
         Debug::GetInst()->LogMsg(spdlog::level::level_enum::warn, buf.data());
@@ -306,16 +332,29 @@ extern "C" DLOG_EXPORT void __cdecl LogE(const char* strFormat, ...)
     }
 
     if (Debug::GetInst()->isNeedLog(spdlog::level::level_enum::err)) {
-        std::vector<char> buf(DEBUG_LOG_BUFF_SIZE);
+        std::vector<char> buf(DEBUG_LOG_BUFF_SIZE, '\0');
         int ret = 0;
         va_list arg_ptr;
         va_start(arg_ptr, strFormat);
-        //vsnprintf的返回是不包含\0的预留位置的
-        while ((ret = vsnprintf(buf.data(), buf.size(), strFormat, arg_ptr)) >= buf.size()) {
-            buf.resize(ret + 1, '\0');
-            //在GCC平台需要重新生成一下arg_ptr
-            va_end(arg_ptr);
-            va_start(arg_ptr, strFormat);
+        //最多执行4次增加buff长度
+        for (size_t count = 0; count < 4; count++) {
+            //vsnprintf的返回是不包含\0的预留位置的
+            ret = vsnprintf(buf.data(), buf.size(), strFormat, arg_ptr);
+            if (ret <= 0) {
+                //编码失败
+                break;
+            }
+            else if (ret >= buf.size()) {
+                //buff长度不够
+                buf.resize(ret * 2, '\0');
+                //在GCC平台需要重新生成一下arg_ptr
+                va_end(arg_ptr);
+                va_start(arg_ptr, strFormat);
+            }
+            else {
+                //编码成功
+                break;
+            }
         }
         va_end(arg_ptr);
         Debug::GetInst()->LogMsg(spdlog::level::level_enum::err, buf.data());
@@ -340,16 +379,29 @@ extern "C" DLOG_EXPORT void __cdecl LogD(const char* strFormat, ...)
     }
 
     if (Debug::GetInst()->isNeedLog(spdlog::level::level_enum::debug)) {
-        std::vector<char> buf(DEBUG_LOG_BUFF_SIZE);
+        std::vector<char> buf(DEBUG_LOG_BUFF_SIZE, '\0');
         int ret = 0;
         va_list arg_ptr;
         va_start(arg_ptr, strFormat);
-        //vsnprintf的返回是不包含\0的预留位置的
-        while ((ret = vsnprintf(buf.data(), buf.size(), strFormat, arg_ptr)) >= buf.size()) {
-            buf.resize(ret + 1, '\0');
-            //在GCC平台需要重新生成一下arg_ptr
-            va_end(arg_ptr);
-            va_start(arg_ptr, strFormat);
+        //最多执行4次增加buff长度
+        for (size_t count = 0; count < 4; count++) {
+            //vsnprintf的返回是不包含\0的预留位置的
+            ret = vsnprintf(buf.data(), buf.size(), strFormat, arg_ptr);
+            if (ret <= 0) {
+                //编码失败
+                break;
+            }
+            else if (ret >= buf.size()) {
+                //buff长度不够
+                buf.resize(ret * 2, '\0');
+                //在GCC平台需要重新生成一下arg_ptr
+                va_end(arg_ptr);
+                va_start(arg_ptr, strFormat);
+            }
+            else {
+                //编码成功
+                break;
+            }
         }
         va_end(arg_ptr);
         Debug::GetInst()->LogMsg(spdlog::level::level_enum::debug, buf.data());
@@ -393,19 +445,31 @@ extern "C" DLOG_EXPORT void __cdecl LogW_w(const wchar_t* strFormat, ...)
         //这个函数原来使用的是vswprintf，但是跨平台有问题，如果包含中文则失败。
         std::string strFormatUTF8 = JsonHelper::utf16To8(std::wstring(strFormat));
 
-        std::vector<char> buf(DEBUG_LOG_BUFF_SIZE);
+        std::vector<char> buf(DEBUG_LOG_BUFF_SIZE, '\0');
         int ret = 0;
         va_list arg_ptr;
         va_start(arg_ptr, strFormat);
-        //vsnprintf的返回是不包含\0的预留位置的
-        while ((ret = vsnprintf(buf.data(), buf.size(), strFormatUTF8.c_str(), arg_ptr)) >= buf.size()) {
-            buf.resize(ret + 1, '\0');
-            //在GCC平台需要重新生成一下arg_ptr
-            va_end(arg_ptr);
-            va_start(arg_ptr, strFormat);
+        //最多执行4次增加buff长度
+        for (size_t count = 0; count < 4; count++) {
+            //vsnprintf的返回是不包含\0的预留位置的
+            ret = vsnprintf(buf.data(), buf.size(), strFormatUTF8.c_str(), arg_ptr);
+            if (ret <= 0) {
+                //编码失败
+                break;
+            }
+            else if (ret >= buf.size()) {
+                //buff长度不够
+                buf.resize(ret * 2, '\0');
+                //在GCC平台需要重新生成一下arg_ptr
+                va_end(arg_ptr);
+                va_start(arg_ptr, strFormat);
+            }
+            else {
+                //编码成功
+                break;
+            }
         }
         va_end(arg_ptr);
-
         Debug::GetInst()->LogMsg(spdlog::level::level_enum::warn, buf.data());
     }
 }
@@ -420,19 +484,31 @@ extern "C" DLOG_EXPORT void __cdecl LogE_w(const wchar_t* strFormat, ...)
         //这个函数原来使用的是vswprintf，但是跨平台有问题，如果包含中文则失败。
         std::string strFormatUTF8 = JsonHelper::utf16To8(std::wstring(strFormat));
 
-        std::vector<char> buf(DEBUG_LOG_BUFF_SIZE);
+        std::vector<char> buf(DEBUG_LOG_BUFF_SIZE, '\0');
         int ret = 0;
         va_list arg_ptr;
         va_start(arg_ptr, strFormat);
-        //vsnprintf的返回是不包含\0的预留位置的
-        while ((ret = vsnprintf(buf.data(), buf.size(), strFormatUTF8.c_str(), arg_ptr)) >= buf.size()) {
-            buf.resize(ret + 1, '\0');
-            //在GCC平台需要重新生成一下arg_ptr
-            va_end(arg_ptr);
-            va_start(arg_ptr, strFormat);
+        //最多执行4次增加buff长度
+        for (size_t count = 0; count < 4; count++) {
+            //vsnprintf的返回是不包含\0的预留位置的
+            ret = vsnprintf(buf.data(), buf.size(), strFormatUTF8.c_str(), arg_ptr);
+            if (ret <= 0) {
+                //编码失败
+                break;
+            }
+            else if (ret >= buf.size()) {
+                //buff长度不够
+                buf.resize(ret * 2, '\0');
+                //在GCC平台需要重新生成一下arg_ptr
+                va_end(arg_ptr);
+                va_start(arg_ptr, strFormat);
+            }
+            else {
+                //编码成功
+                break;
+            }
         }
         va_end(arg_ptr);
-
         Debug::GetInst()->LogMsg(spdlog::level::level_enum::err, buf.data());
     }
 }
@@ -447,19 +523,31 @@ extern "C" DLOG_EXPORT void __cdecl LogD_w(const wchar_t* strFormat, ...)
         //这个函数原来使用的是vswprintf，但是跨平台有问题，如果包含中文则失败。
         std::string strFormatUTF8 = JsonHelper::utf16To8(std::wstring(strFormat));
 
-        std::vector<char> buf(DEBUG_LOG_BUFF_SIZE);
+        std::vector<char> buf(DEBUG_LOG_BUFF_SIZE, '\0');
         int ret = 0;
         va_list arg_ptr;
         va_start(arg_ptr, strFormat);
-        //vsnprintf的返回是不包含\0的预留位置的
-        while ((ret = vsnprintf(buf.data(), buf.size(), strFormatUTF8.c_str(), arg_ptr)) >= buf.size()) {
-            buf.resize(ret + 1, '\0');
-            //在GCC平台需要重新生成一下arg_ptr
-            va_end(arg_ptr);
-            va_start(arg_ptr, strFormat);
+        //最多执行4次增加buff长度
+        for (size_t count = 0; count < 4; count++) {
+            //vsnprintf的返回是不包含\0的预留位置的
+            ret = vsnprintf(buf.data(), buf.size(), strFormatUTF8.c_str(), arg_ptr);
+            if (ret <= 0) {
+                //编码失败
+                break;
+            }
+            else if (ret >= buf.size()) {
+                //buff长度不够
+                buf.resize(ret * 2, '\0');
+                //在GCC平台需要重新生成一下arg_ptr
+                va_end(arg_ptr);
+                va_start(arg_ptr, strFormat);
+            }
+            else {
+                //编码成功
+                break;
+            }
         }
         va_end(arg_ptr);
-
         Debug::GetInst()->LogMsg(spdlog::level::level_enum::debug, buf.data());
     }
 }

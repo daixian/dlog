@@ -3,11 +3,11 @@
 # export PATH
 
 # python3 -V
-# python3 ./tools/DownloadLib.py -d"$HOME/dxlib/download" -l"$HOME/dxlib/lib" -p"linux" "concurrentqueue"
 
 # pip3 install conan
-conan create . daixian/stable -o dlog:shared=True --build missing
-conan upload dlog/2.5.0@daixian/stable --all -r=xuexue
+conan create . daixian/stable -s build_type=Release -o dlog:shared=True --build missing
+conan create . daixian/stable -s build_type=Release -o dlog:shared=False --build missing
+# conan upload dlog --all -r=xuexue
 
 # mkdir -p build/Linux
 # cd build/Linux
