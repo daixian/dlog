@@ -1,4 +1,4 @@
-#include "FileHelper.h"
+﻿#include "FileHelper.h"
 
 #include <stdlib.h>
 #include "iostream"
@@ -52,6 +52,7 @@ std::string FileHelper::getAppDir()
     }
     return std::string();
 }
+
 #elif defined(__linux__)
 
 std::string FileHelper::getModuleDir()
@@ -142,7 +143,7 @@ bool FileHelper::dirExists(const std::wstring& dirName_in)
 
 void FileHelper::makeAbsolute(const Poco::Path& base, Poco::Path& path)
 {
-#if WIN32
+#if defined(_WIN32) || defined(_WIN64)
     //在windows下如果是相对地址,或者是没有盘符
     if (path.isRelative() || path.getDevice().empty()) {
         std::string strPath = path.toString();
@@ -153,12 +154,15 @@ void FileHelper::makeAbsolute(const Poco::Path& base, Poco::Path& path)
             strPath.erase(0, 1);
             path = Poco::Path(strPath);
         }
-#else
-    if (path.isRelative()) {
-#endif
         //这个函数会忽略相对路径的
         path.makeAbsolute(base);
     }
+#else
+    if (path.isRelative()) {
+        //这个函数会忽略相对路径的
+        path.makeAbsolute(base);
+    }
+#endif
 }
 
 } // namespace dlog

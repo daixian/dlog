@@ -1,4 +1,4 @@
-// dlog.cpp : 定义 DLL 应用程序的导出函数。
+﻿// dlog.cpp : 定义 DLL 应用程序的导出函数。
 //
 #pragma execution_character_set("utf-8")
 #include "dlog.h"

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 //仓库位置 https://github.com/daixian/dlog
 
 #ifndef _DLOG_H_
@@ -7,25 +7,18 @@
 // --------------------- windows ---------------------
 #    if defined(_WIN32) || defined(_WIN64)
 // 如果是库自身构建时
-#        if defined(DLOG_DLL_EXPORTS) //库使用dll模式
+#        if defined(DLOG_DLL_EXPORTS) //导出库使用dll模式
 #            define DLOG_EXPORT __declspec(dllexport)
 #            define DLOG__LOCAL
-
 #        elif defined(DLOG_STATIC)
 #            define DLOG_EXPORT
 #            define DLOG__LOCAL
-// 如果是用户,在使用的时候定义DLOG_STATIC表示静态链接,DLOG_DLL表示动态链接
-#        else
-#            if defined(DLOG_STATIC)
-#                pragma comment(lib, "dlog.lib")
-#                define DLOG_EXPORT
-#            elif defined(DLOG_DLL)
-#                pragma comment(lib, "dlog.lib")
-#                define DLOG_EXPORT __declspec(dllimport)
-#            else
-#                pragma comment(lib, "dlog.lib")
-#                define DLOG_EXPORT __declspec(dllimport)
-#            endif
+#        endif
+
+// 如果是用户,在使用的时候定义DLOG_STATIC表示静态链接,DLOG_DLL或没有定义表示动态链接
+#        ifndef DLOG_EXPORT
+#            pragma comment(lib, "dlog.lib")
+#            define DLOG_EXPORT __declspec(dllimport)
 #        endif
 // ---------- 非VC的编译器那么先不区分dllimport ---------------
 #    else
@@ -35,9 +28,10 @@
 #        define __cdecl //默认是，加上了反而有warning __attribute__((__cdecl__))
 #    endif
 
-#    ifdef DLOG_UTF8 //它是定义vs编译器使用utf-8,现在整个dlog统一应该使用utf-8作为输出.
+//它是定义vs编译器使用utf-8,现在整个dlog统一应该使用utf-8作为输出.注意文件需要保存成UTF8带BOM
+#    ifdef DLOG_UTF8
 #        pragma execution_character_set("utf-8")
-#    endif // DLOG_UTF8
+#    endif
 
 //给用户使用的LogSeverity定义,目前和spdlog里的定义一致,但是只使用debug,info,warn,err
 enum class dlog_level

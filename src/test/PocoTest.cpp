@@ -1,4 +1,4 @@
-#include <Poco/Path.h>
+﻿#include <Poco/Path.h>
 #include <Poco/File.h>
 #include <Poco/DirectoryIterator.h>
 #include <Poco/Format.h>

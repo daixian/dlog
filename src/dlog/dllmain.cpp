@@ -1,9 +1,9 @@
 ﻿// dllmain.cpp : 定义 DLL 应用程序的入口点。
-#include "stdafx.h"
-#include "dlog.h"
-#include "./Common/Debug.h"
-
 #if defined(_WIN32) || defined(_WIN64)
+
+#    include "stdafx.h"
+#    include "dlog.h"
+#    include "./Common/Debug.h"
 
 BOOL APIENTRY DllMain(HMODULE hModule,
                       DWORD ul_reason_for_call,
