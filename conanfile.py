@@ -6,12 +6,11 @@ import os
 import sys
 import io
 # sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='gbk')
-# os.system("chcp 65001")
 
 
 class DlogConan(ConanFile):
     name = "dlog"
-    version = "2.5.6"
+    version = "2.5.7"
     license = "WTFPL???"
     author = "daixian<amano_tooko@qq.com>"
     url = "https://github.com/daixian/dlog"
@@ -22,6 +21,9 @@ class DlogConan(ConanFile):
         True, False], "fmt.fPIC": [True, False]}
     default_options = {"shared": True,
                        "build_test": False,
+                       "poco:enable_data_sqlite": False,
+                       "poco:enable_mongodb": False,
+                       "poco:enable_redis": False,
                        "fmt.fPIC": False}
     generators = "cmake"
     exports_sources = "src/*"
@@ -30,6 +32,7 @@ class DlogConan(ConanFile):
         if self.options.shared:
             pass
         else:
+            # 如果是静态库,那么需要列出所有的依赖库才行
             self.requires("spdlog/1.5.0")
             self.requires("poco/[>=1.10.1]@daixian/stable")
             self.requires("rapidjson/1.1.0")
@@ -39,8 +42,6 @@ class DlogConan(ConanFile):
             self.build_requires("spdlog/1.5.0")
             self.build_requires("poco/[>=1.10.1]@daixian/stable")
             self.build_requires("rapidjson/1.1.0")
-        if self.options.build_test:
-            self.build_requires("gtest/1.8.1@bincrafters/stable")
 
     def _configure_cmake(self):
         """转换python的设置到CMake"""
@@ -56,11 +57,14 @@ class DlogConan(ConanFile):
             print("python脚本设置构建成静态库 DLOG_BUILD_SHARED=False")
 
         cmake.definitions["DLOG_BUILD_SHARED"] = self.options.shared
-        cmake.definitions["DLOG_BUILD_TESTS"] = self.options.build_test
         cmake.definitions["LLVM_ENABLE_PIC"] = False
         return cmake
 
     def build(self):
+        # 解决一下乱码
+        if self.settings.os == "Windows":
+            os.system("chcp 65001")
+
         print("进入了build...")
         cmake = self._configure_cmake()
         cmake.configure(source_folder="src")
@@ -73,7 +77,8 @@ class DlogConan(ConanFile):
 
     def package(self):
         # 拷贝如果不带*那么不会搜索到下一级文件夹
-        self.copy("*dlog.h", dst="include", src="src")
+        # 包含所有的头文件算了
+        self.copy("*.h", dst="include", src="src")
         self.copy("*.lib", dst="lib", keep_path=False)
         self.copy("*.dll", dst="bin", keep_path=False)
         self.copy("*.dylib*", dst="lib", keep_path=False)

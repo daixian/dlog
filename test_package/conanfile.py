@@ -8,7 +8,10 @@ from conans import ConanFile, CMake, tools
 class DLogTestConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     generators = "cmake"
-    default_options = {"dlog:shared": False}
+    default_options = {"dlog:shared": False,
+                       "poco:enable_data_sqlite": False,
+                       "poco:enable_mongodb": False,
+                       "poco:enable_redis": False}
 
     def requirements(self):
         self.requires("spdlog/1.5.0")

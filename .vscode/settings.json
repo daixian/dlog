@@ -35,5 +35,5 @@
     "files.associations": {
         "*.ipp": "cpp"
     },
-    "python.pythonPath": "/usr/local/bin/python3",
+    "python.pythonPath": "C:\\Users\\dx\\AppData\\Local\\Programs\\Python\\Python37-32\\python.exe",
 }

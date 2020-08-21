@@ -35,7 +35,7 @@ if(APPLE)
 endif()
 
 # 这里只能在调试工程里定义,在python里定义是没有执行build的
-option(DLOG_BUILD_SHARED "DLOG BUILD SHARED" ON)
+option(DLOG_BUILD_SHARED "DLOG BUILD SHARED" OFF)
 
 message(STATUS "总工程的CMAKE_BINARY_DIR = ${CMAKE_BINARY_DIR}")
 add_subdirectory("src")

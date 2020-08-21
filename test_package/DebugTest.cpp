@@ -1,8 +1,8 @@
 ﻿#include "gtest/gtest.h"
-#include "../dlog/Common/MemoryLog.h"
-#include "../dlog/Common/Debug.h"
-#include "../dlog/dlog.h"
-#include "../dlog/Common/FileHelper.h"
+#include "dlog/Common/MemoryLog.h"
+#include "dlog/Common/Debug.h"
+#include "dlog/dlog.h"
+#include "dlog/Common/FileHelper.h"
 
 #include "Poco/LocalDateTime.h"
 #include "Poco/DateTime.h"
