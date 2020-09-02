@@ -54,6 +54,30 @@ enum class dlog_init_relative
     MODULE = 1,
 };
 
+// 错误状态,目前还没时间去实现返回使用...
+enum class DLogError
+{
+    Unknown = -1,
+    Ok = 0,
+    NotImplemented = 1,
+    NotInitialized = 2,
+    AlreadyInitialized = 3,
+    InvalidParameter = 4,
+    InvalidContext = 5,
+    InvalidHandle = 6,
+    RuntimeIncompatible = 7,
+    RuntimeNotFound = 8,
+    SymbolNotFound = 9,
+    DisplayNotFound = 10,
+    DeviceNotFound = 11,
+    TargetNotFound = 12,
+    CapabilityNotFound = 13,
+    BufferTooSmall = 14,
+    SyncFailed = 15,
+    OperationFailed = 16,
+    InvalidAttribute = 17,
+};
+
 /**
  * 模块初始化,日志文件夹路径可以使用绝对目录也可以使用相对目录(第三个参数进行相对位置的设置), 
  * 如果使用相对目录,那么程序会将它理解为相对模块目录,路径例如 char* logDir = "log",char* program = "dlog".
@@ -68,7 +92,7 @@ enum class dlog_init_relative
  * @param [in] program      (Optional) 程序名.
  * @param      dir_relatvie (Optional)相对路径的相对文件夹位置.
  *                           APPDATA: 相对于AppData文件夹.
- *                           MODULE: 相对于dll文件自身文件夹
+ *                           MODULE:  相对于dll文件自身文件夹
  * @param      isForceInit  (Optional) 如果为false，那么就可以不强制初始化模块，理论上整个程序都共用一个日志.
  *
  * @returns 如果之前未被初始化返回0,如果成功复用那么就返回1,如果强制重设成功那么返回2, 如果强制重设但是失败还是复用了那么返回3.

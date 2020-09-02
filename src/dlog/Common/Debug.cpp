@@ -7,6 +7,7 @@
 #include <Poco/Format.h>
 #include "Poco/Glob.h"
 #include "Poco/Timespan.h"
+#include "Poco/FileStream.h"
 
 #include "Common.h"
 #include <iostream>
@@ -19,7 +20,7 @@ namespace dlog {
 
 Debug* Debug::m_pInstance = NULL;
 
-void Debug::init(const char* logDir, const char* program, INIT_RELATIVE rel)
+void Debug::init(const char* logDir, const char* program, INIT_RELATIVE rel, bool utf8bom)
 {
     mt.lock();
     if (isInit) {
@@ -32,6 +33,7 @@ void Debug::init(const char* logDir, const char* program, INIT_RELATIVE rel)
         spdlog::set_pattern(logPattern);
 
         programName = program; //记录程序名
+        isUTF8BOM = utf8bom;
         logDirPath.clear();
         logFilePath.clear();
 
@@ -66,6 +68,14 @@ void Debug::init(const char* logDir, const char* program, INIT_RELATIVE rel)
 
         string logFileName = format("%s.%s.log", programName, secTimeStr());
         logFilePath = Path(logDirPath).append(logFileName).toString();
+
+        //如果使用写入UTF8BOM那么就写入3个字节的bom头
+        if (isUTF8BOM) {
+            Poco::FileOutputStream fs(logFilePath);
+            const char bom[3] = {0xef, 0xbb, 0xbf};
+            fs.write(bom, 3);
+            fs.close();
+        }
 
         filelogger = spdlog::basic_logger_mt(programName, logFilePath);
         filelogger->set_level(spdlog::level::trace);

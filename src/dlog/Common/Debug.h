@@ -11,6 +11,7 @@
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/basic_file_sink.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
+#include "spdlog/sinks/rotating_file_sink.h"
 
 #pragma execution_character_set("utf-8")
 #include "MemoryLog.h"
@@ -99,6 +100,9 @@ class Debug
     /// <summary> 默认日志格式. https://github.com/gabime/spdlog/wiki/3.-Custom-formatting </summary>
     std::string logPattern = _logPattern;
 
+    /// <summary> 是否使用UTF8的Bom. </summary>
+    bool isUTF8BOM = true;
+
     /// <summary> 是否进行整个日志系统的工作. </summary>
     bool isEnable = true;
 
@@ -142,7 +146,7 @@ class Debug
     /// <param name="rel">     (Optional) 如果是相对目录那么相对位置是. </param>
     ///-------------------------------------------------------------------------------------------------
     void init(const char* logDir = "log", const char* program = "dlog",
-              INIT_RELATIVE rel = INIT_RELATIVE::APPDATA);
+              INIT_RELATIVE rel = INIT_RELATIVE::APPDATA, bool utf8bom = true);
 
     ///-------------------------------------------------------------------------------------------------
     /// <summary> 重置设置回默认设置,并且会关掉所有的日志器. </summary>
