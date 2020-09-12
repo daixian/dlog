@@ -34,13 +34,13 @@ class DlogConan(ConanFile):
         else:
             # 如果是静态库,那么需要列出所有的依赖库才行
             self.requires("spdlog/1.5.0")
-            self.requires("poco/[>=1.10.1]@daixian/stable")
+            self.requires("poco/[>=1.10.1]")
             self.requires("rapidjson/1.1.0")
 
     def build_requirements(self):
         if self.options.shared:
             self.build_requires("spdlog/1.5.0")
-            self.build_requires("poco/[>=1.10.1]@daixian/stable")
+            self.build_requires("poco/[>=1.10.1]")
             self.build_requires("rapidjson/1.1.0")
 
     def _configure_cmake(self):

@@ -15,7 +15,7 @@ class DLogTestConan(ConanFile):
 
     def requirements(self):
         self.requires("spdlog/1.5.0")
-        self.requires("poco/[>=1.10.1]@daixian/stable")
+        self.requires("poco/[>=1.10.1]")
         self.requires("rapidjson/1.1.0")
 
     def build_requirements(self):

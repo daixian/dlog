@@ -9,11 +9,15 @@ conan create . daixian/stable -s compiler.runtime=MD -s arch=x86_64 -s build_typ
 conan create . daixian/stable -s compiler.runtime=MD -s arch=x86_64 -s build_type=Release -o dlog:shared=True --build missing
 conan create . daixian/stable -s compiler.runtime=MT -s arch=x86_64 -s build_type=Release -o dlog:shared=False --build missing
 conan create . daixian/stable -s compiler.runtime=MT -s arch=x86_64 -s build_type=Release -o dlog:shared=True --build missing
+conan create . daixian/stable -s compiler.runtime=MD -s arch=x86 -s build_type=Release -o dlog:shared=False --build missing
+conan create . daixian/stable -s compiler.runtime=MD -s arch=x86 -s build_type=Release -o dlog:shared=True --build missing
+conan create . daixian/stable -s compiler.runtime=MT -s arch=x86 -s build_type=Release -o dlog:shared=False --build missing
+conan create . daixian/stable -s compiler.runtime=MT -s arch=x86 -s build_type=Release -o dlog:shared=True --build missing
 
 REM conan upload dlog/2.5.7@daixian/stable --all -r=xuexue
-conan upload fmt/6.1.2 --all -r=xuexue
-conan upload openssl/1.0.2t --all -r=xuexue
-conan upload poco/1.10.1@daixian/stable --all -r=xuexue
-conan upload rapidjson/1.1.0 --all -r=xuexue
-conan upload spdlog/1.5.0 --all -r=xuexue
-conan upload zlib/1.2.11 --all -r=xuexue
+conan upload fmt --all -r=xuexue
+conan upload openssl --all -r=xuexue
+conan upload poco --all -r=xuexue
+conan upload rapidjson --all -r=xuexue
+conan upload spdlog --all -r=xuexue
+conan upload zlib --all -r=xuexue
