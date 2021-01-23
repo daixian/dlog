@@ -72,8 +72,8 @@ void Debug::init(const char* logDir, const char* program, INIT_RELATIVE rel, boo
         //如果使用写入UTF8BOM那么就写入3个字节的bom头
         if (isUTF8BOM) {
             Poco::FileOutputStream fs(logFilePath);
-            const char bom[3] = {0xef, 0xbb, 0xbf};
-            fs.write(bom, 3);
+            const unsigned char bom[3] = {0xef, 0xbb, 0xbf};
+            fs.write((char*)bom, 3);
             fs.close();
         }
 
