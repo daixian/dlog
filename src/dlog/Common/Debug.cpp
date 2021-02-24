@@ -182,7 +182,7 @@ void Debug::removeOldFile(long sec)
         vector<Timestamp::TimeDiff> vFileSubTimeSort = vFilesProgramLogDiffTime;
         std::sort(vFileSubTimeSort.begin(), vFileSubTimeSort.end());
         if (vFileSubTimeSort.size() < 50) {
-            LogMsg(spdlog::level::level_enum::info, format("dlog启动,\"%s\" 当前有%z个日志文件", programName, vFileSubTimeSort.size()).c_str());
+            LogMsg(spdlog::level::level_enum::info, format("日志启动,\"%s\" 当前有%z个日志文件", programName, vFileSubTimeSort.size()).c_str());
         }
         else {
             int thr = vFileSubTimeSort[49];
@@ -193,13 +193,13 @@ void Debug::removeOldFile(long sec)
             for (size_t i = 0; i < vFilesProgramLogDiffTime.size(); i++) {
                 if (vFilesProgramLogDiffTime[i] > thr) {
                     vFilesProgramLogs[i].remove();
-                    LogMsg(spdlog::level::level_enum::info, (format("dlog移除过早的日志文件%s", vFilesProgramLogs[i].path())).c_str());
+                    LogMsg(spdlog::level::level_enum::info, (format("移除过早的日志文件%s", vFilesProgramLogs[i].path())).c_str());
                 }
             }
         }
     }
     catch (const std::exception& e) {
-        LogMsg(spdlog::level::level_enum::err, format("dlog移除过早的日志文件异常:%s", std::string(e.what())).c_str());
+        LogMsg(spdlog::level::level_enum::err, format("移除过早的日志文件异常:%s", std::string(e.what())).c_str());
     }
 }
 
