@@ -83,8 +83,6 @@ class Debug
     ///-------------------------------------------------------------------------------------------------
     static Debug* GetInst()
     {
-        if (m_pInstance == NULL) //判断是否第一次调用
-            m_pInstance = new Debug();
         return m_pInstance;
     }
 
@@ -160,7 +158,7 @@ class Debug
     ///
     /// <remarks> Surface, 2019/3/17. </remarks>
     ///-------------------------------------------------------------------------------------------------
-    void removeOldFile(long sec = 3600 * 24 * 3);
+    void removeOldFile(long long sec = 3600 * 24 * 3);
 
     ///-------------------------------------------------------------------------------------------------
     /// <summary> 设置是否使能控制台日志. </summary>
@@ -198,13 +196,15 @@ class Debug
     ///-------------------------------------------------------------------------------------------------
     bool isNeedLog(spdlog::level::level_enum logThr)
     {
-        if (!isInit && !isInitFail) {
-            init(); //如果还没有初始化那么就初始化一次
-        }
         //这里由我自己来做判断，避免字符串格式化，但是实际上spdlog也是支持这个屏蔽功能的
         if (!isEnable) {
             return false; //如果控制是不输出日志
         }
+
+        //if (!isInit && !isInitFail) {
+        //    init(); //如果还没有初始化那么就初始化一次
+        //}
+
         if (logFileThr > logThr &&
             (!isConsoleEnable || logConsoleThr > logThr) &&
             (!isMemLogEnable || logMemoryThr > logThr)) {

@@ -34,6 +34,10 @@ class DLogTestConan(ConanFile):
         self.copy('*.so*', dst='bin', src='lib')
 
     def test(self):
-        if not tools.cross_building(self.settings):
+        # windows平台的x86其实也可以跑测试
+        if self.settings.os == "Windows":
+            os.chdir("bin")
+            self.run('.%spackage_test --gtest_output="xml:gtest_report.xml"' % os.sep)
+        elif not tools.cross_building(self.settings):
             os.chdir("bin")
             self.run('.%spackage_test --gtest_output="xml:gtest_report.xml"' % os.sep)

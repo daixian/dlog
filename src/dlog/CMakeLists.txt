@@ -16,7 +16,9 @@ FILE(GLOB_RECURSE SOURCE_LIST "*.cpp" "*.h" "*.hpp" "*.c")
 
 #windows下添加资源文件
 if(WIN32)
-    list(APPEND SOURCE_LIST "${CMAKE_CURRENT_SOURCE_DIR}/${SUB_NAME}.rc")
+    if(DLOG_BUILD_SHARED)
+        list(APPEND SOURCE_LIST "${CMAKE_CURRENT_SOURCE_DIR}/${SUB_NAME}.rc")
+    endif()
 endif()
 
 add_definitions(-D UNICODE)

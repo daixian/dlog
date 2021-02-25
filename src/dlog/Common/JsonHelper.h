@@ -8,7 +8,9 @@
 #include "rapidjson/filereadstream.h"
 #include "rapidjson/encodings.h"
 
-#include "vector"
+#include <stdio.h>
+#include <vector>
+#include <string>
 
 namespace rapidjson {
 

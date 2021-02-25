@@ -5,6 +5,8 @@
 #    define _DLOG_H_
 
 // --------------------- windows ---------------------
+// 由三个定义来控制,构建时会根据是否是共享库定义DLOG_DLL_EXPORTS或DLOG_STATIC,
+// 使用该库的其他项目会由这个库的conan文件加入DLOG_STATIC或DLOG_DLL的定义.
 #    if defined(_WIN32) || defined(_WIN64)
 // 如果是库自身构建时
 #        if defined(DLOG_DLL_EXPORTS) //导出库使用dll模式

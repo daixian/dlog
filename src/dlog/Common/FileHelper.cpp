@@ -95,11 +95,11 @@ std::string FileHelper::getAppDir()
 }
 #endif
 
-void FileHelper::isExistsAndCreat(const std::wstring& dirPath)
-{
-    std::string sDir = ws2s(dirPath);
-    isExistsAndCreat(sDir);
-}
+//void FileHelper::isExistsAndCreat(const std::wstring& dirPath)
+//{
+//    std::string sDir = Common::ws2s(dirPath);
+//    isExistsAndCreat(sDir);
+//}
 
 void FileHelper::isExistsAndCreat(const std::string& sDir)
 {
@@ -128,18 +128,18 @@ bool FileHelper::dirExists(const std::string& dirName_in)
     return false;
 }
 
-bool FileHelper::dirExists(const std::wstring& dirName_in)
-{
-    //如果存在
-    Poco::File dir(ws2s(dirName_in));
-    if (dir.exists()) {
-        if (dir.isDirectory()) {
-            return true;
-        }
-        //它还是存在一种是一个文件的可能
-    }
-    return false;
-}
+//bool FileHelper::dirExists(const std::wstring& dirName_in)
+//{
+//    //如果存在
+//    Poco::File dir(Common::ws2s(dirName_in));
+//    if (dir.exists()) {
+//        if (dir.isDirectory()) {
+//            return true;
+//        }
+//        //它还是存在一种是一个文件的可能
+//    }
+//    return false;
+//}
 
 void FileHelper::makeAbsolute(const Poco::Path& base, Poco::Path& path)
 {

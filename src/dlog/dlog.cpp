@@ -2,11 +2,11 @@
 //
 #pragma execution_character_set("utf-8")
 #include "dlog.h"
+#include "./Common/JsonHelper.h"
 
 #include "./Common/Debug.h"
 #include "./Common/MemoryLog.h"
 #include "./Common/FileHelper.h"
-#include "./Common/JsonHelper.h"
 
 using namespace dlog;
 
@@ -235,11 +235,11 @@ extern "C" DLOG_EXPORT void __cdecl dlog_flush()
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT void __cdecl LogI(const char* strFormat, ...)
 {
-    if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
-        dlog_init();
-    }
-
     if (Debug::GetInst()->isNeedLog(spdlog::level::level_enum::info)) {
+        if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
+            dlog_init();
+        }
+
         std::vector<char> buf(DEBUG_LOG_BUFF_SIZE, '\0');
         int ret = 0;
         va_list arg_ptr;
@@ -254,7 +254,7 @@ extern "C" DLOG_EXPORT void __cdecl LogI(const char* strFormat, ...)
             }
             else if (ret >= buf.size()) {
                 //buff长度不够
-                buf.resize(ret * 2, '\0');
+                buf.resize((size_t)ret * 2, '\0');
                 //在GCC平台需要重新生成一下arg_ptr
                 va_end(arg_ptr);
                 va_start(arg_ptr, strFormat);
@@ -282,11 +282,11 @@ extern "C" DLOG_EXPORT void __cdecl LogI(const char* strFormat, ...)
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT void __cdecl LogW(const char* strFormat, ...)
 {
-    if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
-        dlog_init();
-    }
-
     if (Debug::GetInst()->isNeedLog(spdlog::level::level_enum::warn)) {
+        if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
+            dlog_init();
+        }
+
         std::vector<char> buf(DEBUG_LOG_BUFF_SIZE, '\0');
         int ret = 0;
         va_list arg_ptr;
@@ -301,7 +301,7 @@ extern "C" DLOG_EXPORT void __cdecl LogW(const char* strFormat, ...)
             }
             else if (ret >= buf.size()) {
                 //buff长度不够
-                buf.resize(ret * 2, '\0');
+                buf.resize((size_t)ret * 2, '\0');
                 //在GCC平台需要重新生成一下arg_ptr
                 va_end(arg_ptr);
                 va_start(arg_ptr, strFormat);
@@ -329,11 +329,11 @@ extern "C" DLOG_EXPORT void __cdecl LogW(const char* strFormat, ...)
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT void __cdecl LogE(const char* strFormat, ...)
 {
-    if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
-        dlog_init();
-    }
-
     if (Debug::GetInst()->isNeedLog(spdlog::level::level_enum::err)) {
+        if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
+            dlog_init();
+        }
+
         std::vector<char> buf(DEBUG_LOG_BUFF_SIZE, '\0');
         int ret = 0;
         va_list arg_ptr;
@@ -348,7 +348,7 @@ extern "C" DLOG_EXPORT void __cdecl LogE(const char* strFormat, ...)
             }
             else if (ret >= buf.size()) {
                 //buff长度不够
-                buf.resize(ret * 2, '\0');
+                buf.resize((size_t)ret * 2, '\0');
                 //在GCC平台需要重新生成一下arg_ptr
                 va_end(arg_ptr);
                 va_start(arg_ptr, strFormat);
@@ -376,11 +376,11 @@ extern "C" DLOG_EXPORT void __cdecl LogE(const char* strFormat, ...)
 ///-------------------------------------------------------------------------------------------------
 extern "C" DLOG_EXPORT void __cdecl LogD(const char* strFormat, ...)
 {
-    if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
-        dlog_init();
-    }
-
     if (Debug::GetInst()->isNeedLog(spdlog::level::level_enum::debug)) {
+        if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
+            dlog_init();
+        }
+
         std::vector<char> buf(DEBUG_LOG_BUFF_SIZE, '\0');
         int ret = 0;
         va_list arg_ptr;
@@ -395,7 +395,7 @@ extern "C" DLOG_EXPORT void __cdecl LogD(const char* strFormat, ...)
             }
             else if (ret >= buf.size()) {
                 //buff长度不够
-                buf.resize(ret * 2, '\0');
+                buf.resize((size_t)ret * 2, '\0');
                 //在GCC平台需要重新生成一下arg_ptr
                 va_end(arg_ptr);
                 va_start(arg_ptr, strFormat);
@@ -412,11 +412,11 @@ extern "C" DLOG_EXPORT void __cdecl LogD(const char* strFormat, ...)
 
 extern "C" DLOG_EXPORT void __cdecl LogI_w(const wchar_t* strFormat, ...)
 {
-    if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
-        dlog_init();
-    }
-
     if (Debug::GetInst()->isNeedLog(spdlog::level::level_enum::info)) {
+        if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
+            dlog_init();
+        }
+
         //这个函数原来使用的是vswprintf，但是跨平台有问题，如果包含中文则失败。
         std::string strFormatUTF8 = JsonHelper::utf16To8(std::wstring(strFormat));
 
@@ -426,7 +426,7 @@ extern "C" DLOG_EXPORT void __cdecl LogI_w(const wchar_t* strFormat, ...)
         va_start(arg_ptr, strFormat);
         //vsnprintf的返回是不包含\0的预留位置的
         while ((ret = vsnprintf(buf.data(), buf.size(), strFormatUTF8.c_str(), arg_ptr)) >= buf.size()) {
-            buf.resize(ret + 1, '\0');
+            buf.resize((size_t)ret + 1, '\0');
             //在GCC平台需要重新生成一下arg_ptr
             va_end(arg_ptr);
             va_start(arg_ptr, strFormat);
@@ -439,11 +439,11 @@ extern "C" DLOG_EXPORT void __cdecl LogI_w(const wchar_t* strFormat, ...)
 
 extern "C" DLOG_EXPORT void __cdecl LogW_w(const wchar_t* strFormat, ...)
 {
-    if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
-        dlog_init();
-    }
-
     if (Debug::GetInst()->isNeedLog(spdlog::level::level_enum::warn)) {
+        if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
+            dlog_init();
+        }
+
         //这个函数原来使用的是vswprintf，但是跨平台有问题，如果包含中文则失败。
         std::string strFormatUTF8 = JsonHelper::utf16To8(std::wstring(strFormat));
 
@@ -461,7 +461,7 @@ extern "C" DLOG_EXPORT void __cdecl LogW_w(const wchar_t* strFormat, ...)
             }
             else if (ret >= buf.size()) {
                 //buff长度不够
-                buf.resize(ret * 2, '\0');
+                buf.resize((size_t)ret * 2, '\0');
                 //在GCC平台需要重新生成一下arg_ptr
                 va_end(arg_ptr);
                 va_start(arg_ptr, strFormat);
@@ -478,11 +478,11 @@ extern "C" DLOG_EXPORT void __cdecl LogW_w(const wchar_t* strFormat, ...)
 
 extern "C" DLOG_EXPORT void __cdecl LogE_w(const wchar_t* strFormat, ...)
 {
-    if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
-        dlog_init();
-    }
-
     if (Debug::GetInst()->isNeedLog(spdlog::level::level_enum::err)) {
+        if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
+            dlog_init();
+        }
+
         //这个函数原来使用的是vswprintf，但是跨平台有问题，如果包含中文则失败。
         std::string strFormatUTF8 = JsonHelper::utf16To8(std::wstring(strFormat));
 
@@ -500,7 +500,7 @@ extern "C" DLOG_EXPORT void __cdecl LogE_w(const wchar_t* strFormat, ...)
             }
             else if (ret >= buf.size()) {
                 //buff长度不够
-                buf.resize(ret * 2, '\0');
+                buf.resize((size_t)ret * 2, '\0');
                 //在GCC平台需要重新生成一下arg_ptr
                 va_end(arg_ptr);
                 va_start(arg_ptr, strFormat);
@@ -517,11 +517,11 @@ extern "C" DLOG_EXPORT void __cdecl LogE_w(const wchar_t* strFormat, ...)
 
 extern "C" DLOG_EXPORT void __cdecl LogD_w(const wchar_t* strFormat, ...)
 {
-    if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
-        dlog_init();
-    }
-
     if (Debug::GetInst()->isNeedLog(spdlog::level::level_enum::debug)) {
+        if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
+            dlog_init();
+        }
+
         //这个函数原来使用的是vswprintf，但是跨平台有问题，如果包含中文则失败。
         std::string strFormatUTF8 = JsonHelper::utf16To8(std::wstring(strFormat));
 
@@ -539,7 +539,7 @@ extern "C" DLOG_EXPORT void __cdecl LogD_w(const wchar_t* strFormat, ...)
             }
             else if (ret >= buf.size()) {
                 //buff长度不够
-                buf.resize(ret * 2, '\0');
+                buf.resize((size_t)ret * 2, '\0');
                 //在GCC平台需要重新生成一下arg_ptr
                 va_end(arg_ptr);
                 va_start(arg_ptr, strFormat);
@@ -668,7 +668,7 @@ extern "C" DLOG_EXPORT int __cdecl dlog_get_memlog(char* buff, int offset, int l
     std::string msg;
     int copyLen = 0;
     if (MemoryLog::GetInst()->getLog(msg)) {
-        copyLen = msg.size() < (length - 1) ? msg.size() : (length - 1); //这里string的size是否就等于字节的size???
+        copyLen = (int)msg.size() < (length - 1) ? (int)msg.size() : (length - 1); //这里string的size是否就等于字节的size???
         msg.copy(buff + offset, copyLen);
     }
     else {
@@ -707,7 +707,7 @@ extern "C" DLOG_EXPORT void __cdecl dlog_set_memlog_save_limit(unsigned int maxC
 extern "C" DLOG_EXPORT int __cdecl dlog_get_appdata_dir(char* buff, int size)
 {
     std::string dir = FileHelper::getAppDir();
-    int copyLen = dir.size() < (size - 1) ? dir.size() : (size - 1); //这里string的size是否就等于字节的size???
+    int copyLen = (int)dir.size() < (size - 1) ? (int)dir.size() : (size - 1); //这里string的size是否就等于字节的size???
     dir.copy(buff, copyLen);
     buff[copyLen] = '\0';
     return copyLen;
@@ -726,7 +726,7 @@ extern "C" DLOG_EXPORT int __cdecl dlog_get_appdata_dir(char* buff, int size)
 extern "C" DLOG_EXPORT int __cdecl dlog_get_module_dir(char* buff, int size)
 {
     std::string dir = FileHelper::getModuleDir();
-    int copyLen = dir.size() < (size - 1) ? dir.size() : (size - 1); //这里string的size是否就等于字节的size???
+    int copyLen = (int)dir.size() < (size - 1) ? (int)dir.size() : (size - 1); //这里string的size是否就等于字节的size???
     dir.copy(buff, copyLen);
     buff[copyLen] = '\0';
     return copyLen;
@@ -745,7 +745,7 @@ extern "C" DLOG_EXPORT int __cdecl dlog_get_module_dir(char* buff, int size)
 extern "C" DLOG_EXPORT int __cdecl dlog_get_log_dir(char* buff, int size)
 {
     std::string dir = Debug::GetInst()->logDirPath;
-    int copyLen = dir.size() < (size - 1) ? dir.size() : (size - 1); //这里string的size是否就等于字节的size???
+    int copyLen = (int)dir.size() < (size - 1) ? (int)dir.size() : (size - 1); //这里string的size是否就等于字节的size???
     dir.copy(buff, copyLen);
     buff[copyLen] = '\0';
     return copyLen;
@@ -764,7 +764,7 @@ extern "C" DLOG_EXPORT int __cdecl dlog_get_log_dir(char* buff, int size)
 extern "C" DLOG_EXPORT int __cdecl dlog_get_log_file_path(char* buff, int size)
 {
     std::string dir = Debug::GetInst()->logFilePath;
-    int copyLen = dir.size() < (size - 1) ? dir.size() : (size - 1); //这里string的size是否就等于字节的size???
+    int copyLen = (int)dir.size() < (size - 1) ? (int)dir.size() : (size - 1); //这里string的size是否就等于字节的size???
     dir.copy(buff, copyLen);
     buff[copyLen] = '\0';
     return copyLen;

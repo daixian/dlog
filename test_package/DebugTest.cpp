@@ -1,14 +1,17 @@
 ﻿#include "gtest/gtest.h"
-#include "dlog/Common/MemoryLog.h"
-#include "dlog/Common/Debug.h"
-#include "dlog/dlog.h"
-#include "dlog/Common/FileHelper.h"
 
-#include "Poco/LocalDateTime.h"
-#include "Poco/DateTime.h"
-#include "Poco/DateTimeFormat.h"
-#include "Poco/DateTimeFormatter.h"
-#include "Poco/DateTimeParser.h"
+#if DLOG_STATIC
+
+#    include "dlog/Common/MemoryLog.h"
+#    include "dlog/Common/Debug.h"
+#    include "dlog/dlog.h"
+#    include "dlog/Common/FileHelper.h"
+
+#    include "Poco/LocalDateTime.h"
+#    include "Poco/DateTime.h"
+#    include "Poco/DateTimeFormat.h"
+#    include "Poco/DateTimeFormatter.h"
+#    include "Poco/DateTimeParser.h"
 
 using namespace dlog;
 using namespace std;
@@ -35,9 +38,9 @@ ANSI格式时间：Sat Dec 28 02:32:15 2019
 */
 TEST(Debug, DateTime)
 {
-#if defined(_WIN32) || defined(_WIN64)
+#    if defined(_WIN32) || defined(_WIN64)
     system("chcp 65001"); //测试了在windows下有效
-#endif
+#    endif
 
     LocalDateTime now;
     std::cout << "年：" << now.year() << std::endl;
@@ -161,9 +164,11 @@ TEST(Debug, LogMsg)
     Debug::GetInst()->LogMsg(spdlog::level::level_enum::info, "试一试");
     Debug::GetInst()->LogMsg(spdlog::level::level_enum::info, "试一试");
 // 只有在windows上支持这个功能，暂时还是不要使用了
-#ifdef SPDLOG_WCHAR_TO_UTF8_SUPPORT
+#    ifdef SPDLOG_WCHAR_TO_UTF8_SUPPORT
     Debug::GetInst()->LogMsg(spdlog::level::level_enum::info, L"试一试");
     Debug::GetInst()->LogMsg(spdlog::level::level_enum::info, L"试一试");
     Debug::GetInst()->LogMsg(spdlog::level::level_enum::info, L"试一试");
-#endif
+#    endif
 }
+
+#endif

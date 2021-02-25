@@ -15,9 +15,9 @@ conan create . daixian/stable -s compiler.runtime=MT -s arch=x86 -s build_type=R
 conan create . daixian/stable -s compiler.runtime=MT -s arch=x86 -s build_type=Release -o dlog:shared=True --build missing
 
 REM conan upload dlog/2.5.7@daixian/stable --all -r=xuexue
-conan upload fmt --all -r=xuexue
-conan upload openssl --all -r=xuexue
-conan upload poco --all -r=xuexue
-conan upload rapidjson --all -r=xuexue
-conan upload spdlog --all -r=xuexue
-conan upload zlib --all -r=xuexue
+@REM conan upload fmt --all -r=xuexue
+@REM conan upload openssl --all -r=xuexue
+@REM conan upload poco --all -r=xuexue
+@REM conan upload rapidjson --all -r=xuexue
+@REM conan upload spdlog --all -r=xuexue
+@REM conan upload zlib --all -r=xuexue

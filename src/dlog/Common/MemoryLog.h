@@ -21,8 +21,6 @@ class MemoryLog
 
     static MemoryLog* GetInst()
     {
-        if (m_pInstance == nullptr) //判断是否第一次调用
-            m_pInstance = new MemoryLog();
         return m_pInstance;
     }
 

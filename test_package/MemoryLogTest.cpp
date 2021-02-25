@@ -1,8 +1,11 @@
 ﻿#include "gtest/gtest.h"
-#include "dlog/Common/MemoryLog.h"
-#include "dlog/Common/Debug.h"
-#include "dlog/dlog.h"
-#include "dlog/Common/FileHelper.h"
+
+#if DLOG_STATIC
+
+#    include "dlog/Common/MemoryLog.h"
+#    include "dlog/Common/Debug.h"
+#    include "dlog/dlog.h"
+#    include "dlog/Common/FileHelper.h"
 
 using namespace dlog;
 using namespace std;
@@ -39,3 +42,5 @@ TEST(MemoryLog, ManyTest)
 
     MemoryLog::GetInst()->clear();
 }
+
+#endif

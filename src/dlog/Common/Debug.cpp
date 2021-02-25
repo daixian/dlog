@@ -18,10 +18,14 @@ using namespace Poco;
 
 namespace dlog {
 
-Debug* Debug::m_pInstance = NULL;
+Debug* Debug::m_pInstance = new Debug();
 
 void Debug::init(const char* logDir, const char* program, INIT_RELATIVE rel, bool utf8bom)
 {
+    if (!isEnable) {
+        return;
+    }
+
     mt.lock();
     if (isInit) {
         mt.unlock();
@@ -66,7 +70,7 @@ void Debug::init(const char* logDir, const char* program, INIT_RELATIVE rel, boo
             FileHelper::isExistsAndCreat(this->logDirPath); //如果文件夹不存在就创建
         }
 
-        string logFileName = format("%s.%s.log", programName, secTimeStr());
+        string logFileName = format("%s.%s.log", programName, Common::secTimeStr());
         logFilePath = Path(logDirPath).append(logFileName).toString();
 
         //如果使用写入UTF8BOM那么就写入3个字节的bom头
@@ -83,21 +87,22 @@ void Debug::init(const char* logDir, const char* program, INIT_RELATIVE rel, boo
         spdlog::flush_every(std::chrono::seconds(3)); //每秒自动刷新一次
         isInit = true;                                //标记已经初始化了
         isInitFail = false;
-        mt.unlock();
     }
     catch (const std::exception& e) {
-        std::cerr << "Debug.init():初始化失败!" << e.what() << '\n';
+        //std::cerr << "Debug.init():初始化失败!" << e.what() << '\n';
         isInitFail = true; //标记初始化失败过了
         mt.unlock();
+        clear();
         throw e;
     }
 
-    //检查看看日志文件是否存在了
+    mt.unlock();
+    //检查看看日志文件是否存在了,如果filelogger指针为null,或者连文件也不存在
     if (filelogger == nullptr || !File(logFilePath).exists()) {
-        string msg = "Debug.init():无法创建日志文件! -> " + logFilePath; //底下马上要clear(),所以这里先写了
+        string msg = "Debug.init():无法创建日志文件 -> " + logFilePath; //底下马上要clear(),所以这里先写了
         clear();
         isInitFail = true; //标记初始化失败过了
-        std::cerr << msg << '\n';
+        //std::cerr << msg << '\n';
         throw std::invalid_argument(msg);
     }
     else {
@@ -135,7 +140,6 @@ void Debug::clear()
         if (consolelogger != nullptr) {
             consolelogger->flush();
         }
-
         filelogger = nullptr;
         consolelogger = nullptr;
         spdlog::drop_all(); //这里要注意删除,否则无法再创建同名的
@@ -152,7 +156,7 @@ void Debug::clear()
     mt.unlock();
 }
 
-void Debug::removeOldFile(long sec)
+void Debug::removeOldFile(long long sec)
 {
     using namespace std;
     try {
@@ -185,7 +189,7 @@ void Debug::removeOldFile(long sec)
             LogMsg(spdlog::level::level_enum::info, format("日志启动,\"%s\" 当前有%z个日志文件", programName, vFileSubTimeSort.size()).c_str());
         }
         else {
-            int thr = vFileSubTimeSort[49];
+            Timestamp::TimeDiff thr = vFileSubTimeSort[49];
             //删除的时间门限,如果超过50个文件那么保留50个文件,如果这50个文件都是最近产生的,那么还是以2天为准
             if (thr < sec) {
                 thr = sec;
