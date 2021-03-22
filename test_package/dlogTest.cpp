@@ -10,8 +10,11 @@ using namespace std;
 TEST(dlog, memorylog)
 {
     dlog_close();
+    ASSERT_FALSE(dlog_is_initialized());
 
     dlog_init("log", "memorylog", dlog_init_relative::MODULE);
+    ASSERT_TRUE(dlog_is_initialized());
+
     dlog_memory_log_enable(true);
     dlog_set_console_thr(dlog_level::err);
     //LogI打印10W条，异步的，只要942毫秒
@@ -44,6 +47,7 @@ TEST(dlog, init_close)
 
         //第一次创建
         int res = dlog_init("log", "init_close", dlog_init_relative::MODULE);
+        ASSERT_TRUE(dlog_is_initialized());
         EXPECT_TRUE(res == 0);
         LogI("132");
 
@@ -63,6 +67,10 @@ TEST(dlog, init_close)
         LogI("132");
     }
     dlog_close();
+
+    //文件已经关闭,dlog_get_log_file_path函数返回值为0
+    char path[245];
+    EXPECT_EQ(dlog_get_log_file_path(path, 245), 0);
 }
 
 TEST(dlog, logi)
@@ -71,6 +79,7 @@ TEST(dlog, logi)
 
     //第一次创建
     int res = dlog_init("log", "LogI", dlog_init_relative::MODULE);
+    ASSERT_TRUE(dlog_is_initialized());
     EXPECT_TRUE(res == 0);
     // for (size_t i = 0; i < 5; i++) {
     //     LogI("输出一个日志 %d", i);
@@ -87,7 +96,7 @@ TEST(dlog, logi)
         fp += fp;
         fp += fp;
         LogI("GC100CharucoCalib.searchImageInCharucoDir():找到一个charuco图片 %s", fp.c_str());
-        LogI_w(L"试试❀❀❀❀❀❀❀❀❀");
+        wLogI(L"试试❀❀❀❀❀❀❀❀❀");
     }
 
     char msg[129];
@@ -106,6 +115,7 @@ TEST(dlog, logD)
 
     //第一次创建
     int res = dlog_init("log", "LogD", dlog_init_relative::MODULE);
+    ASSERT_TRUE(dlog_is_initialized());
     dlog_set_console_thr(dlog_level::debug);
     dlog_set_file_thr(dlog_level::debug);
     dlog_set_memory_thr(dlog_level::debug);
@@ -125,7 +135,7 @@ TEST(dlog, logD)
         fp += fp;
         fp += fp;
         LogD("GC100CharucoCalib.searchImageInCharucoDir():找到一个charuco图片 %s", fp.c_str());
-        LogD_w(L"试试❀❀❀❀❀❀❀❀❀");
+        wLogD(L"试试❀❀❀❀❀❀❀❀❀");
     }
 
     char msg[129];
@@ -150,6 +160,38 @@ TEST(dlog, path)
 
     //第一次创建
     int res = dlog_init("C:\\ProgramData\\log", "LogD", dlog_init_relative::MODULE);
+    ASSERT_TRUE(dlog_is_initialized());
+    dlog_set_console_thr(dlog_level::debug);
+    dlog_set_file_thr(dlog_level::debug);
+    dlog_set_memory_thr(dlog_level::debug);
+    EXPECT_TRUE(res == 0);
+    char path[245];
+    dlog_get_log_dir(path, 245);
+
+    int strcres = strcmp("C:\\ProgramData\\log\\", path);
+    EXPECT_TRUE(strcres == 0);
+
+    char msg[129];
+
+    for (size_t i = 0; i < sizeof(msg); i++) {
+        msg[i] = 'a';
+    }
+    msg[128] = '\0';
+    LogI(msg);
+    LogD(msg);
+    LogW(msg);
+    LogE(msg);
+    dlog_flush();
+    dlog_close();
+}
+
+TEST(dlog, path2)
+{
+    dlog_close();
+
+    //第一次创建
+    int res = dlog_init("C:\\ProgramData\\log\\", "LogD", dlog_init_relative::MODULE);
+    ASSERT_TRUE(dlog_is_initialized());
     dlog_set_console_thr(dlog_level::debug);
     dlog_set_file_thr(dlog_level::debug);
     dlog_set_memory_thr(dlog_level::debug);

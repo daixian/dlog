@@ -25,6 +25,7 @@ class DlogConan(ConanFile):
                        "poco:enable_mongodb": False,
                        "poco:enable_redis": False,
                        "spdlog:header_only": True,
+                       "fmt:header_only": True,
                        "fmt.fPIC": False}
     generators = "cmake"
     exports_sources = "src/*"

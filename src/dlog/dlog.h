@@ -92,10 +92,10 @@ enum class DLogError
  *
  * @param [in] logDir       (Optional) 日志文件夹路径名（相对模块目录）.
  * @param [in] program      (Optional) 程序名.
- * @param      dir_relatvie (Optional)相对路径的相对文件夹位置.
- *                           APPDATA: 相对于AppData文件夹.
- *                           MODULE:  相对于dll文件自身文件夹
- * @param      isForceInit  (Optional) 如果为false，那么就可以不强制初始化模块，理论上整个程序都共用一个日志.
+ * @param      dir_relatvie (Optional) 相对路径的相对文件夹位置.
+ *                                          APPDATA: 相对于AppData文件夹.
+ *                                          MODULE:  相对于dll文件自身文件夹
+ * @param      isForceInit  (Optional) 如果为false，那么就可以不强制初始化模块，理论上整个程序C#和C++都共用一个日志.
  *
  * @returns 如果之前未被初始化返回0,如果成功复用那么就返回1,如果强制重设成功那么返回2, 如果强制重设但是失败还是复用了那么返回3.
  */
@@ -113,6 +113,26 @@ extern "C" DLOG_EXPORT int __cdecl dlog_init(const char* logDir = "log",
  * @returns 成功返回0.
  */
 extern "C" DLOG_EXPORT int __cdecl dlog_close();
+
+/**
+ * 是否日志已经初始化了.
+ *
+ * @author daixian
+ * @date 2018/4/22
+ *
+ * @returns 已经初始化了返回true.
+ */
+extern "C" DLOG_EXPORT bool __cdecl dlog_is_initialized();
+
+/**
+ * 在调用过init之后可以查询是否是初始化失败的状态,如果是初始化失败的状态那么通常是严重的文件系统错误.
+ *
+ * @author daixian
+ * @date 2021/3/22
+ *
+ * @returns 初始化失败的状态返回true.
+ */
+extern "C" DLOG_EXPORT bool __cdecl dlog_is_init_fail();
 
 /**
  * 设置整个log使能.
@@ -266,18 +286,11 @@ extern "C" DLOG_EXPORT void __cdecl LogE(const char* strFormat, ...);
  */
 extern "C" DLOG_EXPORT void __cdecl LogD(const char* strFormat, ...);
 
-// 只有在windows上支持这个功能，暂时还是不要使用了
-//#    ifdef SPDLOG_WCHAR_TO_UTF8_SUPPORT
-//extern "C" DLOG_EXPORT void __cdecl LogwI(const wchar_t* strFormat, ...);
-//extern "C" DLOG_EXPORT void __cdecl LogwW(const wchar_t* strFormat, ...);
-//extern "C" DLOG_EXPORT void __cdecl LogwE(const wchar_t* strFormat, ...);
-//extern "C" DLOG_EXPORT void __cdecl LogwD(const wchar_t* strFormat, ...);
-//#    endif
-
-extern "C" DLOG_EXPORT void __cdecl LogI_w(const wchar_t* strFormat, ...);
-extern "C" DLOG_EXPORT void __cdecl LogW_w(const wchar_t* strFormat, ...);
-extern "C" DLOG_EXPORT void __cdecl LogE_w(const wchar_t* strFormat, ...);
-extern "C" DLOG_EXPORT void __cdecl LogD_w(const wchar_t* strFormat, ...);
+//wchar_t转成UTF8的日志
+extern "C" DLOG_EXPORT void __cdecl wLogI(const wchar_t* strFormat, ...);
+extern "C" DLOG_EXPORT void __cdecl wLogW(const wchar_t* strFormat, ...);
+extern "C" DLOG_EXPORT void __cdecl wLogE(const wchar_t* strFormat, ...);
+extern "C" DLOG_EXPORT void __cdecl wLogD(const wchar_t* strFormat, ...);
 
 #    pragma region 内存缓存日志相关
 

@@ -46,11 +46,13 @@ void Debug::init(const char* logDir, const char* program, INIT_RELATIVE rel, boo
 
         Path inputDir = Path::forDirectory(logDir);
 
-        //如果是绝对路径,就直接使用
-        if (inputDir.isAbsolute()) {
-            this->logDirPath = inputDir.toString();
-        }
-        else { //如果是相对对路径,就从根目录去拼接
+#if WIN32
+        //在windows下如果是相对地址,或者是没有盘符.如果是相对对路径,就从根目录去拼接
+        if (inputDir.isRelative() || inputDir.getDevice().empty()) {
+
+#else
+        if (inputDir.isRelative()) {
+#endif
             if (rel == INIT_RELATIVE::MODULE) {
                 FileHelper::makeAbsolute(Path(FileHelper::getModuleDir()), inputDir); //模块目录
                 this->logDirPath = inputDir.toString();
@@ -60,6 +62,11 @@ void Debug::init(const char* logDir, const char* program, INIT_RELATIVE rel, boo
                 this->logDirPath = inputDir.toString();
             }
         }
+        else {
+            //如果是绝对路径,就直接使用
+            this->logDirPath = inputDir.toString();
+        }
+
         if (!FileHelper::dirExists(this->logDirPath)) //如果文件夹不存在
         {
             Path wantPath(this->logDirPath);
@@ -189,8 +196,8 @@ void Debug::removeOldFile(long long sec)
             LogMsg(spdlog::level::level_enum::info, format("日志启动,\"%s\" 当前有%z个日志文件", programName, vFileSubTimeSort.size()).c_str());
         }
         else {
-            Timestamp::TimeDiff thr = vFileSubTimeSort[49];
-            //删除的时间门限,如果超过50个文件那么保留50个文件,如果这50个文件都是最近产生的,那么还是以2天为准
+            Timestamp::TimeDiff thr = vFileSubTimeSort[49]; //第50个文件的时间
+            //删除的时间门限,如果超过50个文件那么保留50个文件,如果是3天内的文件那么时间设成3天
             if (thr < sec) {
                 thr = sec;
             }
