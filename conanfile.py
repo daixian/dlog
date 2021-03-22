@@ -10,7 +10,7 @@ import io
 
 class DlogConan(ConanFile):
     name = "dlog"
-    version = "2.6.2"
+    version = "2.6.3"
     license = "WTFPL???"
     author = "daixian<amano_tooko@qq.com>"
     url = "https://github.com/daixian/dlog"
@@ -24,6 +24,7 @@ class DlogConan(ConanFile):
                        "poco:enable_data_sqlite": False,
                        "poco:enable_mongodb": False,
                        "poco:enable_redis": False,
+                       "spdlog:header_only": True,
                        "fmt.fPIC": False}
     generators = "cmake"
     exports_sources = "src/*"
