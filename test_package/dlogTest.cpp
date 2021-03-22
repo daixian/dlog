@@ -7,6 +7,52 @@ using namespace std;
 
 //注意,在微软的CI服务器上,APPDATA目录没有权限创建,同时不支持中文路径
 
+TEST(dlog, speed)
+{
+    dlog_close();
+    dlog_memory_log_enable(false);
+    dlog_console_log_enable(false);
+    int res = dlog_init("log", "speed", dlog_init_relative::MODULE);
+    ASSERT_TRUE(dlog_is_initialized());
+
+    dlog_set_file_thr(dlog_level::debug);
+    int count = 100000; //10万条日志
+    clock_t lastTime = clock();
+
+    for (size_t i = 0; i < count; i++) {
+        LogI("测试纯文件速度的日志");
+    }
+    clock_t now = clock();
+    float costTime = (float)(now - lastTime) / CLOCKS_PER_SEC;
+    dlog_console_log_enable(true);
+    LogI("%d条日志的时间=%fs", count, costTime);
+    dlog_flush();
+    dlog_close();
+}
+
+TEST(dlog, speed_format)
+{
+    dlog_close();
+    dlog_memory_log_enable(false);
+    dlog_console_log_enable(false);
+    int res = dlog_init("log", "speed", dlog_init_relative::MODULE);
+    ASSERT_TRUE(dlog_is_initialized());
+
+    dlog_set_file_thr(dlog_level::debug);
+    int count = 100000; //10万条日志
+    clock_t lastTime = clock();
+
+    for (size_t i = 0; i < count; i++) {
+        LogI("测试纯文件速度的日志%d", i);
+    }
+    clock_t now = clock();
+    float costTime = (float)(now - lastTime) / CLOCKS_PER_SEC;
+    dlog_console_log_enable(true);
+    LogI("%d条带格式化日志的时间=%fs", count, costTime);
+    dlog_flush();
+    dlog_close();
+}
+
 TEST(dlog, memorylog)
 {
     dlog_close();
