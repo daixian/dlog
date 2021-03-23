@@ -28,110 +28,121 @@
 
 namespace dlog {
 
-/// <summary> 初始化的相对位置 </summary>
+// 初始化的相对位置
 enum class INIT_RELATIVE
 {
     APPDATA = 0,
     MODULE = 1,
 };
 
-///-------------------------------------------------------------------------------------------------
-/// <summary> Debug日志系统. </summary>
-///
-/// <remarks> Dx, 2016/11/24. </remarks>
-///-------------------------------------------------------------------------------------------------
+// 日志回调
+typedef void (*LoggerCallback)(int level, const char* message);
+
+/**
+ * Debug日志系统.
+ *
+ * @author daixian
+ * @date 2016/11/24
+ */
 class Debug
 {
   private:
-    /// <summary> The debug object. </summary>
+    // 单例
     static Debug* m_pInstance;
 
-    /// <summary> 互斥锁，用于初始化和关闭的时候. </summary>
+    // 互斥锁，用于初始化和关闭的时候.
     std::mutex mt;
 
-    /// <summary> 默认的输出日志格式. </summary>
+    // 默认的输出日志格式.
     const char* _logPattern = "%^[%L][%C%m%d %H:%M:%S.%e %t] %v%$";
 
   public:
-    ///-------------------------------------------------------------------------------------------------
-    /// <summary> 默认构造,默认使能LogI,不使能MemoryLog. </summary>
-    ///
-    /// <remarks> Dx, 2017/3/11. </remarks>
-    ///-------------------------------------------------------------------------------------------------
+    /**
+     * 默认构造,默认使能LogI,不使能MemoryLog.
+     *
+     * @author daixian
+     * @date 2017/3/11
+     */
     Debug()
     {
     }
 
-    ///-------------------------------------------------------------------------------------------------
-    /// <summary> Destructor. </summary>
-    ///
-    /// <remarks> Dx, 2017/3/11. </remarks>
-    ///-------------------------------------------------------------------------------------------------
+    /**
+     * Destructor.
+     *
+     * @author daixian
+     * @date 2017/3/11
+     */
     ~Debug()
     {
         clear();
     }
 
-    ///-------------------------------------------------------------------------------------------------
-    /// <summary> 获得单例. </summary>
-    ///
-    /// <remarks> Dx, 2017/3/11. </remarks>
-    ///
-    /// <returns>
-    /// 返回单例对象，第一次调用会创建.
-    /// </returns>
-    ///-------------------------------------------------------------------------------------------------
+    /**
+     * 获得单例.
+     *
+     * @author daixian
+     * @date 2017/3/11
+     *
+     * @returns 返回单例对象，第一次调用会创建.
+     */
     static Debug* GetInst()
     {
         return m_pInstance;
     }
 
-    /// <summary> 日志文件夹的记录(绝对路径). </summary>
+    // 日志文件夹的记录(绝对路径).
     std::string logDirPath;
 
-    /// <summary> 日志程序名的记录(glog中没有api来记录，所以要自己记录). </summary>
+    // 日志程序名的记录(glog中没有api来记录，所以要自己记录).
     std::string programName;
 
-    /// <summary> 日志文件的路径. </summary>
+    // 日志文件的路径.
     std::string logFilePath;
 
-    /// <summary> 默认日志格式. https://github.com/gabime/spdlog/wiki/3.-Custom-formatting </summary>
+    // 默认日志格式. https://github.com/gabime/spdlog/wiki/3.-Custom-formatting
     std::string logPattern = _logPattern;
 
-    /// <summary> 是否使用UTF8的Bom. </summary>
+    // 是否使用UTF8的Bom.
     bool isUTF8BOM = true;
 
-    /// <summary> 是否进行整个日志系统的工作. </summary>
+    // 是否进行整个日志系统的工作.
     bool isEnable = true;
 
-    /// <summary> 是否内存日志系统的使能. </summary>
+    // 是否内存日志系统的使能.
     bool isMemLogEnable = false;
 
-    /// <summary> 是否使能控制台. </summary>
+    // 是否使能控制台.
     bool isConsoleEnable = true;
 
-    /// <summary> 大于等于这个优先级的常规日志(文件日志)都会工作. </summary>
+    // 大于等于这个优先级的常规日志(文件日志)都会工作.
     spdlog::level::level_enum logFileThr = spdlog::level::level_enum::debug;
 
-    /// <summary> 大于等于这个级别的日志都会进入内存日志. </summary>
+    // 大于等于这个级别的日志都会进入内存日志.
     spdlog::level::level_enum logMemoryThr = spdlog::level::level_enum::debug;
 
-    /// <summary> 大于等于这个级别的日志都会输出到控制台. </summary>
+    // 大于等于这个级别的日志都会输出到控制台.
     spdlog::level::level_enum logConsoleThr = spdlog::level::level_enum::debug;
 
-    /// <summary> 文件日志器. </summary>
+    // 文件日志器.
     std::shared_ptr<spdlog::logger> filelogger = nullptr;
 
-    /// <summary> 控制台日志器. </summary>
+    // 控制台日志器.
     std::shared_ptr<spdlog::logger> consolelogger = nullptr;
 
-    /// <summary> 是否初始化了. </summary>
+    // 是否初始化了.
     bool isInit = false;
 
-    /// <summary> 是否初始化失败了. </summary>
+    // 是否初始化失败了.
     bool isInitFail = false;
 
-    // /// <summary> 是否使用wchat来记录日志,其实只影响内部输出的日志内容. </summary>
+    // 外部传入的logger指针
+    LoggerCallback exLoggerCallback = nullptr;
+
+    // 是否执行chcp 65001
+    bool ischcp65001 = false;
+
+    // 是否使用wchat来记录日志,其实只影响内部输出的日志内容.
     // bool isWchat = false;
 
     /**
@@ -206,7 +217,9 @@ class Debug
         if (!isEnable) {
             return false; //如果控制是不输出日志
         }
-
+        if (exLoggerCallback != nullptr) {
+            return true;
+        }
         //if (!isInit && !isInitFail) {
         //    init(); //如果还没有初始化那么就初始化一次
         //}
@@ -238,6 +251,11 @@ class Debug
         }
         if (isMemLogEnable && logMemoryThr <= logThr) { //满足优先级才输出 - 内存队列
             MemoryLog::GetInst()->addLog(msg);
+        }
+
+        //如果有外部的回调那么就执行一下
+        if (exLoggerCallback != nullptr) {
+            exLoggerCallback((int)logThr, msg);
         }
     }
 

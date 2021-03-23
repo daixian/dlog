@@ -483,6 +483,16 @@ extern "C" DLOG_EXPORT void __cdecl wLogD(const wchar_t* strFormat, ...)
 //}
 //#endif
 
+extern "C" DLOG_EXPORT void __stdcall dlog_set_logger_function(LoggerCallback fp)
+{
+    Debug::GetInst()->exLoggerCallback = fp;
+}
+
+extern "C" DLOG_EXPORT void __stdcall dlog_set_is_chcp65001(bool ischcp65001)
+{
+    Debug::GetInst()->ischcp65001 = ischcp65001;
+}
+
 #pragma region memory log
 
 extern "C" DLOG_EXPORT void __cdecl dlog_memory_log_enable(bool enable)

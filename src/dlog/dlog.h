@@ -80,6 +80,9 @@ enum class DLogError
     InvalidAttribute = 17,
 };
 
+// 日志回调函数指针类型
+typedef void (*DlogLoggerCallback)(int level, const char* message);
+
 /**
  * 模块初始化,日志文件夹路径可以使用绝对目录也可以使用相对目录(第三个参数进行相对位置的设置), 
  * 如果使用相对目录,那么程序会将它理解为相对模块目录,路径例如 char* logDir = "log",char* program = "dlog".
@@ -291,6 +294,26 @@ extern "C" DLOG_EXPORT void __cdecl wLogI(const wchar_t* strFormat, ...);
 extern "C" DLOG_EXPORT void __cdecl wLogW(const wchar_t* strFormat, ...);
 extern "C" DLOG_EXPORT void __cdecl wLogE(const wchar_t* strFormat, ...);
 extern "C" DLOG_EXPORT void __cdecl wLogD(const wchar_t* strFormat, ...);
+
+/**
+ * 设置一个传入外部的回调.
+ *
+ * @author daixian
+ * @date 2021/3/23
+ *
+ * @param  fp 函数指针.
+ */
+extern "C" DLOG_EXPORT void __stdcall dlog_set_logger_function(DlogLoggerCallback fp);
+
+/**
+ * 是否执行chcp 65001
+ *
+ * @author daixian
+ * @date 2021/3/23
+ *
+ * @param  ischcp65001 True to ischcp 65001.
+ */
+extern "C" DLOG_EXPORT void __stdcall dlog_set_is_chcp65001(bool ischcp65001);
 
 #    pragma region 内存缓存日志相关
 

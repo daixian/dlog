@@ -151,6 +151,8 @@ void Debug::clear()
         consolelogger = nullptr;
         spdlog::drop_all(); //这里要注意删除,否则无法再创建同名的
 
+        exLoggerCallback = nullptr;
+
         programName.clear();
         logDirPath.clear();
         logFilePath.clear();
@@ -159,6 +161,7 @@ void Debug::clear()
         filelogger = nullptr;
         consolelogger = nullptr;
         spdlog::drop_all();
+        exLoggerCallback = nullptr;
     }
     mt.unlock();
 }
@@ -225,7 +228,9 @@ void Debug::setIsConsoleEnable(bool enable)
 
     //设置控制台为UTF8输出
 #if defined(_WIN32) || defined(_WIN64)
-    system("chcp 65001"); //测试了在windows下有效
+    if (ischcp65001) {
+        system("chcp 65001"); //测试了在windows下有效
+    }
 #endif
 
     //如果是设置为使能,如果指针还没有初始化过

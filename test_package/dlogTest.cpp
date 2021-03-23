@@ -263,3 +263,36 @@ TEST(dlog, path2)
 }
 
 #endif
+
+bool isCallbackIn = false;
+void LoggerFun(int level, const char* message)
+{
+    isCallbackIn = true;
+}
+
+TEST(dlog, callback)
+{
+    dlog_close();
+
+    //第一次创建
+    int res = dlog_init("C:\\ProgramData\\log\\", "LogD", dlog_init_relative::MODULE);
+    ASSERT_TRUE(dlog_is_initialized());
+    dlog_set_console_thr(dlog_level::debug);
+    dlog_set_file_thr(dlog_level::debug);
+    dlog_set_logger_function(LoggerFun);
+
+    char msg[129];
+
+    for (size_t i = 0; i < sizeof(msg); i++) {
+        msg[i] = 'a';
+    }
+    msg[128] = '\0';
+    LogI(msg);
+    LogD(msg);
+    LogW(msg);
+    LogE(msg);
+
+    ASSERT_TRUE(isCallbackIn);
+    dlog_flush();
+    dlog_close();
+}
