@@ -8,6 +8,10 @@
 #include "./Common/MemoryLog.h"
 #include "./Common/FileHelper.h"
 
+#include <Poco/UTF8Encoding.h>
+#include <Poco/Windows936Encoding.h>
+#include <Poco/TextConverter.h>
+
 using namespace dlog;
 
 extern "C" DLOG_EXPORT void* __cdecl dlog_global_ptr()
@@ -132,7 +136,7 @@ extern "C" DLOG_EXPORT void __cdecl LogI(const char* strFormat, ...)
             }
             else if (ret >= buf.size()) {
                 //buff长度不够
-                buf.resize((size_t)ret * 2, '\0');
+                buf.resize((size_t)ret * 4, '\0');
                 //在GCC平台需要重新生成一下arg_ptr
                 va_end(arg_ptr);
                 va_start(arg_ptr, strFormat);
@@ -168,7 +172,7 @@ extern "C" DLOG_EXPORT void __cdecl LogW(const char* strFormat, ...)
             }
             else if (ret >= buf.size()) {
                 //buff长度不够
-                buf.resize((size_t)ret * 2, '\0');
+                buf.resize((size_t)ret * 4, '\0');
                 //在GCC平台需要重新生成一下arg_ptr
                 va_end(arg_ptr);
                 va_start(arg_ptr, strFormat);
@@ -204,7 +208,7 @@ extern "C" DLOG_EXPORT void __cdecl LogE(const char* strFormat, ...)
             }
             else if (ret >= buf.size()) {
                 //buff长度不够
-                buf.resize((size_t)ret * 2, '\0');
+                buf.resize((size_t)ret * 4, '\0');
                 //在GCC平台需要重新生成一下arg_ptr
                 va_end(arg_ptr);
                 va_start(arg_ptr, strFormat);
@@ -240,7 +244,7 @@ extern "C" DLOG_EXPORT void __cdecl LogD(const char* strFormat, ...)
             }
             else if (ret >= buf.size()) {
                 //buff长度不够
-                buf.resize((size_t)ret * 2, '\0');
+                buf.resize((size_t)ret * 4, '\0');
                 //在GCC平台需要重新生成一下arg_ptr
                 va_end(arg_ptr);
                 va_start(arg_ptr, strFormat);
@@ -306,7 +310,7 @@ extern "C" DLOG_EXPORT void __cdecl wLogW(const wchar_t* strFormat, ...)
             }
             else if (ret >= buf.size()) {
                 //buff长度不够
-                buf.resize((size_t)ret * 2, '\0');
+                buf.resize((size_t)ret * 4, '\0');
                 //在GCC平台需要重新生成一下arg_ptr
                 va_end(arg_ptr);
                 va_start(arg_ptr, strFormat);
@@ -345,7 +349,7 @@ extern "C" DLOG_EXPORT void __cdecl wLogE(const wchar_t* strFormat, ...)
             }
             else if (ret >= buf.size()) {
                 //buff长度不够
-                buf.resize((size_t)ret * 2, '\0');
+                buf.resize((size_t)ret * 4, '\0');
                 //在GCC平台需要重新生成一下arg_ptr
                 va_end(arg_ptr);
                 va_start(arg_ptr, strFormat);
@@ -384,7 +388,7 @@ extern "C" DLOG_EXPORT void __cdecl wLogD(const wchar_t* strFormat, ...)
             }
             else if (ret >= buf.size()) {
                 //buff长度不够
-                buf.resize((size_t)ret * 2, '\0');
+                buf.resize((size_t)ret * 4, '\0');
                 //在GCC平台需要重新生成一下arg_ptr
                 va_end(arg_ptr);
                 va_start(arg_ptr, strFormat);
@@ -399,89 +403,53 @@ extern "C" DLOG_EXPORT void __cdecl wLogD(const wchar_t* strFormat, ...)
     }
 }
 
-// 只有在windows上支持这个功能，暂时还是不要使用了
-//#ifdef SPDLOG_WCHAR_TO_UTF8_SUPPORT
-//
-//extern "C" DLOG_EXPORT void __cdecl LogwI(const wchar_t* strFormat, ...)
-//{
-//    if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
-//        dlog_init();
-//    }
-//
-//    if (Debug::GetInst()->isNeedLog(spdlog::level::level_enum::info)) {
-//        std::vector<wchar_t> buf(DEBUG_LOG_BUFF_SIZE);
-//        int ret = 0;
-//        va_list arg_ptr;
-//        va_start(arg_ptr, strFormat);
-//        //vsnprintf的返回是不包含\0的预留位置的
-//        while ((ret = vswprintf(buf.data(), buf.size(), strFormat, arg_ptr)) >= buf.size()) {
-//            buf.resize(ret + 1, '\0');
-//        }
-//        va_end(arg_ptr);
-//        Debug::GetInst()->LogMsg(spdlog::level::level_enum::info, buf.data());
-//    }
-//}
-//
-//extern "C" DLOG_EXPORT void __cdecl LogwW(const wchar_t* strFormat, ...)
-//{
-//    if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
-//        dlog_init();
-//    }
-//
-//    if (Debug::GetInst()->isNeedLog(spdlog::level::level_enum::warn)) {
-//        std::vector<wchar_t> buf(DEBUG_LOG_BUFF_SIZE);
-//        int ret = 0;
-//        va_list arg_ptr;
-//        va_start(arg_ptr, strFormat);
-//        //vsnprintf的返回是不包含\0的预留位置的
-//        while ((ret = vswprintf(buf.data(), buf.size(), strFormat, arg_ptr)) >= buf.size()) {
-//            buf.resize(ret + 1, '\0');
-//        }
-//        va_end(arg_ptr);
-//        Debug::GetInst()->LogMsg(spdlog::level::level_enum::warn, buf.data());
-//    }
-//}
-//
-//extern "C" DLOG_EXPORT void __cdecl LogwE(const wchar_t* strFormat, ...)
-//{
-//    if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
-//        dlog_init();
-//    }
-//
-//    if (Debug::GetInst()->isNeedLog(spdlog::level::level_enum::err)) {
-//        std::vector<wchar_t> buf(DEBUG_LOG_BUFF_SIZE);
-//        int ret = 0;
-//        va_list arg_ptr;
-//        va_start(arg_ptr, strFormat);
-//        //vsnprintf的返回是不包含\0的预留位置的
-//        while ((ret = vswprintf(buf.data(), buf.size(), strFormat, arg_ptr)) >= buf.size()) {
-//            buf.resize(ret + 1, '\0');
-//        }
-//        va_end(arg_ptr);
-//        Debug::GetInst()->LogMsg(spdlog::level::level_enum::err, buf.data());
-//    }
-//}
-//
-//extern "C" DLOG_EXPORT void __cdecl LogwD(const wchar_t* strFormat, ...)
-//{
-//    if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
-//        dlog_init();
-//    }
-//
-//    if (Debug::GetInst()->isNeedLog(spdlog::level::level_enum::debug)) {
-//        std::vector<wchar_t> buf(DEBUG_LOG_BUFF_SIZE);
-//        int ret = 0;
-//        va_list arg_ptr;
-//        va_start(arg_ptr, strFormat);
-//        //vsnprintf的返回是不包含\0的预留位置的
-//        while ((ret = vswprintf(buf.data(), buf.size(), strFormat, arg_ptr)) >= buf.size()) {
-//            buf.resize(ret + 1, '\0');
-//        }
-//        va_end(arg_ptr);
-//        Debug::GetInst()->LogMsg(spdlog::level::level_enum::debug, buf.data());
-//    }
-//}
-//#endif
+extern "C" DLOG_EXPORT void __cdecl LogMsg(dlog_level level, const char* message)
+{
+    if (Debug::GetInst()->isNeedLog((spdlog::level::level_enum)level)) {
+        if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
+            dlog_init();
+        }
+        Debug::GetInst()->LogMsg((spdlog::level::level_enum)level, message);
+    }
+}
+
+extern "C" DLOG_EXPORT void __cdecl wLogMsg(dlog_level level, const wchar_t* message)
+{
+
+    if (Debug::GetInst()->isNeedLog((spdlog::level::level_enum)level)) {
+        if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
+            dlog_init();
+        }
+        std::string messageUTF8 = JsonHelper::utf16To8(std::wstring(message));
+        Debug::GetInst()->LogMsg((spdlog::level::level_enum)level, messageUTF8.c_str());
+    }
+}
+
+extern "C" DLOG_EXPORT int __cdecl dlog_convert_utf8_to_gbk(const char* s_utf8, char* dst, int size)
+{
+    Poco::Windows936Encoding cp936;
+    Poco::UTF8Encoding utf8;
+    Poco::TextConverter converter(utf8, cp936);
+    std::string s_gbk;
+    converter.convert(s_utf8, s_gbk);
+    int copyLen = (int)s_gbk.size() < (size - 1) ? (int)s_gbk.size() : (size - 1); //这里string的size是否就等于字节的size???
+    s_gbk.copy(dst, copyLen);
+    dst[copyLen] = '\0';
+    return copyLen;
+}
+
+extern "C" DLOG_EXPORT int __cdecl dlog_convert_gbk_to_utf8(const char* s_gbk, char* dst, int size)
+{
+    Poco::Windows936Encoding cp936;
+    Poco::UTF8Encoding utf8;
+    Poco::TextConverter converter(cp936, utf8);
+    std::string s_utf8;
+    converter.convert(s_gbk, s_utf8);
+    int copyLen = (int)s_utf8.size() < (size - 1) ? (int)s_utf8.size() : (size - 1); //这里string的size是否就等于字节的size???
+    s_utf8.copy(dst, copyLen);
+    dst[copyLen] = '\0';
+    return copyLen;
+}
 
 extern "C" DLOG_EXPORT void __stdcall dlog_set_logger_function(LoggerCallback fp)
 {

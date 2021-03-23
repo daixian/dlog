@@ -315,6 +315,57 @@ extern "C" DLOG_EXPORT void __stdcall dlog_set_logger_function(DlogLoggerCallbac
  */
 extern "C" DLOG_EXPORT void __stdcall dlog_set_is_chcp65001(bool ischcp65001);
 
+/**
+ * 不带格式化字符串的输出日志.
+ *
+ * @author daixian
+ * @date 2021/3/23
+ *
+ * @param  level   The level.
+ * @param  message The message.
+ */
+extern "C" DLOG_EXPORT void __cdecl LogMsg(dlog_level level, const char* message);
+
+/**
+ * 不带格式化字符串的输出日志.
+ *
+ * @author daixian
+ * @date 2021/3/23
+ *
+ * @param  level   The level.
+ * @param  message The message.
+ */
+extern "C" DLOG_EXPORT void __cdecl wLogMsg(dlog_level level, const wchar_t* message);
+
+/**
+ * 转换UTF8到gbk.
+ *
+ * @author daixian
+ * @date 2021/3/23
+ *
+ * @param       s_utf8 utf8编码的字符串.
+ * @param [out] dst    目标buff.
+ * @param       size   buff大小.
+ *
+ * @returns 结果字符串长度.
+ */
+
+extern "C" DLOG_EXPORT int __cdecl dlog_convert_utf8_to_gbk(const char* s_utf8, char* dst, int size);
+
+/**
+ * 转换gbk到utf8.
+ *
+ * @author daixian
+ * @date 2021/3/23
+ *
+ * @param       s_gbk gbk编码的字符串.
+ * @param [out] dst   目标buff.
+ * @param       size  buff大小.
+ *
+ * @returns 结果字符串长度.
+ */
+extern "C" DLOG_EXPORT int __cdecl dlog_convert_gbk_to_utf8(const char* s_gbk, char* dst, int size);
+
 #    pragma region 内存缓存日志相关
 
 /**

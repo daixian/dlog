@@ -12,14 +12,14 @@ set(CMAKE_CXX_STANDARD 14)
 set(SUB_NAME "dlog")
 
 # 先自动添加算了
-FILE(GLOB_RECURSE SOURCE_LIST "*.cpp" "*.h" "*.hpp" "*.c")
+FILE(GLOB_RECURSE SOURCE_LIST "*.cpp" "*.h" "*.hpp" "*.c" "*.rc")
 
 #windows下添加资源文件
-if(WIN32)
-    if(DLOG_BUILD_SHARED)
-        list(APPEND SOURCE_LIST "${CMAKE_CURRENT_SOURCE_DIR}/${SUB_NAME}.rc")
-    endif()
-endif()
+# if(WIN32)
+#     if(DLOG_BUILD_SHARED)
+#         list(APPEND SOURCE_LIST "${CMAKE_CURRENT_SOURCE_DIR}/${SUB_NAME}.rc")
+#     endif()
+# endif()
 
 add_definitions(-D UNICODE)
 if(WIN32)

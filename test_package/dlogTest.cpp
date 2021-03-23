@@ -1,7 +1,7 @@
 ﻿#include "pch.h"
-#include "dlog/dlog.h"
 
-#pragma execution_character_set("utf-8")
+#define DLOG_UTF8
+#include "dlog/dlog.h"
 
 using namespace std;
 
@@ -275,7 +275,7 @@ TEST(dlog, callback)
     dlog_close();
 
     //第一次创建
-    int res = dlog_init("C:\\ProgramData\\log\\", "LogD", dlog_init_relative::MODULE);
+    int res = dlog_init("log", "callback", dlog_init_relative::MODULE);
     ASSERT_TRUE(dlog_is_initialized());
     dlog_set_console_thr(dlog_level::debug);
     dlog_set_file_thr(dlog_level::debug);
@@ -295,4 +295,50 @@ TEST(dlog, callback)
     ASSERT_TRUE(isCallbackIn);
     dlog_flush();
     dlog_close();
+}
+
+TEST(dlog, mayaTest)
+{
+    dlog_close();
+
+    int res = dlog_init("log", "Maya", dlog_init_relative::MODULE);
+    ASSERT_TRUE(dlog_is_initialized());
+    dlog_set_console_thr(dlog_level::debug);
+    dlog_set_file_thr(dlog_level::debug);
+
+    string text;
+    text.push_back(-28);
+    text.push_back(-72);
+    text.push_back(-102);
+    text.push_back(-27);
+    text.push_back(-118);
+    text.push_back(-95);
+    text.push_back(-27);
+    text.push_back(-111);
+    text.push_back(-104);
+
+    for (size_t i = 0; i < 100; i++) {
+        LogI(text.c_str());
+    }
+
+    for (size_t i = 0; i < 100; i++) {
+        LogMsg(dlog_level::warn, text.c_str());
+    }
+
+    dlog_flush();
+    dlog_close();
+}
+
+TEST(dlog, gbk2utf8)
+{
+    vector<char> buff(256, 0);
+    string utf8 = "中文热带水果地方改";
+    string gbk;
+    dlog_convert_utf8_to_gbk(utf8.c_str(), buff.data(), buff.size());
+    gbk = buff.data();
+
+    dlog_convert_gbk_to_utf8(gbk.c_str(), buff.data(), buff.size());
+    string utf8_2 = buff.data();
+
+    ASSERT_TRUE(utf8 == utf8_2);
 }
