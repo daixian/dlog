@@ -80,7 +80,7 @@ class DlogConan(ConanFile):
     def package(self):
         # 拷贝如果不带*那么不会搜索到下一级文件夹
         # 包含所有的头文件算了
-        self.copy("*.h", dst="include", src="src")
+        self.copy("*/dlog.h", dst="include", src="src", keep_path=True)
         self.copy("*.lib", dst="lib", keep_path=False)
         self.copy("*.dll", dst="bin", keep_path=False)
         self.copy("*.dylib*", dst="lib", keep_path=False)

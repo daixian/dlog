@@ -306,12 +306,12 @@ extern "C" DLOG_EXPORT void __cdecl wLogD(const wchar_t* strFormat, ...);
 extern "C" DLOG_EXPORT void __stdcall dlog_set_logger_function(DlogLoggerCallback fp);
 
 /**
- * 是否执行chcp 65001
+ * 是否在windows平台下初始化控制台的时候执行chcp 65001,现在默认是不是执行的,需要在init之前调用这个函数。
  *
  * @author daixian
  * @date 2021/3/23
  *
- * @param  ischcp65001 True to ischcp 65001.
+ * @param  ischcp65001 设为True则在windows平台下初始化控制台的时候执行chcp 65001.
  */
 extern "C" DLOG_EXPORT void __stdcall dlog_set_is_chcp65001(bool ischcp65001);
 
@@ -321,8 +321,8 @@ extern "C" DLOG_EXPORT void __stdcall dlog_set_is_chcp65001(bool ischcp65001);
  * @author daixian
  * @date 2021/3/23
  *
- * @param  level   The level.
- * @param  message The message.
+ * @param  level   日志等级.
+ * @param  message 日志内容.
  */
 extern "C" DLOG_EXPORT void __cdecl LogMsg(dlog_level level, const char* message);
 
@@ -332,8 +332,8 @@ extern "C" DLOG_EXPORT void __cdecl LogMsg(dlog_level level, const char* message
  * @author daixian
  * @date 2021/3/23
  *
- * @param  level   The level.
- * @param  message The message.
+ * @param  level   日志等级.
+ * @param  message 日志内容.
  */
 extern "C" DLOG_EXPORT void __cdecl wLogMsg(dlog_level level, const wchar_t* message);
 
