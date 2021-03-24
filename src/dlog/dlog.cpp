@@ -451,7 +451,7 @@ extern "C" DLOG_EXPORT int __cdecl dlog_convert_gbk_to_utf8(const char* s_gbk, c
     return copyLen;
 }
 
-extern "C" DLOG_EXPORT void __stdcall dlog_set_logger_function(LoggerCallback fp)
+extern "C" DLOG_EXPORT void __stdcall dlog_set_logger_function(DlogLoggerCallback fp)
 {
     Debug::GetInst()->exLoggerCallback = fp;
 }
