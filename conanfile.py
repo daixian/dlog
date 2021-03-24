@@ -18,15 +18,17 @@ class DlogConan(ConanFile):
     topics = ("log", "C++", "C#")
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False], "build_test": [
-        True, False], "fmt.fPIC": [True, False]}
+        True, False]}
     default_options = {"shared": True,
                        "build_test": False,
                        "poco:enable_data_sqlite": False,
+                       "poco:enable_data_mysql": False,
+                       "poco:enable_apacheconnector": False,
+                       "poco:enable_data_postgresql": False,
                        "poco:enable_mongodb": False,
                        "poco:enable_redis": False,
                        "spdlog:header_only": True,
-                       "fmt:header_only": True,
-                       "fmt.fPIC": False}
+                       "fmt:header_only": True}
     generators = "cmake"
     exports_sources = "src/*"
 

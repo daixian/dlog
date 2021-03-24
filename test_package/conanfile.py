@@ -10,8 +10,13 @@ class DLogTestConan(ConanFile):
     generators = "cmake"
     default_options = {"dlog:shared": False,
                        "poco:enable_data_sqlite": False,
+                       "poco:enable_data_mysql": False,
+                       "poco:enable_apacheconnector": False,
+                       "poco:enable_data_postgresql": False,
                        "poco:enable_mongodb": False,
-                       "poco:enable_redis": False}
+                       "poco:enable_redis": False,
+                       "spdlog:header_only": True,
+                       "fmt:header_only": True}
 
     def requirements(self):
         self.requires("spdlog/1.5.0")
@@ -37,7 +42,9 @@ class DLogTestConan(ConanFile):
         # windows平台的x86其实也可以跑测试
         if self.settings.os == "Windows":
             os.chdir("bin")
-            self.run('.%spackage_test --gtest_output="xml:gtest_report.xml"' % os.sep)
+            self.run(
+                '.%spackage_test --gtest_output="xml:gtest_report.xml"' % os.sep)
         elif not tools.cross_building(self.settings):
             os.chdir("bin")
-            self.run('.%spackage_test --gtest_output="xml:gtest_report.xml"' % os.sep)
+            self.run(
+                '.%spackage_test --gtest_output="xml:gtest_report.xml"' % os.sep)
