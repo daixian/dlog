@@ -5,12 +5,13 @@ from conans.errors import ConanInvalidConfiguration
 import os
 import sys
 import io
+import shutil
 # sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='gbk')
 
 
 class DlogConan(ConanFile):
     name = "dlog"
-    version = "2.6.5"
+    version = "2.6.6"
     license = "WTFPL???"
     author = "daixian<amano_tooko@qq.com>"
     url = "https://github.com/daixian/dlog"
@@ -105,20 +106,20 @@ class DlogConan(ConanFile):
 
     def copy_archive(self):
         """把安装文件拷贝到当前源文件目录来,方便在CI中上传"""
-        print("copy_archive():package_folder="+self.package_folder)
-        # if not os.environ["CONAN_ARCHIVE_PATH"] is None:
-        #     dest = os.environ["CONAN_ARCHIVE_PATH"]+os.sep
-        #     dest += self.settings["compiler"]+"_" + \
-        #         self.setting["compiler.version"]+"_"+self.settings["arch"]
-        #     if(self.settings["compiler"] is "Visual Studio"):
-        #         dest += "_"+self.settings["compiler.runtime"]
-        #     dest += os.sep
-        #     print("copy_archive():归档目录="+dest)
-        #     self.copy("*dlog.h", dst=dest+"include", src="src")
-        #     self.copy("*.lib", dst=dest+"lib", keep_path=False)
-        #     self.copy("*.dll", dst=dest+"bin", keep_path=False)
-        #     self.copy("*.dylib*", dst=dest+"lib", keep_path=False)
-        #     self.copy("*.so", dst=dest+"lib", keep_path=False)
-        #     self.copy("*.a", dst=dest+"lib", keep_path=False)
-        # else:
-        #     print("copy_archive():执行目录CONAN_ARCHIVE_PATH为空，不执行archive拷贝")
+        print("copy_archive():package_folder=" + self.package_folder)
+        archive_path = os.environ.get("CONAN_ARCHIVE_PATH")
+        print("copy_archive():archivePath=" + archive_path)
+        if not archive_path is None:
+            dest = archive_path + os.sep + str(self.name) + os.sep
+            dest += str(self.settings.os) + "_" + str(self.settings.compiler) + \
+                str(self.settings.compiler.version) + "_" + str(self.settings.arch)
+            if(self.settings.compiler == "Visual Studio"):
+                dest += "_" + str(self.settings.compiler.runtime)
+            dest += os.sep
+            print("copy_archive():归档目录="+dest)
+            if os.path.exists(dest):
+                shutil.rmtree(dest)
+            # copytree必须要是一个不存在的文件夹
+            shutil.copytree(self.package_folder, dest)
+        else:
+            print("copy_archive():执行目录CONAN_ARCHIVE_PATH为空，不执行archive拷贝")

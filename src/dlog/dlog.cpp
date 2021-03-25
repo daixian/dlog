@@ -44,7 +44,7 @@ extern "C" DLOG_EXPORT int __cdecl dlog_init(const char* logDir, const char* pro
 
 extern "C" DLOG_EXPORT int __cdecl dlog_close()
 {
-    if (Debug::GetInst()->isInit)
+    if (Debug::GetInst()->isInit && Debug::GetInst()->isPrintInternalMessage)
         LogI("dlog关闭!");
     Debug::GetInst()->clear();
     return 0;
@@ -459,6 +459,16 @@ extern "C" DLOG_EXPORT void __stdcall dlog_set_logger_function(DlogLoggerCallbac
 extern "C" DLOG_EXPORT void __stdcall dlog_set_is_chcp65001(bool ischcp65001)
 {
     Debug::GetInst()->ischcp65001 = ischcp65001;
+}
+
+extern "C" DLOG_EXPORT void __stdcall dlog_set_is_print_internal_message(bool isPrint)
+{
+    Debug::GetInst()->isPrintInternalMessage = isPrint;
+}
+
+extern "C" DLOG_EXPORT void __stdcall dlog_set_is_use_utf8_bom(bool isUTF8BOM)
+{
+    Debug::GetInst()->isUTF8BOM = isUTF8BOM;
 }
 
 #pragma region memory log

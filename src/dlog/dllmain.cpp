@@ -20,7 +20,8 @@ BOOL APIENTRY DllMain(HMODULE hModule,
         //目前发现貌似最后一次进入是0
         if (ul_reason_for_call == 0) {
             if (dlog::Debug::GetInst()->isInit) {
-                LogI("dll释放,日志关闭!");
+                if (dlog::Debug::GetInst()->isPrintInternalMessage)
+                    LogI("dll释放,日志关闭!");
                 dlog_close();
             }
         }

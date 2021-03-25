@@ -142,6 +142,9 @@ class Debug
     // 是否执行chcp 65001
     bool ischcp65001 = false;
 
+    // 是否打印模块内部的消息
+    bool isPrintInternalMessage = false;
+
     // 是否使用wchat来记录日志,其实只影响内部输出的日志内容.
     // bool isWchat = false;
 

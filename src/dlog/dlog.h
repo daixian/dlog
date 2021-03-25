@@ -296,7 +296,7 @@ extern "C" DLOG_EXPORT void __cdecl wLogE(const wchar_t* strFormat, ...);
 extern "C" DLOG_EXPORT void __cdecl wLogD(const wchar_t* strFormat, ...);
 
 /**
- * 设置一个传入外部的回调.
+ * 设置一个传入外部的回调,注意每次close日志系统会清空这个设置,之后需要重新设置一次.
  *
  * @author daixian
  * @date 2021/3/23
@@ -306,14 +306,34 @@ extern "C" DLOG_EXPORT void __cdecl wLogD(const wchar_t* strFormat, ...);
 extern "C" DLOG_EXPORT void __stdcall dlog_set_logger_function(DlogLoggerCallback fp);
 
 /**
- * 是否在windows平台下初始化控制台的时候执行chcp 65001,现在默认是不是执行的,需要在init之前调用这个函数。
+ * 是否在windows平台下初始化控制台的时候执行chcp 65001,现在默认不是执行.(需要在init之前调用这个函数)
  *
  * @author daixian
  * @date 2021/3/23
  *
- * @param  ischcp65001 设为True则在windows平台下初始化控制台的时候执行chcp 65001.
+ * @param  ischcp65001 设为true则在windows平台下初始化控制台的时候执行chcp 65001.
  */
 extern "C" DLOG_EXPORT void __stdcall dlog_set_is_chcp65001(bool ischcp65001);
+
+/**
+ * 是否打印日志模块的启动时的内部消息,默认不打印.(需要在init之前调用这个函数)
+ *
+ * @author daixian
+ * @date 2021/3/25
+ *
+ * @param  isPrint 设为true则会打印一些日志模块启动的内容.
+ */
+extern "C" DLOG_EXPORT void __stdcall dlog_set_is_print_internal_message(bool isPrint);
+
+/**
+ * 是否在日志文件头写入utf8的bom头,默认是写入.(需要在init之前调用这个函数)
+ *
+ * @author daixian
+ * @date 2021/3/25
+ *
+ * @param  isUTF8BOM 设为true则会写入bom头.
+ */
+extern "C" DLOG_EXPORT void __stdcall dlog_set_is_use_utf8_bom(bool isUTF8BOM);
 
 /**
  * 不带格式化字符串的输出日志.
