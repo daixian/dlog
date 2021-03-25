@@ -50,16 +50,16 @@ class DlogConan(ConanFile):
 
     def _configure_cmake(self):
         """转换python的设置到CMake"""
-        print("_configure_cmake():package_folder="+self.package_folder)
+        print("_configure_cmake():package_folder = "+self.package_folder)
         cmake = CMake(self)
         # 在windows平台目前只支持动态库
         # if self.settings.os == "Windows":
         #     cmake.definitions["DLOG_BUILD_SHARED"] = True
         # else:
         if self.options.shared:
-            print("python脚本设置构建成共享库 DLOG_BUILD_SHARED=True")
+            print("python config set -> DLOG_BUILD_SHARED=True")
         else:
-            print("python脚本设置构建成静态库 DLOG_BUILD_SHARED=False")
+            print("python config set -> DLOG_BUILD_SHARED=False")
 
         cmake.definitions["DLOG_BUILD_SHARED"] = self.options.shared
         cmake.definitions["LLVM_ENABLE_PIC"] = False
@@ -70,7 +70,7 @@ class DlogConan(ConanFile):
         if self.settings.os == "Windows":
             os.system("chcp 65001")
 
-        print("进入了build...")
+        print("start build...")
         cmake = self._configure_cmake()
         cmake.configure(source_folder="src")
         cmake.build()
@@ -106,9 +106,9 @@ class DlogConan(ConanFile):
 
     def copy_archive(self):
         """把安装文件拷贝到当前源文件目录来,方便在CI中上传"""
-        print("copy_archive():package_folder=" + self.package_folder)
+        print("copy_archive():package_folder = " + self.package_folder)
         archive_path = os.environ.get("CONAN_ARCHIVE_PATH")
-        print("copy_archive():archivePath=" + archive_path)
+        print("copy_archive():archivePath = " + archive_path)
         if not archive_path is None:
             dest = archive_path + os.sep + str(self.name) + os.sep
             dest += str(self.settings.os) + "_" + str(self.settings.compiler) + \
@@ -116,10 +116,10 @@ class DlogConan(ConanFile):
             if(self.settings.compiler == "Visual Studio"):
                 dest += "_" + str(self.settings.compiler.runtime)
             dest += os.sep
-            print("copy_archive():归档目录="+dest)
+            print("copy_archive():archive dir = " + dest)
             if os.path.exists(dest):
                 shutil.rmtree(dest)
             # copytree必须要是一个不存在的文件夹
             shutil.copytree(self.package_folder, dest)
         else:
-            print("copy_archive():执行目录CONAN_ARCHIVE_PATH为空，不执行archive拷贝")
+            print("copy_archive():environ CONAN_ARCHIVE_PATH=None，can not archive copy!")
