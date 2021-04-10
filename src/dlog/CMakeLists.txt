@@ -22,6 +22,8 @@ FILE(GLOB_RECURSE SOURCE_LIST "*.cpp" "*.h" "*.hpp" "*.c" "*.rc")
 # endif()
 
 add_definitions(-D UNICODE)
+add_definitions(-D SPDLOG_WCHAR_FILENAMES)
+
 if(WIN32)
     add_definitions(-D _WINDOWS)
     if(DLOG_BUILD_SHARED)

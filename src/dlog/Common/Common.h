@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include <string>
-#include <locale.h>
 
 namespace dlog {
 

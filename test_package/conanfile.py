@@ -19,7 +19,7 @@ class DLogTestConan(ConanFile):
                        "fmt:header_only": True}
 
     def requirements(self):
-        self.requires("spdlog/1.5.0")
+        self.requires("spdlog/1.8.5")
         self.requires("poco/[>=1.10.1]")
         self.requires("rapidjson/1.1.0")
 

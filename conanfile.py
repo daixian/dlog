@@ -11,7 +11,7 @@ import shutil
 
 class DlogConan(ConanFile):
     name = "dlog"
-    version = "2.6.6"
+    version = "2.6.7"
     license = "WTFPL???"
     author = "daixian<amano_tooko@qq.com>"
     url = "https://github.com/daixian/dlog"
@@ -38,13 +38,13 @@ class DlogConan(ConanFile):
             pass
         else:
             # 如果是静态库,那么需要列出所有的依赖库才行
-            self.requires("spdlog/1.5.0")
+            self.requires("spdlog/1.8.5")
             self.requires("poco/[>=1.10.1]")
             self.requires("rapidjson/1.1.0")
 
     def build_requirements(self):
         if self.options.shared:
-            self.build_requires("spdlog/1.5.0")
+            self.build_requires("spdlog/1.8.5")
             self.build_requires("poco/[>=1.10.1]")
             self.build_requires("rapidjson/1.1.0")
 

@@ -377,3 +377,4 @@ download/
 lib/
 .vscode/
 .DS_Store
+/CSharp/UnitTest/dlog.dll

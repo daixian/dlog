@@ -88,13 +88,16 @@ typedef void (*DlogLoggerCallback)(int level, const char* message);
  * 如果使用相对目录,那么程序会将它理解为相对模块目录,路径例如 char* logDir = "log",char* program = "dlog".
  * isForceInit如果为false，那么就可以不强制初始化模块，理论上整个程序都共用一个日志. 如果之前未被初始化返回0,
  * 如果成功复用那么就返回1,如果强制重设成功那么返回2, 如果强制重设但是失败还是复用了那么返回3.
+ * 在这个函数调用之后可以调用dlog_is_initialized()函数查询是否初始化成功.
  *
  * 如果是在同一秒重复创建关闭日志文件,那么由于文件名一样,会被写入同一个日志文件.
+ * 注意不支持UTF8的中文程序名~~ 如有乱码文件名使用dlog_init_wchar_filename()函数进行初始化.
+ * 
  * @author daixian
  * @date 2018/4/22
  *
- * @param [in] logDir       (Optional) 日志文件夹路径名（相对模块目录）.
- * @param [in] program      (Optional) 程序名.
+ * @param [in] logDir       (Optional) 日志文件夹路径名.
+ * @param [in] program      (Optional) 程序名,他会成为文件名的一部分,所以不要使用一些非法符号,注意这里不支持UTF8的中文.
  * @param      dir_relatvie (Optional) 相对路径的相对文件夹位置.
  *                                          APPDATA: 相对于AppData文件夹.
  *                                          MODULE:  相对于dll文件自身文件夹
@@ -106,6 +109,26 @@ extern "C" DLOG_EXPORT int __cdecl dlog_init(const char* logDir = "log",
                                              const char* program = "dlog",
                                              dlog_init_relative dir_relatvie = dlog_init_relative::APPDATA,
                                              bool isForceInit = false);
+
+/**
+ * 模块初始化,输入的路径使用utf16编码,主要是方便c#的调用和解决各种日志文件名乱码.使用方法同dlog_init().
+ *
+ * @author daixian
+ * @date 2021/4/11
+ *
+ * @param [in] logDir       (Optional) 日志文件夹路径名.
+ * @param [in] program      (Optional) 程序名,他会成为文件名的一部分,所以不要使用一些非法符号.
+ * @param      dir_relatvie (Optional) 相对路径的相对文件夹位置.
+ *                                          APPDATA: 相对于AppData文件夹.
+ *                                          MODULE:  相对于dll文件自身文件夹
+ * @param      isForceInit  (Optional) 如果为false，那么就可以不强制初始化模块，理论上整个程序C#和C++都共用一个日志.
+ *
+ * @returns 如果之前未被初始化返回0,如果成功复用那么就返回1,如果强制重设成功那么返回2, 如果强制重设但是失败还是复用了那么返回3.
+ */
+extern "C" DLOG_EXPORT int __cdecl dlog_init_wchar_filename(const wchar_t* logDir = L"log",
+                                                            const wchar_t* program = L"dlog",
+                                                            dlog_init_relative dir_relatvie = dlog_init_relative::APPDATA,
+                                                            bool isForceInit = false);
 
 /**
  * 关闭模块.
@@ -148,14 +171,24 @@ extern "C" DLOG_EXPORT bool __cdecl dlog_is_init_fail();
 extern "C" DLOG_EXPORT void __cdecl dlog_enable(bool enable);
 
 /**
- * 设置控制台log是否使能.
+ * 设置控制台log是否使能.(需要在init之前调用这个函数,close之后下次打开重置为enable,需要重新再设置一次)
+ *
+ * @author daixian
+ * @date 2018/5/11
+ *
+ * @param  enable 设置为false之后不会开启相关控制台日志功能.
+ */
+extern "C" DLOG_EXPORT void __cdecl dlog_console_log_enable(bool enable);
+
+/**
+ * 设置文件log是否使能.(需要在init之前调用这个函数,close之后下次打开会重置为enable,需要重新再设置一次)
  *
  * @author daixian
  * @date 2018/5/11
  *
  * @param  enable 设置为false之后Log函数会直接返回不作任何操作.
  */
-extern "C" DLOG_EXPORT void __cdecl dlog_console_log_enable(bool enable);
+extern "C" DLOG_EXPORT void __cdecl dlog_file_log_enable(bool enable);
 
 /**
  * 设置Dlog的常规文件日志（非内存日志）门限,大于等于该优先级的日志都会写入.
@@ -296,6 +329,28 @@ extern "C" DLOG_EXPORT void __cdecl wLogE(const wchar_t* strFormat, ...);
 extern "C" DLOG_EXPORT void __cdecl wLogD(const wchar_t* strFormat, ...);
 
 /**
+ * 不带格式化字符串的输出日志.
+ *
+ * @author daixian
+ * @date 2021/3/23
+ *
+ * @param  level   日志等级.
+ * @param  message 日志内容.
+ */
+extern "C" DLOG_EXPORT void __cdecl LogMsg(dlog_level level, const char* message);
+
+/**
+ * 不带格式化字符串的输出日志.
+ *
+ * @author daixian
+ * @date 2021/3/23
+ *
+ * @param  level   日志等级.
+ * @param  message 日志内容.
+ */
+extern "C" DLOG_EXPORT void __cdecl wLogMsg(dlog_level level, const wchar_t* message);
+
+/**
  * 设置一个传入外部的回调,注意每次close日志系统会清空这个设置,之后需要重新设置一次.
  *
  * @author daixian
@@ -334,28 +389,6 @@ extern "C" DLOG_EXPORT void __stdcall dlog_set_is_print_internal_message(bool is
  * @param  isUTF8BOM 设为true则会写入bom头.
  */
 extern "C" DLOG_EXPORT void __stdcall dlog_set_is_use_utf8_bom(bool isUTF8BOM);
-
-/**
- * 不带格式化字符串的输出日志.
- *
- * @author daixian
- * @date 2021/3/23
- *
- * @param  level   日志等级.
- * @param  message 日志内容.
- */
-extern "C" DLOG_EXPORT void __cdecl LogMsg(dlog_level level, const char* message);
-
-/**
- * 不带格式化字符串的输出日志.
- *
- * @author daixian
- * @date 2021/3/23
- *
- * @param  level   日志等级.
- * @param  message 日志内容.
- */
-extern "C" DLOG_EXPORT void __cdecl wLogMsg(dlog_level level, const wchar_t* message);
 
 /**
  * 转换UTF8到gbk.

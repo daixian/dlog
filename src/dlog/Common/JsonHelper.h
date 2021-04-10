@@ -48,7 +48,7 @@ class JsonHelper
     ///-------------------------------------------------------------------------------------------------
     static void save(const std::string& filePath, const rapidjson::Document& doc)
     {
-        FILE* fp;
+        FILE* fp = nullptr;
 #if defined(_WIN32) || defined(_WIN64)
         fopen_s(&fp, filePath.c_str(), "wb"); // 非 Windows 平台使用 "w"
 #elif defined(__linux__)
@@ -58,7 +58,8 @@ class JsonHelper
         rapidjson::FileWriteStream os(fp, writeBuffer, sizeof(writeBuffer));
         rapidjson::Writer<rapidjson::FileWriteStream> writer(os);
         doc.Accept(writer);
-        fclose(fp);
+        if (fp != nullptr)
+            fclose(fp);
     }
 
     ///-------------------------------------------------------------------------------------------------
@@ -73,7 +74,7 @@ class JsonHelper
     static void save(const std::string& filePath, const rapidjson::DocumentW& doc, bool putBOM = false, bool isPretty = true)
     {
         using namespace rapidjson;
-        FILE* fp;
+        FILE* fp = nullptr;
 
 #if defined(_WIN32) || defined(_WIN64)
         fopen_s(&fp, filePath.c_str(), "wb"); // 非 Windows 平台使用 "w"
@@ -100,8 +101,8 @@ class JsonHelper
         //OutputStream eos(bos, type, putBOM);
         //Writer<OutputStream, UTF8<>, AutoUTF<unsigned>> writer;
         //doc.Accept(writer);
-
-        fclose(fp);
+        if (fp != nullptr)
+            fclose(fp);
     }
 
     ///-------------------------------------------------------------------------------------------------
@@ -115,7 +116,7 @@ class JsonHelper
     static void readFile(const std::string& filePath, rapidjson::Document& doc)
     {
         using namespace rapidjson;
-        FILE* fp;
+        FILE* fp = nullptr;
 #if defined(_WIN32) || defined(_WIN64)
         fopen_s(&fp, filePath.c_str(), "rb"); // 非 Windows 平台使用 "r"
 #elif defined(__linux__)
@@ -125,7 +126,8 @@ class JsonHelper
         char readBuffer[256];
         rapidjson::FileReadStream is(fp, readBuffer, sizeof(readBuffer));
         doc.ParseStream(is);
-        fclose(fp);
+        if (fp != nullptr)
+            fclose(fp);
     }
 
     ///-------------------------------------------------------------------------------------------------
@@ -139,7 +141,7 @@ class JsonHelper
     static void readFile(const std::string& filePath, rapidjson::DocumentW& doc)
     {
         using namespace rapidjson;
-        FILE* fp;
+        FILE* fp = nullptr;
 #if defined(_WIN32) || defined(_WIN64)
         fopen_s(&fp, filePath.c_str(), "rb"); // 非 Windows 平台使用 "r"
 #elif defined(__linux__)
@@ -149,7 +151,8 @@ class JsonHelper
         FileReadStream bis(fp, readBuffer, sizeof(readBuffer));
         AutoUTFInputStream<unsigned, FileReadStream> eis(bis);
         doc.ParseStream<0, AutoUTF<unsigned>>(eis);
-        fclose(fp);
+        if (fp != nullptr)
+            fclose(fp);
     }
 
     ///-------------------------------------------------------------------------------------------------
@@ -250,6 +253,33 @@ class JsonHelper
             return target.GetString();
         }
         return std::string();
+    }
+
+    /**
+     * UTF16转换成UTF8,减少内存分配的使用方法.
+     *
+     * @author daixian
+     * @date 2021/4/11
+     *
+     * @param          str    The string.
+     * @param [in,out] target Target for the.
+     *
+     * @returns True if it succeeds, false if it fails.
+     */
+    static inline bool utf16To8(const wchar_t* str, rapidjson::StringBuffer& target)
+    {
+        using namespace rapidjson;
+        StringStreamW source(str);
+        bool hasError = false;
+        while (source.Peek() != L'\0')
+            if (!Transcoder<UTF16<>, UTF8<>>::Transcode(source, target)) {
+                hasError = true;
+                break;
+            }
+        if (!hasError) {
+            return true;
+        }
+        return false;
     }
 
     ///-------------------------------------------------------------------------------------------------

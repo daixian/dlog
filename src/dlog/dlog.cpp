@@ -22,10 +22,9 @@ extern "C" DLOG_EXPORT void* __cdecl dlog_global_ptr()
 extern "C" DLOG_EXPORT int __cdecl dlog_init(const char* logDir, const char* program, dlog_init_relative dir_relatvie,
                                              bool isForceInit)
 {
-    bool UTF8BOM = true;
     if (isForceInit == false) {
         if (!Debug::GetInst()->isInit) {
-            Debug::GetInst()->init(logDir, program, (INIT_RELATIVE)dir_relatvie, UTF8BOM);
+            Debug::GetInst()->init(logDir, program, (INIT_RELATIVE)dir_relatvie);
             return 0; //第一次初始化
         }
         return 1; //成功复用
@@ -35,11 +34,20 @@ extern "C" DLOG_EXPORT int __cdecl dlog_init(const char* logDir, const char* pro
         if (Debug::GetInst()->programName.compare(program) != 0 && //如果两次设置的程序名不一致，那么才删除
             strcmp(program, "dlog") != 0) {                        //同时第二次设置的这个程序名不能等于默认名字
             Debug::GetInst()->clear();
-            Debug::GetInst()->init(logDir, program, (INIT_RELATIVE)dir_relatvie, UTF8BOM);
+            Debug::GetInst()->init(logDir, program, (INIT_RELATIVE)dir_relatvie);
             return 2; //强制重设了一次glog
         }
         return 3; //强制重设了一次glog
     }
+}
+extern "C" DLOG_EXPORT int __cdecl dlog_init_wchar_filename(const wchar_t* wLogDir,
+                                                            const wchar_t* wProgram,
+                                                            dlog_init_relative dir_relatvie,
+                                                            bool isForceInit)
+{
+    std::string logDir = JsonHelper::utf16To8(std::wstring(wLogDir));
+    std::string program = JsonHelper::utf16To8(std::wstring(wProgram));
+    return dlog_init(logDir.c_str(), program.c_str(), dir_relatvie, isForceInit);
 }
 
 extern "C" DLOG_EXPORT int __cdecl dlog_close()
@@ -68,6 +76,11 @@ extern "C" DLOG_EXPORT void __cdecl dlog_enable(bool enable)
 extern "C" DLOG_EXPORT void __cdecl dlog_console_log_enable(bool enable)
 {
     Debug::GetInst()->setIsConsoleEnable(enable);
+}
+
+extern "C" DLOG_EXPORT void __cdecl dlog_file_log_enable(bool enable)
+{
+    Debug::GetInst()->isFileEnable = enable;
 }
 
 extern "C" DLOG_EXPORT void __cdecl dlog_set_file_thr(dlog_level usualThr)
@@ -267,14 +280,17 @@ extern "C" DLOG_EXPORT void __cdecl wLogI(const wchar_t* strFormat, ...)
         }
 
         //这个函数原来使用的是vswprintf，但是跨平台有问题，如果包含中文则失败。
-        std::string strFormatUTF8 = JsonHelper::utf16To8(std::wstring(strFormat));
+        rapidjson::StringBuffer buffUtf8;
+        if (!JsonHelper::utf16To8(strFormat, buffUtf8)) {
+            return; //如果转码失败就直接返回
+        }
 
         std::vector<char> buf(DEBUG_LOG_BUFF_SIZE);
         int ret = 0;
         va_list arg_ptr;
         va_start(arg_ptr, strFormat);
         //vsnprintf的返回是不包含\0的预留位置的
-        while ((ret = vsnprintf(buf.data(), buf.size(), strFormatUTF8.c_str(), arg_ptr)) >= buf.size()) {
+        while ((ret = vsnprintf(buf.data(), buf.size(), buffUtf8.GetString(), arg_ptr)) >= buf.size()) {
             buf.resize((size_t)ret + 1, '\0');
             //在GCC平台需要重新生成一下arg_ptr
             va_end(arg_ptr);
@@ -294,7 +310,10 @@ extern "C" DLOG_EXPORT void __cdecl wLogW(const wchar_t* strFormat, ...)
         }
 
         //这个函数原来使用的是vswprintf，但是跨平台有问题，如果包含中文则失败。
-        std::string strFormatUTF8 = JsonHelper::utf16To8(std::wstring(strFormat));
+        rapidjson::StringBuffer buffUtf8;
+        if (!JsonHelper::utf16To8(strFormat, buffUtf8)) {
+            return; //如果转码失败就直接返回
+        }
 
         std::vector<char> buf(DEBUG_LOG_BUFF_SIZE, '\0');
         int ret = 0;
@@ -303,7 +322,7 @@ extern "C" DLOG_EXPORT void __cdecl wLogW(const wchar_t* strFormat, ...)
         //最多执行4次增加buff长度
         for (size_t count = 0; count < 4; count++) {
             //vsnprintf的返回是不包含\0的预留位置的
-            ret = vsnprintf(buf.data(), buf.size(), strFormatUTF8.c_str(), arg_ptr);
+            ret = vsnprintf(buf.data(), buf.size(), buffUtf8.GetString(), arg_ptr);
             if (ret <= 0) {
                 //编码失败
                 break;
@@ -333,7 +352,10 @@ extern "C" DLOG_EXPORT void __cdecl wLogE(const wchar_t* strFormat, ...)
         }
 
         //这个函数原来使用的是vswprintf，但是跨平台有问题，如果包含中文则失败。
-        std::string strFormatUTF8 = JsonHelper::utf16To8(std::wstring(strFormat));
+        rapidjson::StringBuffer buffUtf8;
+        if (!JsonHelper::utf16To8(strFormat, buffUtf8)) {
+            return; //如果转码失败就直接返回
+        }
 
         std::vector<char> buf(DEBUG_LOG_BUFF_SIZE, '\0');
         int ret = 0;
@@ -342,7 +364,7 @@ extern "C" DLOG_EXPORT void __cdecl wLogE(const wchar_t* strFormat, ...)
         //最多执行4次增加buff长度
         for (size_t count = 0; count < 4; count++) {
             //vsnprintf的返回是不包含\0的预留位置的
-            ret = vsnprintf(buf.data(), buf.size(), strFormatUTF8.c_str(), arg_ptr);
+            ret = vsnprintf(buf.data(), buf.size(), buffUtf8.GetString(), arg_ptr);
             if (ret <= 0) {
                 //编码失败
                 break;
@@ -372,8 +394,10 @@ extern "C" DLOG_EXPORT void __cdecl wLogD(const wchar_t* strFormat, ...)
         }
 
         //这个函数原来使用的是vswprintf，但是跨平台有问题，如果包含中文则失败。
-        std::string strFormatUTF8 = JsonHelper::utf16To8(std::wstring(strFormat));
-
+        rapidjson::StringBuffer buffUtf8;
+        if (!JsonHelper::utf16To8(strFormat, buffUtf8)) {
+            return; //如果转码失败就直接返回
+        }
         std::vector<char> buf(DEBUG_LOG_BUFF_SIZE, '\0');
         int ret = 0;
         va_list arg_ptr;
@@ -381,7 +405,7 @@ extern "C" DLOG_EXPORT void __cdecl wLogD(const wchar_t* strFormat, ...)
         //最多执行4次增加buff长度
         for (size_t count = 0; count < 4; count++) {
             //vsnprintf的返回是不包含\0的预留位置的
-            ret = vsnprintf(buf.data(), buf.size(), strFormatUTF8.c_str(), arg_ptr);
+            ret = vsnprintf(buf.data(), buf.size(), buffUtf8.GetString(), arg_ptr);
             if (ret <= 0) {
                 //编码失败
                 break;
@@ -420,8 +444,11 @@ extern "C" DLOG_EXPORT void __cdecl wLogMsg(dlog_level level, const wchar_t* mes
         if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
             dlog_init();
         }
-        std::string messageUTF8 = JsonHelper::utf16To8(std::wstring(message));
-        Debug::GetInst()->LogMsg((spdlog::level::level_enum)level, messageUTF8.c_str());
+
+        rapidjson::StringBuffer buffUtf8;
+        if (JsonHelper::utf16To8(message, buffUtf8)) {
+            Debug::GetInst()->LogMsg((spdlog::level::level_enum)level, buffUtf8.GetString());
+        }
     }
 }
 

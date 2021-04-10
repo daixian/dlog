@@ -119,6 +119,39 @@ TEST(dlog, init_close)
     EXPECT_EQ(dlog_get_log_file_path(path, 245), 0);
 }
 
+TEST(dlog, init_close_w)
+{
+    for (size_t i = 0; i < 10; i++) {
+        dlog_close();
+
+        //第一次创建
+        int res = dlog_init_wchar_filename(L"log", L"试试中文app", dlog_init_relative::MODULE);
+        ASSERT_TRUE(dlog_is_initialized());
+        EXPECT_TRUE(res == 0);
+        LogI("132");
+
+        //复用
+        res = dlog_init_wchar_filename(L"log", L"试试中文app", dlog_init_relative::MODULE, false);
+        EXPECT_TRUE(res == 1);
+        LogI("132");
+
+        //强制创建,因为重名所以还是复用
+        res = dlog_init_wchar_filename(L"log", L"试试中文app", dlog_init_relative::MODULE, true);
+        EXPECT_TRUE(res == 3);
+        LogI("132");
+
+        //强制创建
+        res = dlog_init_wchar_filename(L"log", L"试试中文app_2", dlog_init_relative::MODULE, true);
+        EXPECT_TRUE(res == 2);
+        LogI("132");
+    }
+    dlog_close();
+
+    //文件已经关闭,dlog_get_log_file_path函数返回值为0
+    char path[245];
+    EXPECT_EQ(dlog_get_log_file_path(path, 245), 0);
+}
+
 TEST(dlog, logi)
 {
     dlog_close();

@@ -27,7 +27,7 @@ namespace UnitTest
             int ThreadStartCount = 0;
             int DoneCount = 0;
 
-            DLog.dlog_close();//关闭
+            DLog.Close();//关闭
 
             string logDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log");
             if (Directory.Exists(logDir))
@@ -35,13 +35,16 @@ namespace UnitTest
                 Directory.Delete(logDir, true);
             }
 
-            DLog.dlog_init(logDir);
-            DLog.dlog_console_log_enable(false);//禁用控制台,如果不禁用的话时间可能很长
+
+            DLog.ConsoleLogEnable(false);//禁用控制台,如果不禁用的话时间可能很长
+            DLog.Init(logDir);
+            Assert.IsTrue(DLog.IsInitialized());
+
             Thread.Sleep(500);
             int testMsgNum = 500;
             //DLog.dlog_set_usual_thr(DLog.DLOG_ERROR + 1);
 
-            DLog.dlog_memory_log_enable(true);
+            DLog.MemoryLogEnable(true);
 
             for (int threadCount = 0; threadCount < 20; threadCount++)//20个线程一起写
             {
@@ -67,11 +70,12 @@ namespace UnitTest
                 }
             }
 
-            StringBuilder msg = new StringBuilder(256);
+
             int msgCount = 0;
             while (true)
             {
-                if (DLog.dlog_get_memlog(msg, 0, 256) > 0)
+                string msg = DLog.GetMemorylog();
+                if (!String.IsNullOrEmpty(msg))
                 {
                     msgCount++;
                     Assert.IsTrue(msg.ToString().Contains("测试日志"));//检查文本内容是否有大问题
@@ -84,7 +88,7 @@ namespace UnitTest
 
             Assert.IsTrue(msgCount == 20 * testMsgNum);//检查消息条数是否漏了
 
-            DLog.dlog_close();//必须要关闭，否则有线程在后台还
+            DLog.Close();//必须要关闭，否则有线程在后台还
 
         }
 
@@ -94,7 +98,8 @@ namespace UnitTest
         [TestMethod]
         public void TestMethodDLogInitClose()
         {
-            DLog.dlog_close();
+            DLog.Close();
+            Assert.IsFalse(DLog.IsInitialized());
             string logDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log");
             if (Directory.Exists(logDir))
             {
@@ -105,63 +110,64 @@ namespace UnitTest
             int res = 0;
             for (int i = 0; i < 50; i++)
             {
-                res = DLog.dlog_init(logDir, $"开关测试{count}");
+                res = DLog.Init(logDir, $"openclose{count}");
+                Assert.IsTrue(DLog.IsInitialized());
                 Assert.IsTrue(res == 0);
                 DLog.LogI($"开关测试log！{count}");
-                DLog.dlog_close();
+                DLog.Close();
                 count++;
             }
 
             for (int i = 0; i < 50; i++)
             {
-                res = DLog.dlog_init(logDir, $"开关测试{count}");
+                res = DLog.Init(logDir, $"开关测试{count}");
                 Assert.IsTrue(res == 0);
                 DLog.LogI($"开关测试log！{count}");
-                res = DLog.dlog_init(logDir, $"开关测试{count}");
+                res = DLog.Init(logDir, $"开关测试{count}");
                 Assert.IsTrue(res == 1);
                 DLog.LogI($"开关测试log！{count}");
-                DLog.dlog_close();
+                DLog.Close();
                 count++;
             }
 
 
             for (int i = 0; i < 50; i++)
             {
-                DLog.dlog_init(logDir, $"开关测试{count}");
+                DLog.Init(logDir, $"开关测试{count}");
                 DLog.LogI($"开关测试log！{count}");
-                DLog.dlog_init(logDir, $"开关测试{count}");
+                DLog.Init(logDir, $"开关测试{count}");
                 DLog.LogI($"开关测试log！{count}");
-                DLog.dlog_init(logDir, $"开关测试{count}");
-                DLog.dlog_close();
+                DLog.Init(logDir, $"开关测试{count}");
+                DLog.Close();
                 count++;
             }
 
             for (int i = 0; i < 50; i++)
             {
-                DLog.dlog_init(logDir, $"开关测试{count}");
+                DLog.Init(logDir, $"开关测试{count}");
                 DLog.LogI($"开关测试log！{count}");
-                DLog.dlog_init(logDir, $"开关测试二{count}");
+                DLog.Init(logDir, $"开关测试二{count}");
                 DLog.LogI($"开关测试log！{count}");
-                DLog.dlog_init(logDir, $"开关测试二{count}");
+                DLog.Init(logDir, $"开关测试二{count}");
                 DLog.LogI($"开关测试log！{count}");
-                DLog.dlog_close();
-                DLog.dlog_close();
+                DLog.Close();
+                DLog.Close();
                 count++;
             }
 
             for (int i = 0; i < 50; i++)
             {
-                DLog.dlog_init(logDir, $"开关测试{count}");
+                DLog.Init(logDir, $"开关测试{count}");
                 DLog.LogI($"开关测试log！{count}");
-                DLog.dlog_close();
-                DLog.dlog_close();
+                DLog.Close();
+                DLog.Close();
                 count++;
             }
 
             string[] logfiles = Directory.GetFiles(logDir);
             Assert.IsTrue(logfiles.Length == count);
 
-            DLog.dlog_close();//关闭
+            DLog.Close();//关闭
         }
 
         /// <summary>
@@ -170,14 +176,14 @@ namespace UnitTest
         [TestMethod]
         public void TestMethodDLogMT()
         {
-            DLog.dlog_close();//关闭
+            DLog.Close();//关闭
 
             string logDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log");
             if (Directory.Exists(logDir))
             {
                 Directory.Delete(logDir, true);
             }
-            xuexue.DLog.dlog_init(logDir, "线程测试");
+            xuexue.DLog.Init(logDir, "线程测试");
 
             //设置一个一般的控制变量，多个线程对它读写
             int controlFlag = 0;
@@ -291,7 +297,7 @@ namespace UnitTest
                 }
             }
 
-            DLog.dlog_close();
+            DLog.Close();
         }
 
 
@@ -310,35 +316,35 @@ namespace UnitTest
             //测试50次
             for (int i = 0; i < 20; i++)
             {
-                DLog.dlog_close();
+                //DLog.Close();
 
-                int res;
-                res = DLog.dlog_init("log", "MRSystem");
-                Assert.IsTrue(res == 0);//c#部分成功复用
+                //int res;
+                //res = DLog.Init("log", "MRSystem");
+                //Assert.IsTrue(res == 0);//c#部分成功复用
 
-                //调用DLL1里的函数
-                res = Fun1();//先在cpp部分init,实际调用了一句 dlog_init("\\log", "MRSystem", false);
-                Assert.IsTrue(res == 1);//cpp部分创建成功了
+                ////调用DLL1里的函数
+                //res = Fun1();//先在cpp部分init,实际调用了一句 dlog_init("\\log", "MRSystem", false);
+                //Assert.IsTrue(res == 1);//cpp部分创建成功了
 
-                res = Fun2();//
-                Assert.IsTrue(res == 1);//dll2应该是成功复用
+                //res = Fun2();//
+                //Assert.IsTrue(res == 1);//dll2应该是成功复用
 
-                DLog.dlog_memory_log_enable(true);//使能内存日志(库默认不使能)
-                int res2 = DLog.dlog_init("log", "MRSystem");
-                Assert.IsTrue(res2 == 1);//c#部分成功复用
+                //DLog.(true);//使能内存日志(库默认不使能)
+                //int res2 = DLog.Init("log", "MRSystem");
+                //Assert.IsTrue(res2 == 1);//c#部分成功复用
 
-                DLog.LogI("这是第二条日志");//内存日志的第一条
-                StringBuilder sb = new StringBuilder();
+                //DLog.LogI("这是第二条日志");//内存日志的第一条
+                //StringBuilder sb = new StringBuilder();
 
-                int success = DLog.dlog_get_memlog(sb, 0, 1024);
-                Assert.IsTrue(success == 14);//第一条内存日志应该提取成功
-                Assert.IsTrue(sb.ToString() == "这是第二条日志");
+                //int success = DLog.dlog_get_memlog(sb, 0, 1024);
+                //Assert.IsTrue(success == 14);//第一条内存日志应该提取成功
+                //Assert.IsTrue(sb.ToString() == "这是第二条日志");
 
 
-                success = DLog.dlog_get_memlog(sb, 0, 1024);
-                Assert.IsTrue(success == 0);
+                //success = DLog.dlog_get_memlog(sb, 0, 1024);
+                //Assert.IsTrue(success == 0);
 
-                //int res3 = DLog.dlog_init("\\log", "MRSystem2", true);
+                //int res3 = DLog.Init()("\\log", "MRSystem2", true);
 
 
                 //Assert.IsTrue(res3 == 2);
@@ -352,8 +358,8 @@ namespace UnitTest
         [TestMethod]
         public void TestPathGet()
         {
-            string ad = DLog.dlog_get_appdata_dir();
-            string md = DLog.dlog_get_module_dir();
+            string ad = DLog.GetAppdataDir();
+            string md = DLog.GetModuleDir();
             Assert.IsTrue(ad != md);
         }
 
@@ -362,10 +368,10 @@ namespace UnitTest
         //{
 
         //string md = DLog.dlog_get_module_dir();
-        //DLog.dlog_close();
+        //DLog.Close();
         //StringBuilder sb = new StringBuilder(128);
         //sb.Append("123");
-        //DLog.dlog_init("\\LOG", "MRSystem", DLog.INIT_RELATIVE.MODULE, false);
+        //DLog.Init()("\\LOG", "MRSystem", DLog.INIT_RELATIVE.MODULE, false);
 
         //string logDir = DLog.dlog_get_log_dir();
         //Assert.IsTrue(logDir == Path.Combine(md, "LOG"));
@@ -377,31 +383,31 @@ namespace UnitTest
         [TestMethod]
         public void TestMethod_thrTest()
         {
-            DLog.dlog_close();
-            DLog.dlog_set_console_thr(DLog.LOG_THR.err);//设置只有err级别的日志才输出到控制台
-            Assert.IsTrue(DLog.dlog_get_console_thr() == (int)DLog.LOG_THR.err);
+            DLog.Close();
+            DLog.SetConsoleThr(DLog.LOG_THR.err);//设置只有err级别的日志才输出到控制台
+            Assert.IsTrue(DLog.GetConsoleThr() == (int)DLog.LOG_THR.err);
 
-            DLog.dlog_set_file_thr(DLog.LOG_THR.err);
-            Assert.IsTrue(DLog.dlog_get_file_thr() == (int)DLog.LOG_THR.err);
+            DLog.SetFileThr(DLog.LOG_THR.err);
+            Assert.IsTrue(DLog.GetFileThr() == (int)DLog.LOG_THR.err);
 
-            DLog.dlog_set_memory_thr(DLog.LOG_THR.err);
-            Assert.IsTrue(DLog.dlog_get_memory_thr() == (int)DLog.LOG_THR.err);
+            DLog.SetMemoryThr(DLog.LOG_THR.err);
+            Assert.IsTrue(DLog.GetMemoryThr() == (int)DLog.LOG_THR.err);
         }
 
         [TestMethod]
         public void TestMethod_flush()
         {
-            DLog.dlog_close();
+            DLog.Close();
             for (int i = 0; i < 10; i++)
             {
-                DLog.dlog_flush();
+                DLog.Flush();
             }
             for (int i = 0; i < 10; i++)
             {
                 DLog.LogI("123");
-                DLog.dlog_flush();
+                DLog.Flush();
             }
-            DLog.dlog_close();
+            DLog.Close();
         }
     }
 }

@@ -115,6 +115,9 @@ class Debug
     // 是否使能控制台.
     bool isConsoleEnable = true;
 
+    // 是否使能文件日志.
+    bool isFileEnable = true;
+
     // 大于等于这个优先级的常规日志(文件日志)都会工作.
     spdlog::level::level_enum logFileThr = spdlog::level::level_enum::debug;
 
@@ -159,8 +162,7 @@ class Debug
      * @param  rel     (Optional) 如果是相对目录那么相对位置是.
      * @param  utf8bom (Optional) True to UTF 8bom.
      */
-    void init(const char* logDir = "log", const char* program = "dlog",
-              INIT_RELATIVE rel = INIT_RELATIVE::APPDATA, bool utf8bom = true);
+    void init(const char* logDir, const char* program, INIT_RELATIVE rel);
 
     /**
      * 重置设置回默认设置,并且会关掉所有的日志器.
@@ -227,7 +229,7 @@ class Debug
         //    init(); //如果还没有初始化那么就初始化一次
         //}
 
-        if (logFileThr > logThr &&
+        if ((!isFileEnable || logFileThr > logThr) &&
             (!isConsoleEnable || logConsoleThr > logThr) &&
             (!isMemLogEnable || logMemoryThr > logThr)) {
             return false;
@@ -246,7 +248,7 @@ class Debug
      */
     void LogMsg(spdlog::level::level_enum logThr, const char* msg)
     {
-        if (logFileThr <= logThr && filelogger != nullptr) { //满足优先级才输出 - 文件
+        if (isFileEnable && logFileThr <= logThr && filelogger != nullptr) { //满足优先级才输出 - 文件
             filelogger->log(logThr, msg);
         }
         if (isConsoleEnable && logConsoleThr <= logThr && consolelogger != nullptr) { //满足优先级才输出 - 控制台

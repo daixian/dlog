@@ -1,5 +1,6 @@
 ﻿#include "Debug.h"
 #include "FileHelper.h"
+#include "JsonHelper.h"
 
 #include <Poco/Path.h>
 #include <Poco/File.h>
@@ -20,7 +21,7 @@ namespace dlog {
 
 Debug* Debug::m_pInstance = new Debug();
 
-void Debug::init(const char* logDir, const char* program, INIT_RELATIVE rel, bool utf8bom)
+void Debug::init(const char* logDir, const char* program, INIT_RELATIVE rel)
 {
     if (!isEnable) {
         return;
@@ -37,62 +38,66 @@ void Debug::init(const char* logDir, const char* program, INIT_RELATIVE rel, boo
         spdlog::set_pattern(logPattern);
 
         programName = program; //记录程序名
-        isUTF8BOM = utf8bom;
         logDirPath.clear();
         logFilePath.clear();
 
         //初始化控制台
         setIsConsoleEnable(isConsoleEnable);
 
-        Path inputDir = Path::forDirectory(logDir);
+        //初始化文件日志
+        if (isFileEnable) {
+            Path inputDir = Path::forDirectory(logDir);
 
 #if WIN32
-        //在windows下如果是相对地址,或者是没有盘符.如果是相对对路径,就从根目录去拼接
-        if (inputDir.isRelative() || inputDir.getDevice().empty()) {
+            //在windows下如果是相对地址,或者是没有盘符.如果是相对对路径,就从根目录去拼接
+            if (inputDir.isRelative() || inputDir.getDevice().empty()) {
 
 #else
-        if (inputDir.isRelative()) {
+            if (inputDir.isRelative()) {
 #endif
-            if (rel == INIT_RELATIVE::MODULE) {
-                FileHelper::makeAbsolute(Path(FileHelper::getModuleDir()), inputDir); //模块目录
-                this->logDirPath = inputDir.toString();
+                if (rel == INIT_RELATIVE::MODULE) {
+                    FileHelper::makeAbsolute(Path(FileHelper::getModuleDir()), inputDir); //模块目录
+                    this->logDirPath = inputDir.toString();
+                }
+                else {
+                    FileHelper::makeAbsolute(Path(FileHelper::getAppDir()), inputDir); //app目录
+                    this->logDirPath = inputDir.toString();
+                }
             }
             else {
-                FileHelper::makeAbsolute(Path(FileHelper::getAppDir()), inputDir); //app目录
+                //如果是绝对路径,就直接使用
                 this->logDirPath = inputDir.toString();
             }
-        }
-        else {
-            //如果是绝对路径,就直接使用
-            this->logDirPath = inputDir.toString();
-        }
 
-        if (!FileHelper::dirExists(this->logDirPath)) //如果文件夹不存在
-        {
-            Path wantPath(this->logDirPath);
-            if (wantPath.isFile()) {
-                //如果它又已经被一个文件占用了文件名,那就在这个文件夹下使用log文件夹
-                this->logDirPath = wantPath.parent().append("log").toString();
+            if (!FileHelper::dirExists(this->logDirPath)) //如果文件夹不存在
+            {
+                Path wantPath(this->logDirPath);
+                if (wantPath.isFile()) {
+                    //如果它又已经被一个文件占用了文件名,那就在这个文件夹下使用log文件夹
+                    this->logDirPath = wantPath.parent().append("log").toString();
+                }
+                FileHelper::isExistsAndCreat(this->logDirPath); //如果文件夹不存在就创建
             }
-            FileHelper::isExistsAndCreat(this->logDirPath); //如果文件夹不存在就创建
+
+            string logFileName = format("%s.%s.log", programName, Common::secTimeStr());
+            logFilePath = Path(logDirPath).append(logFileName).toString();
+
+            //如果使用写入UTF8BOM那么就写入3个字节的bom头
+            if (isUTF8BOM) {
+                Poco::FileOutputStream fs(logFilePath);
+                const unsigned char bom[3] = {0xef, 0xbb, 0xbf};
+                fs.write((char*)bom, 3);
+                fs.close();
+            }
+
+            //这个函数居然不支持utf8编码的文件名,在CMake文件中定义SPDLOG_WCHAR_FILENAMES可以解决
+            filelogger = spdlog::basic_logger_mt(programName, JsonHelper::utf8To16(logFilePath));
+            filelogger->set_level(spdlog::level::trace);
+            filelogger->flush_on(spdlog::level::level_enum::warn);
+            spdlog::flush_every(std::chrono::seconds(3)); //每3秒自动刷新一次
         }
 
-        string logFileName = format("%s.%s.log", programName, Common::secTimeStr());
-        logFilePath = Path(logDirPath).append(logFileName).toString();
-
-        //如果使用写入UTF8BOM那么就写入3个字节的bom头
-        if (isUTF8BOM) {
-            Poco::FileOutputStream fs(logFilePath);
-            const unsigned char bom[3] = {0xef, 0xbb, 0xbf};
-            fs.write((char*)bom, 3);
-            fs.close();
-        }
-
-        filelogger = spdlog::basic_logger_mt(programName, logFilePath);
-        filelogger->set_level(spdlog::level::trace);
-        filelogger->flush_on(spdlog::level::level_enum::warn);
-        spdlog::flush_every(std::chrono::seconds(3)); //每3秒自动刷新一次
-        isInit = true;                                //标记已经初始化了
+        isInit = true; //标记已经初始化了
         isInitFail = false;
     }
     catch (const std::exception& e) {
@@ -134,6 +139,7 @@ void Debug::clear()
         isEnable = true;
         isMemLogEnable = false;
         isConsoleEnable = true;
+        isFileEnable = true;
         logFileThr = spdlog::level::level_enum::debug;
         logMemoryThr = spdlog::level::level_enum::debug;
         logConsoleThr = spdlog::level::level_enum::debug;
@@ -245,11 +251,12 @@ void Debug::setIsConsoleEnable(bool enable)
 
 #if defined(_WIN32) || defined(_WIN64)
         //win下好像可以选择的颜色不多
-        console_sink->set_color(spdlog::level::trace, console_sink->BOLD);
-        console_sink->set_color(spdlog::level::debug, console_sink->CYAN);
-        console_sink->set_color(spdlog::level::info, console_sink->WHITE);
+        //console_sink->set_color(spdlog::level::trace,  console_sink->BOLD);
+        //console_sink->set_color(spdlog::level::debug, console_sink->CYAN);
+        //新版本的API貌似改了
+        console_sink->set_color(spdlog::level::info, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 #else
-        console_sink->set_color(spdlog::level::info, console_sink->white);
+        //console_sink->set_color(spdlog::level::info, console_sink->white);
 #endif
         //console_sink->set_color(spdlog::level::warn, console_sink->YELLOW);
         //console_sink->set_color(spdlog::level::err, console_sink->RED);
