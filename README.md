@@ -13,7 +13,7 @@
     conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
     ```
 2. clone该项目的主分支。
-3. 在终端中执行项目根目录下的build.bat脚本即可，编译完成后可以在**conan的文件夹**中或者**项目根目录下的/temp/archive**中看到编译结果如下:
+3. 在终端中执行项目根目录下的build.bat脚本即可，如果网速过慢的话，我目前的解决方法是给上面两个服务器搭反向代理，编译完成后可以在**conan的文件夹**中或者**项目根目录下的/temp/archive**中看到编译结果如下:
     ``` bash
     dx@DESKTOP-IFNRFQ6:/mnt/d/Work/dlog$ tree ./temp/
     ./temp/
