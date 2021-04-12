@@ -98,13 +98,13 @@ typedef void (*DlogLoggerEncrypDeletetCallback)(void* deletePtr);
  * 在这个函数调用之后可以调用dlog_is_initialized()函数查询是否初始化成功.
  *
  * 如果是在同一秒重复创建关闭日志文件,那么由于文件名一样,会被写入同一个日志文件.
- * 注意不支持UTF8的中文程序名~~ 如有乱码文件名使用dlog_init_wchar_filename()函数进行初始化.
+ * 注意只支持UTF8的程序名~~ 如有乱码文件名使用dlog_init_wchar_filename()函数进行初始化.
  * 
  * @author daixian
  * @date 2018/4/22
  *
- * @param [in] logDir       (Optional) 日志文件夹路径名.
- * @param [in] program      (Optional) 程序名,他会成为文件名的一部分,所以不要使用一些非法符号,注意这里不支持UTF8的中文.
+ * @param [in] logDir       (Optional) 日志文件夹路径名,只支持UTF8的字符串,不支持GBK的字符串.
+ * @param [in] program      (Optional) 程序名,他会成为文件名的一部分,所以不要使用一些非法符号,注意这里只支持UTF8的字符串.
  * @param      dir_relatvie (Optional) 相对路径的相对文件夹位置.
  *                                          APPDATA: 相对于AppData文件夹.
  *                                          MODULE:  相对于dll文件自身文件夹
@@ -130,7 +130,7 @@ extern "C" DLOG_EXPORT int __cdecl dlog_init(const char* logDir = "log",
  *                                          MODULE:  相对于dll文件自身文件夹
  * @param      isForceInit  (Optional) 如果为false，那么就可以不强制初始化模块，理论上整个程序C#和C++都共用一个日志.
  *
- * @returns 如果之前未被初始化返回0,如果成功复用那么就返回1,如果强制重设成功那么返回2, 如果强制重设但是失败还是复用了那么返回3.
+ * @returns 如果初始化失败了返回-1,如果之前未被初始化返回0,如果成功复用那么就返回1,如果强制重设成功那么返回2, 如果强制重设但是失败还是复用了那么返回3.
  */
 extern "C" DLOG_EXPORT int __cdecl dlog_init_wchar_filename(const wchar_t* logDir = L"log",
                                                             const wchar_t* program = L"dlog",
