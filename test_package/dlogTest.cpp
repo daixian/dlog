@@ -375,3 +375,92 @@ TEST(dlog, gbk2utf8)
 
     ASSERT_TRUE(utf8 == utf8_2);
 }
+
+TEST(dlog, no_file)
+{
+    dlog_close();
+
+    //设置不使用文件
+    dlog_file_log_enable(false);
+    int res = dlog_init("log", "no_file", dlog_init_relative::MODULE);
+    ASSERT_TRUE(dlog_is_initialized());
+    EXPECT_TRUE(res == 0);
+    for (size_t i = 0; i < 10; i++) {
+        LogI("no_file log...%d", i);
+    }
+
+    //检察确实没有产生日志文件dlog_get_log_file_path函数返回值为0
+    char path[245];
+    EXPECT_EQ(dlog_get_log_file_path(path, 245), 0);
+
+    dlog_close();
+}
+
+const char* encrypt_function(const char* msg, void*& ptr)
+{
+    string* pStr = new string(msg);
+    ptr = pStr;
+    for (size_t i = 0; i < 4; i++) {
+        pStr->at(i) = 'X';
+    }
+    return pStr->c_str();
+}
+
+TEST(dlog, encrypt)
+{
+    dlog_close();
+
+    //设置不使用文件
+    dlog_set_encrypt_function(encrypt_function, nullptr);
+    dlog_set_is_encrypt_console(true);
+    int res = dlog_init("log", "encrypt", dlog_init_relative::MODULE);
+    ASSERT_TRUE(dlog_is_initialized());
+    EXPECT_TRUE(res == 0);
+    for (size_t i = 0; i < 10; i++) {
+        LogI("encrypt log...%d", i);
+    }
+
+    dlog_close();
+    char path[245];
+    EXPECT_EQ(dlog_get_log_file_path(path, 245), 0);
+}
+
+const char* encrypt_function2(const char* msg, void*& ptr)
+{
+    //构建文本内存对象
+    string* pStr = new string();
+    ptr = pStr; //传出去保留,等会传递给释放函数
+
+    //进行加密算法
+    for (size_t i = 0; i < 1024 * 1024 * 10; i++) {
+        pStr->push_back(i);
+    }
+    //返回加密文本
+    return pStr->c_str();
+}
+
+void encrypt_delete_function2(void* ptr)
+{
+    //释放函数知道这是一个string*对象,所以强转后直接释放
+    string* pStr = (string*)ptr;
+    delete pStr;
+}
+
+TEST(dlog, encrypt_memory)
+{
+    dlog_close();
+
+    //设置不使用文件
+    dlog_set_encrypt_function(encrypt_function2, encrypt_delete_function2);
+    dlog_set_is_encrypt_console(true);
+    int res = dlog_init("log", "encrypt_memory", dlog_init_relative::MODULE);
+    ASSERT_TRUE(dlog_is_initialized());
+    EXPECT_TRUE(res == 0);
+    for (size_t i = 0; i < 10; i++) {
+        LogI("encrypt log...%d", i);
+    }
+
+    dlog_close();
+    char path[245];
+    EXPECT_EQ(dlog_get_log_file_path(path, 245), 0);
+}

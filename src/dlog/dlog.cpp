@@ -22,9 +22,14 @@ extern "C" DLOG_EXPORT void* __cdecl dlog_global_ptr()
 extern "C" DLOG_EXPORT int __cdecl dlog_init(const char* logDir, const char* program, dlog_init_relative dir_relatvie,
                                              bool isForceInit)
 {
+    //这个函数要主动清空初始化错误标志
+    Debug::GetInst()->isInitFail = false;
+
     if (isForceInit == false) {
         if (!Debug::GetInst()->isInit) {
             Debug::GetInst()->init(logDir, program, (INIT_RELATIVE)dir_relatvie);
+            if (Debug::GetInst()->isInitFail)
+                return -1;
             return 0; //第一次初始化
         }
         return 1; //成功复用
@@ -35,6 +40,8 @@ extern "C" DLOG_EXPORT int __cdecl dlog_init(const char* logDir, const char* pro
             strcmp(program, "dlog") != 0) {                        //同时第二次设置的这个程序名不能等于默认名字
             Debug::GetInst()->clear();
             Debug::GetInst()->init(logDir, program, (INIT_RELATIVE)dir_relatvie);
+            if (Debug::GetInst()->isInitFail)
+                return -1;
             return 2; //强制重设了一次glog
         }
         return 3; //强制重设了一次glog
@@ -75,7 +82,10 @@ extern "C" DLOG_EXPORT void __cdecl dlog_enable(bool enable)
 
 extern "C" DLOG_EXPORT void __cdecl dlog_console_log_enable(bool enable)
 {
-    Debug::GetInst()->setIsConsoleEnable(enable);
+    if (!Debug::GetInst()->isInit)
+        Debug::GetInst()->isConsoleEnable = enable;
+    else
+        Debug::GetInst()->setIsConsoleEnable(enable);
 }
 
 extern "C" DLOG_EXPORT void __cdecl dlog_file_log_enable(bool enable)
@@ -132,7 +142,7 @@ extern "C" DLOG_EXPORT void __cdecl LogI(const char* strFormat, ...)
 {
     if (Debug::GetInst()->isNeedLog(spdlog::level::level_enum::info)) {
         if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
-            dlog_init();
+            Debug::GetInst()->init("log", "dlog", INIT_RELATIVE::APPDATA);
         }
 
         std::vector<char> buf(DEBUG_LOG_BUFF_SIZE, '\0');
@@ -168,7 +178,7 @@ extern "C" DLOG_EXPORT void __cdecl LogW(const char* strFormat, ...)
 {
     if (Debug::GetInst()->isNeedLog(spdlog::level::level_enum::warn)) {
         if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
-            dlog_init();
+            Debug::GetInst()->init("log", "dlog", INIT_RELATIVE::APPDATA);
         }
 
         std::vector<char> buf(DEBUG_LOG_BUFF_SIZE, '\0');
@@ -204,7 +214,7 @@ extern "C" DLOG_EXPORT void __cdecl LogE(const char* strFormat, ...)
 {
     if (Debug::GetInst()->isNeedLog(spdlog::level::level_enum::err)) {
         if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
-            dlog_init();
+            Debug::GetInst()->init("log", "dlog", INIT_RELATIVE::APPDATA);
         }
 
         std::vector<char> buf(DEBUG_LOG_BUFF_SIZE, '\0');
@@ -240,7 +250,7 @@ extern "C" DLOG_EXPORT void __cdecl LogD(const char* strFormat, ...)
 {
     if (Debug::GetInst()->isNeedLog(spdlog::level::level_enum::debug)) {
         if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
-            dlog_init();
+            Debug::GetInst()->init("log", "dlog", INIT_RELATIVE::APPDATA);
         }
 
         std::vector<char> buf(DEBUG_LOG_BUFF_SIZE, '\0');
@@ -276,7 +286,7 @@ extern "C" DLOG_EXPORT void __cdecl wLogI(const wchar_t* strFormat, ...)
 {
     if (Debug::GetInst()->isNeedLog(spdlog::level::level_enum::info)) {
         if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
-            dlog_init();
+            Debug::GetInst()->init("log", "dlog", INIT_RELATIVE::APPDATA);
         }
 
         //这个函数原来使用的是vswprintf，但是跨平台有问题，如果包含中文则失败。
@@ -306,7 +316,7 @@ extern "C" DLOG_EXPORT void __cdecl wLogW(const wchar_t* strFormat, ...)
 {
     if (Debug::GetInst()->isNeedLog(spdlog::level::level_enum::warn)) {
         if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
-            dlog_init();
+            Debug::GetInst()->init("log", "dlog", INIT_RELATIVE::APPDATA);
         }
 
         //这个函数原来使用的是vswprintf，但是跨平台有问题，如果包含中文则失败。
@@ -348,7 +358,7 @@ extern "C" DLOG_EXPORT void __cdecl wLogE(const wchar_t* strFormat, ...)
 {
     if (Debug::GetInst()->isNeedLog(spdlog::level::level_enum::err)) {
         if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
-            dlog_init();
+            Debug::GetInst()->init("log", "dlog", INIT_RELATIVE::APPDATA);
         }
 
         //这个函数原来使用的是vswprintf，但是跨平台有问题，如果包含中文则失败。
@@ -390,7 +400,7 @@ extern "C" DLOG_EXPORT void __cdecl wLogD(const wchar_t* strFormat, ...)
 {
     if (Debug::GetInst()->isNeedLog(spdlog::level::level_enum::debug)) {
         if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
-            dlog_init();
+            Debug::GetInst()->init("log", "dlog", INIT_RELATIVE::APPDATA);
         }
 
         //这个函数原来使用的是vswprintf，但是跨平台有问题，如果包含中文则失败。
@@ -431,7 +441,7 @@ extern "C" DLOG_EXPORT void __cdecl LogMsg(dlog_level level, const char* message
 {
     if (Debug::GetInst()->isNeedLog((spdlog::level::level_enum)level)) {
         if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
-            dlog_init();
+            Debug::GetInst()->init("log", "dlog", INIT_RELATIVE::APPDATA);
         }
         Debug::GetInst()->LogMsg((spdlog::level::level_enum)level, message);
     }
@@ -442,7 +452,7 @@ extern "C" DLOG_EXPORT void __cdecl wLogMsg(dlog_level level, const wchar_t* mes
 
     if (Debug::GetInst()->isNeedLog((spdlog::level::level_enum)level)) {
         if (!Debug::GetInst()->isInit && !Debug::GetInst()->isInitFail) { //如果还没有初始化过，那么就调用默认构造
-            dlog_init();
+            Debug::GetInst()->init("log", "dlog", INIT_RELATIVE::APPDATA);
         }
 
         rapidjson::StringBuffer buffUtf8;
@@ -481,6 +491,25 @@ extern "C" DLOG_EXPORT int __cdecl dlog_convert_gbk_to_utf8(const char* s_gbk, c
 extern "C" DLOG_EXPORT void __stdcall dlog_set_logger_function(DlogLoggerCallback fp)
 {
     Debug::GetInst()->exLoggerCallback = fp;
+}
+
+extern "C" DLOG_EXPORT void __stdcall dlog_set_encrypt_function(DlogLoggerEncryptCallback fpEncrypt,
+                                                                DlogLoggerEncrypDeletetCallback fpDelete)
+{
+    Debug::GetInst()->exLoggerEncryptCallback = fpEncrypt;
+    Debug::GetInst()->exLoggerEncrypDeletetCallback = fpDelete;
+    Debug::GetInst()->isEncryptFile = true;
+    Debug::GetInst()->isEncryptConsole = false;
+}
+
+extern "C" DLOG_EXPORT void __stdcall dlog_set_is_encrypt_file(bool isEncryptFile)
+{
+    Debug::GetInst()->isEncryptFile = isEncryptFile;
+}
+
+extern "C" DLOG_EXPORT void __stdcall dlog_set_is_encrypt_console(bool isEncryptConsole)
+{
+    Debug::GetInst()->isEncryptConsole = isEncryptConsole;
 }
 
 extern "C" DLOG_EXPORT void __stdcall dlog_set_is_chcp65001(bool ischcp65001)

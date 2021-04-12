@@ -4,6 +4,7 @@
 2. 内部从glog换成的spdlog。
 3. 完全去掉了boost，换成了Poco库。
 4. 使用conan的CI已经完成 -> [Release下载(x64,x86)](https://github.com/daixian/dlog/releases)
+5. 随便的加了个日志的加密接口。
 
 ## 编译库的方法
 1. 使用pip安装conan构建工具：

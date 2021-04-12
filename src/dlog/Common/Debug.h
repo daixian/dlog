@@ -35,8 +35,14 @@ enum class INIT_RELATIVE
     MODULE = 1,
 };
 
-// 日志回调
+// 日志外部回调
 typedef void (*LoggerCallback)(int level, const char* message);
+
+//加密日志的函数回调
+typedef const char* (*LoggerEncryptCallback)(const char* message, void*& ptr);
+
+//释放加密文本对象的方法
+typedef void (*LoggerEncrypDeletetCallback)(void* deletePtr);
 
 /**
  * Debug日志系统.
@@ -118,6 +124,12 @@ class Debug
     // 是否使能文件日志.
     bool isFileEnable = true;
 
+    // 是否加密文件日志
+    bool isEncryptFile = false;
+
+    // 是否加密控制台
+    bool isEncryptConsole = false;
+
     // 大于等于这个优先级的常规日志(文件日志)都会工作.
     spdlog::level::level_enum logFileThr = spdlog::level::level_enum::debug;
 
@@ -139,8 +151,14 @@ class Debug
     // 是否初始化失败了.
     bool isInitFail = false;
 
-    // 外部传入的logger指针
+    // 外部传入的logger指针.
     LoggerCallback exLoggerCallback = nullptr;
+
+    // 外部的加密函数指针.
+    LoggerEncryptCallback exLoggerEncryptCallback = nullptr;
+
+    // 文本对象的释放方法
+    LoggerEncrypDeletetCallback exLoggerEncrypDeletetCallback = nullptr;
 
     // 是否执行chcp 65001
     bool ischcp65001 = false;
@@ -249,10 +267,28 @@ class Debug
     void LogMsg(spdlog::level::level_enum logThr, const char* msg)
     {
         if (isFileEnable && logFileThr <= logThr && filelogger != nullptr) { //满足优先级才输出 - 文件
-            filelogger->log(logThr, msg);
+            if (isEncryptFile && exLoggerEncryptCallback != nullptr) {
+                //如果设置了加密日志
+                void* deletePtr = nullptr;
+                filelogger->log(logThr, exLoggerEncryptCallback(msg, deletePtr));
+                if (exLoggerEncrypDeletetCallback != nullptr) //如果有释放方法则释放
+                    exLoggerEncrypDeletetCallback(deletePtr);
+            }
+            else {
+                filelogger->log(logThr, msg);
+            }
         }
         if (isConsoleEnable && logConsoleThr <= logThr && consolelogger != nullptr) { //满足优先级才输出 - 控制台
-            consolelogger->log(logThr, msg);
+            if (isEncryptConsole && exLoggerEncryptCallback != nullptr) {
+                //如果设置了加密日志
+                void* deletePtr = nullptr;
+                consolelogger->log(logThr, exLoggerEncryptCallback(msg, deletePtr));
+                if (exLoggerEncrypDeletetCallback != nullptr) //如果有释放方法则释放
+                    exLoggerEncrypDeletetCallback(deletePtr);
+            }
+            else {
+                consolelogger->log(logThr, msg);
+            }
         }
         if (isMemLogEnable && logMemoryThr <= logThr) { //满足优先级才输出 - 内存队列
             MemoryLog::GetInst()->addLog(msg);

@@ -80,8 +80,15 @@ enum class DLogError
     InvalidAttribute = 17,
 };
 
-// 日志回调函数指针类型
+// 日志回调函数指针类型,message为日志的原始文本
 typedef void (*DlogLoggerCallback)(int level, const char* message);
+
+//加密日志的函数回调,message为日志的原始文本,deletePtr为这个函数执行完毕后需要被dlog模块释放的对象,
+//return加密后的日志文本(加密后的文本会替代message写入日志文件)
+typedef const char* (*DlogLoggerEncryptCallback)(const char* message, void*& deletePtr);
+
+//释放加密文本对象的方法
+typedef void (*DlogLoggerEncrypDeletetCallback)(void* deletePtr);
 
 /**
  * 模块初始化,日志文件夹路径可以使用绝对目录也可以使用相对目录(第三个参数进行相对位置的设置), 
@@ -103,7 +110,7 @@ typedef void (*DlogLoggerCallback)(int level, const char* message);
  *                                          MODULE:  相对于dll文件自身文件夹
  * @param      isForceInit  (Optional) 如果为false，那么就可以不强制初始化模块，理论上整个程序C#和C++都共用一个日志.
  *
- * @returns 如果之前未被初始化返回0,如果成功复用那么就返回1,如果强制重设成功那么返回2, 如果强制重设但是失败还是复用了那么返回3.
+ * @returns 如果初始化失败了返回-1,如果之前未被初始化返回0,如果成功复用那么就返回1,如果强制重设成功那么返回2,如果强制重设但是失败还是复用了那么返回3.
  */
 extern "C" DLOG_EXPORT int __cdecl dlog_init(const char* logDir = "log",
                                              const char* program = "dlog",
@@ -189,6 +196,33 @@ extern "C" DLOG_EXPORT void __cdecl dlog_console_log_enable(bool enable);
  * @param  enable 设置为false之后Log函数会直接返回不作任何操作.
  */
 extern "C" DLOG_EXPORT void __cdecl dlog_file_log_enable(bool enable);
+
+/**
+ * 设置一个外部对接其他日志系统的回调(如第三方控制台等等),注意每次close日志系统会清空这个设置,之后需要重新设置一次.
+ *
+ * @author daixian
+ * @date 2021/3/23
+ *
+ * @param  fp 函数指针.
+ */
+extern "C" DLOG_EXPORT void __stdcall dlog_set_logger_function(DlogLoggerCallback fp);
+
+/**
+ * 设置一个加密函数指针,用来加密日志,设置这个函数之后会默认设置加密文件,不加密控制台, 
+ * 注意每次close日志系统会清空这个设置,之后需要重新设置一次. 
+ * 相关函数:
+ *     dlog_set_is_encrypt_file();
+ *     dlog_set_is_encrypt_console();
+ *
+ * @author daixian
+ * @date 2021/4/12
+ *
+ * @param  fp       函数指针.
+ * @param  fpdelete 用来释放文本对象的函数方法指针.
+ */
+
+extern "C" DLOG_EXPORT void __stdcall dlog_set_encrypt_function(DlogLoggerEncryptCallback fpEncrypt,
+                                                                DlogLoggerEncrypDeletetCallback fpDelete);
 
 /**
  * 设置Dlog的常规文件日志（非内存日志）门限,大于等于该优先级的日志都会写入.
@@ -351,16 +385,6 @@ extern "C" DLOG_EXPORT void __cdecl LogMsg(dlog_level level, const char* message
 extern "C" DLOG_EXPORT void __cdecl wLogMsg(dlog_level level, const wchar_t* message);
 
 /**
- * 设置一个传入外部的回调,注意每次close日志系统会清空这个设置,之后需要重新设置一次.
- *
- * @author daixian
- * @date 2021/3/23
- *
- * @param  fp 函数指针.
- */
-extern "C" DLOG_EXPORT void __stdcall dlog_set_logger_function(DlogLoggerCallback fp);
-
-/**
  * 是否在windows平台下初始化控制台的时候执行chcp 65001,现在默认不是执行.(需要在init之前调用这个函数)
  *
  * @author daixian
@@ -389,6 +413,26 @@ extern "C" DLOG_EXPORT void __stdcall dlog_set_is_print_internal_message(bool is
  * @param  isUTF8BOM 设为true则会写入bom头.
  */
 extern "C" DLOG_EXPORT void __stdcall dlog_set_is_use_utf8_bom(bool isUTF8BOM);
+
+/**
+ * 设置是否对文件日志进行加密.
+ *
+ * @author daixian
+ * @date 2021/4/12
+ *
+ * @param  isEncryptFile True则会调用加密函数对文件日志进行加密.
+ */
+extern "C" DLOG_EXPORT void __stdcall dlog_set_is_encrypt_file(bool isEncryptFile);
+
+/**
+ * 设置是否对控制台日志进行加密.
+ *
+ * @author daixian
+ * @date 2021/4/12
+ *
+ * @param  isEncryptConsole True则会调用加密函数对控制台日志进行加密.
+ */
+extern "C" DLOG_EXPORT void __stdcall dlog_set_is_encrypt_console(bool isEncryptConsole);
 
 /**
  * 转换UTF8到gbk.

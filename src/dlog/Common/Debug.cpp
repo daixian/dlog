@@ -101,21 +101,18 @@ void Debug::init(const char* logDir, const char* program, INIT_RELATIVE rel)
         isInitFail = false;
     }
     catch (const std::exception& e) {
-        //std::cerr << "Debug.init():初始化失败!" << e.what() << '\n';
         isInitFail = true; //标记初始化失败过了
-        mt.unlock();
         clear();
-        throw e;
     }
 
     mt.unlock();
     //检查看看日志文件是否存在了,如果filelogger指针为null,或者连文件也不存在
-    if (filelogger == nullptr || !File(logFilePath).exists()) {
-        string msg = "Debug.init():无法创建日志文件 -> " + logFilePath; //底下马上要clear(),所以这里先写了
-        clear();
-        isInitFail = true; //标记初始化失败过了
-        //std::cerr << msg << '\n';
-        throw std::invalid_argument(msg);
+    if (isFileEnable && (filelogger == nullptr || !File(logFilePath).exists())) {
+        //string msg = "Debug.init():无法创建日志文件 -> " + logFilePath; //底下马上要clear(),所以这里先写了
+        if (!isInitFail) {
+            isInitFail = true; //标记初始化失败过了
+            clear();
+        }
     }
     else {
         //清空老文件
@@ -143,6 +140,10 @@ void Debug::clear()
         logFileThr = spdlog::level::level_enum::debug;
         logMemoryThr = spdlog::level::level_enum::debug;
         logConsoleThr = spdlog::level::level_enum::debug;
+
+        isEncryptConsole = false;
+        isEncryptFile = false;
+
         MemoryLog::GetInst()->clear();
 
         logPattern = _logPattern;
@@ -158,6 +159,8 @@ void Debug::clear()
         spdlog::drop_all(); //这里要注意删除,否则无法再创建同名的
 
         exLoggerCallback = nullptr;
+        exLoggerEncryptCallback = nullptr;
+        exLoggerEncrypDeletetCallback = nullptr;
 
         programName.clear();
         logDirPath.clear();
@@ -168,6 +171,8 @@ void Debug::clear()
         consolelogger = nullptr;
         spdlog::drop_all();
         exLoggerCallback = nullptr;
+        exLoggerEncryptCallback = nullptr;
+        exLoggerEncrypDeletetCallback = nullptr;
     }
     mt.unlock();
 }
@@ -230,36 +235,39 @@ void Debug::setIsConsoleEnable(bool enable)
 {
     isConsoleEnable = enable;
 
-    //如果是设置为不使能,那么就直接退出
+    //如果是设置为不使能那么就直接退出
     if (isConsoleEnable == false) {
         return;
     }
-
-    //设置控制台为UTF8输出
+    try {
+        //如果是设置为使能,如果指针还没有初始化过
+        if (consolelogger == nullptr) {
+            //ischcp65001设置控制台为UTF8输出
 #if defined(_WIN32) || defined(_WIN64)
-    if (ischcp65001) {
-        system("chcp 65001"); //测试了在windows下有效
-    }
+            if (ischcp65001) {
+                system("chcp 65001"); //测试了在windows下有效
+            }
 #endif
 
-    //如果是设置为使能,如果指针还没有初始化过
-    if (consolelogger == nullptr) {
-        consolelogger = spdlog::stdout_color_mt("console");
+            consolelogger = spdlog::stdout_color_mt("console");
 
-        consolelogger->set_level(spdlog::level::trace);
-        auto console_sink = dynamic_cast<spdlog::sinks::stdout_color_sink_mt*>(consolelogger->sinks().back().get());
+            consolelogger->set_level(spdlog::level::trace);
+            auto console_sink = dynamic_cast<spdlog::sinks::stdout_color_sink_mt*>(consolelogger->sinks().back().get());
 
 #if defined(_WIN32) || defined(_WIN64)
-        //win下好像可以选择的颜色不多
-        //console_sink->set_color(spdlog::level::trace,  console_sink->BOLD);
-        //console_sink->set_color(spdlog::level::debug, console_sink->CYAN);
-        //新版本的API貌似改了
-        console_sink->set_color(spdlog::level::info, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+            //win下好像可以选择的颜色不多
+            //console_sink->set_color(spdlog::level::trace,  console_sink->BOLD);
+            //console_sink->set_color(spdlog::level::debug, console_sink->CYAN);
+            //新版本的API貌似改了
+            console_sink->set_color(spdlog::level::info, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 #else
-        //console_sink->set_color(spdlog::level::info, console_sink->white);
+            //console_sink->set_color(spdlog::level::info, console_sink->white);
 #endif
-        //console_sink->set_color(spdlog::level::warn, console_sink->YELLOW);
-        //console_sink->set_color(spdlog::level::err, console_sink->RED);
+            //console_sink->set_color(spdlog::level::warn, console_sink->YELLOW);
+            //console_sink->set_color(spdlog::level::err, console_sink->RED);
+        }
+    }
+    catch (const std::exception&) {
     }
 }
 
