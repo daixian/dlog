@@ -488,12 +488,12 @@ extern "C" DLOG_EXPORT int __cdecl dlog_convert_gbk_to_utf8(const char* s_gbk, c
     return copyLen;
 }
 
-extern "C" DLOG_EXPORT void __stdcall dlog_set_logger_function(DlogLoggerCallback fp)
+extern "C" DLOG_EXPORT void __cdecl dlog_set_logger_function(DlogLoggerCallback fp)
 {
     Debug::GetInst()->exLoggerCallback = fp;
 }
 
-extern "C" DLOG_EXPORT void __stdcall dlog_set_encrypt_function(DlogLoggerEncryptCallback fpEncrypt,
+extern "C" DLOG_EXPORT void __cdecl dlog_set_encrypt_function(DlogLoggerEncryptCallback fpEncrypt,
                                                                 DlogLoggerEncrypDeletetCallback fpDelete)
 {
     Debug::GetInst()->exLoggerEncryptCallback = fpEncrypt;
@@ -502,27 +502,27 @@ extern "C" DLOG_EXPORT void __stdcall dlog_set_encrypt_function(DlogLoggerEncryp
     Debug::GetInst()->isEncryptConsole = false;
 }
 
-extern "C" DLOG_EXPORT void __stdcall dlog_set_is_encrypt_file(bool isEncryptFile)
+extern "C" DLOG_EXPORT void __cdecl dlog_set_is_encrypt_file(bool isEncryptFile)
 {
     Debug::GetInst()->isEncryptFile = isEncryptFile;
 }
 
-extern "C" DLOG_EXPORT void __stdcall dlog_set_is_encrypt_console(bool isEncryptConsole)
+extern "C" DLOG_EXPORT void __cdecl dlog_set_is_encrypt_console(bool isEncryptConsole)
 {
     Debug::GetInst()->isEncryptConsole = isEncryptConsole;
 }
 
-extern "C" DLOG_EXPORT void __stdcall dlog_set_is_chcp65001(bool ischcp65001)
+extern "C" DLOG_EXPORT void __cdecl dlog_set_is_chcp65001(bool ischcp65001)
 {
     Debug::GetInst()->ischcp65001 = ischcp65001;
 }
 
-extern "C" DLOG_EXPORT void __stdcall dlog_set_is_print_internal_message(bool isPrint)
+extern "C" DLOG_EXPORT void __cdecl dlog_set_is_print_internal_message(bool isPrint)
 {
     Debug::GetInst()->isPrintInternalMessage = isPrint;
 }
 
-extern "C" DLOG_EXPORT void __stdcall dlog_set_is_use_utf8_bom(bool isUTF8BOM)
+extern "C" DLOG_EXPORT void __cdecl dlog_set_is_use_utf8_bom(bool isUTF8BOM)
 {
     Debug::GetInst()->isUTF8BOM = isUTF8BOM;
 }

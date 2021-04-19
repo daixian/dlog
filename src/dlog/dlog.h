@@ -205,7 +205,7 @@ extern "C" DLOG_EXPORT void __cdecl dlog_file_log_enable(bool enable);
  *
  * @param  fp 函数指针.
  */
-extern "C" DLOG_EXPORT void __stdcall dlog_set_logger_function(DlogLoggerCallback fp);
+extern "C" DLOG_EXPORT void __cdecl dlog_set_logger_function(DlogLoggerCallback fp);
 
 /**
  * 设置一个加密函数指针,用来加密日志,设置这个函数之后会默认设置加密文件,不加密控制台, 
@@ -221,7 +221,7 @@ extern "C" DLOG_EXPORT void __stdcall dlog_set_logger_function(DlogLoggerCallbac
  * @param  fpdelete 用来释放文本对象的函数方法指针.
  */
 
-extern "C" DLOG_EXPORT void __stdcall dlog_set_encrypt_function(DlogLoggerEncryptCallback fpEncrypt,
+extern "C" DLOG_EXPORT void __cdecl dlog_set_encrypt_function(DlogLoggerEncryptCallback fpEncrypt,
                                                                 DlogLoggerEncrypDeletetCallback fpDelete);
 
 /**
@@ -392,7 +392,7 @@ extern "C" DLOG_EXPORT void __cdecl wLogMsg(dlog_level level, const wchar_t* mes
  *
  * @param  ischcp65001 设为true则在windows平台下初始化控制台的时候执行chcp 65001.
  */
-extern "C" DLOG_EXPORT void __stdcall dlog_set_is_chcp65001(bool ischcp65001);
+extern "C" DLOG_EXPORT void __cdecl dlog_set_is_chcp65001(bool ischcp65001);
 
 /**
  * 是否打印日志模块的启动时的内部消息,默认不打印.(需要在init之前调用这个函数)
@@ -402,7 +402,7 @@ extern "C" DLOG_EXPORT void __stdcall dlog_set_is_chcp65001(bool ischcp65001);
  *
  * @param  isPrint 设为true则会打印一些日志模块启动的内容.
  */
-extern "C" DLOG_EXPORT void __stdcall dlog_set_is_print_internal_message(bool isPrint);
+extern "C" DLOG_EXPORT void __cdecl dlog_set_is_print_internal_message(bool isPrint);
 
 /**
  * 是否在日志文件头写入utf8的bom头,默认是写入.(需要在init之前调用这个函数)
@@ -412,7 +412,7 @@ extern "C" DLOG_EXPORT void __stdcall dlog_set_is_print_internal_message(bool is
  *
  * @param  isUTF8BOM 设为true则会写入bom头.
  */
-extern "C" DLOG_EXPORT void __stdcall dlog_set_is_use_utf8_bom(bool isUTF8BOM);
+extern "C" DLOG_EXPORT void __cdecl dlog_set_is_use_utf8_bom(bool isUTF8BOM);
 
 /**
  * 设置是否对文件日志进行加密.
@@ -422,7 +422,7 @@ extern "C" DLOG_EXPORT void __stdcall dlog_set_is_use_utf8_bom(bool isUTF8BOM);
  *
  * @param  isEncryptFile True则会调用加密函数对文件日志进行加密.
  */
-extern "C" DLOG_EXPORT void __stdcall dlog_set_is_encrypt_file(bool isEncryptFile);
+extern "C" DLOG_EXPORT void __cdecl dlog_set_is_encrypt_file(bool isEncryptFile);
 
 /**
  * 设置是否对控制台日志进行加密.
@@ -432,7 +432,7 @@ extern "C" DLOG_EXPORT void __stdcall dlog_set_is_encrypt_file(bool isEncryptFil
  *
  * @param  isEncryptConsole True则会调用加密函数对控制台日志进行加密.
  */
-extern "C" DLOG_EXPORT void __stdcall dlog_set_is_encrypt_console(bool isEncryptConsole);
+extern "C" DLOG_EXPORT void __cdecl dlog_set_is_encrypt_console(bool isEncryptConsole);
 
 /**
  * 转换UTF8到gbk.

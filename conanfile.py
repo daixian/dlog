@@ -11,7 +11,7 @@ import shutil
 
 class DlogConan(ConanFile):
     name = "dlog"
-    version = "2.6.8"
+    version = "2.6.9"
     license = "WTFPL???"
     author = "daixian<amano_tooko@qq.com>"
     url = "https://github.com/daixian/dlog"
@@ -108,8 +108,8 @@ class DlogConan(ConanFile):
         """把安装文件拷贝到当前源文件目录来,方便在CI中上传"""
         print("copy_archive():package_folder = " + self.package_folder)
         archive_path = os.environ.get("CONAN_ARCHIVE_PATH")
-        print("copy_archive():archivePath = " + archive_path)
         if not archive_path is None:
+            print("copy_archive():environ CONAN_ARCHIVE_PATH=" + str(archive_path))
             dest = archive_path + os.sep + str(self.name) + os.sep
             dest += str(self.settings.os) + "_" + str(self.settings.compiler) + \
                 str(self.settings.compiler.version) + "_" + str(self.settings.arch)

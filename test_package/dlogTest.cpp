@@ -1,6 +1,8 @@
 ﻿#include "pch.h"
 
-#define DLOG_UTF8
+#ifndef DLOG_UTF8
+#    define DLOG_UTF8
+#endif
 #include "dlog/dlog.h"
 
 using namespace std;

@@ -1,4 +1,4 @@
-﻿#include "Debug.h"
+#include "Debug.h"
 #include "FileHelper.h"
 #include "JsonHelper.h"
 
@@ -89,9 +89,12 @@ void Debug::init(const char* logDir, const char* program, INIT_RELATIVE rel)
                 fs.write((char*)bom, 3);
                 fs.close();
             }
-
-            //这个函数居然不支持utf8编码的文件名,在CMake文件中定义SPDLOG_WCHAR_FILENAMES可以解决
+#if WIN32
+            //这个函数居然不支持utf8编码的文件名,在CMake文件中定义SPDLOG_WCHAR_FILENAMES可以解决,这个函数只在win下有效.
             filelogger = spdlog::basic_logger_mt(programName, JsonHelper::utf8To16(logFilePath));
+#else
+            filelogger = spdlog::basic_logger_mt(programName, logFilePath);
+#endif
             filelogger->set_level(spdlog::level::trace);
             filelogger->flush_on(spdlog::level::level_enum::warn);
             spdlog::flush_every(std::chrono::seconds(3)); //每3秒自动刷新一次
