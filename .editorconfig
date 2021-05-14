@@ -1,0 +1,12 @@
+# 若要了解有关 .editorconfig 的详细信息，请参阅 https://aka.ms/editorconfigdocs
+###############################
+# Core EditorConfig Options   #
+###############################
+root = true
+# All files
+[*.{h,hpp,c,cpp}]
+charset = utf-8-bom
+indent_style = space
+indent_size = 4
+trim_trailing_whitespace = true
+insert_final_newline = true
