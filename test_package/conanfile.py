@@ -20,11 +20,11 @@ class DLogTestConan(ConanFile):
 
     def requirements(self):
         self.requires("spdlog/1.8.5")
-        self.requires("poco/[>=1.10.1]")
+        self.requires("poco/1.10.1")
         self.requires("rapidjson/1.1.0")
 
     def build_requirements(self):
-        self.build_requires("gtest/1.8.1@bincrafters/stable")
+        self.build_requires("gtest/1.8.1")
 
     def build(self):
         cmake = CMake(self)

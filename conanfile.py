@@ -11,7 +11,7 @@ import shutil
 
 class DlogConan(ConanFile):
     name = "dlog"
-    version = "2.6.10"
+    version = "2.6.11"
     license = "WTFPL???"
     author = "daixian<amano_tooko@qq.com>"
     url = "https://github.com/daixian/dlog"
@@ -45,7 +45,7 @@ class DlogConan(ConanFile):
     def build_requirements(self):
         if self.options.shared:
             self.build_requires("spdlog/1.8.5")
-            self.build_requires("poco/[>=1.10.1]")
+            self.build_requires("poco/1.10.1")
             self.build_requires("rapidjson/1.1.0")
 
     def _configure_cmake(self):
