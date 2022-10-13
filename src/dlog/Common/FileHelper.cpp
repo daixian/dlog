@@ -17,6 +17,8 @@
 #include "Common.h"
 #include <ctime>
 
+#include "JsonHelper.h"
+
 ////这个脚本可能会报错 语言->符合模式 "combaseapi.h(229): error C2187: syntax error: 'identifier' was unexpected here" when using /permissive-
 namespace dlog {
 
@@ -32,12 +34,12 @@ std::string FileHelper::getModuleDir()
         return moduleDir; //只要有记录了就直接使用
     }
     else {
-        char exeFullPath[MAX_PATH]; // Full path
+        wchar_t exeFullPath[MAX_PATH];                   // Full path
+        GetModuleFileNameW(NULL, exeFullPath, MAX_PATH); //如果使用A的函数那么是GBK的路径
+
         std::string strPath = "";
-
-        GetModuleFileNameA(NULL, exeFullPath, MAX_PATH);
-
-        strPath = std::string(exeFullPath); // Get full path of the file
+        strPath = JsonHelper::utf16To8(std::wstring(exeFullPath));
+        // exe路径裁剪
         size_t pos = strPath.find_last_of('\\', strPath.length());
         moduleDir = strPath.substr(0, pos); // Return the directory without the file name
         return moduleDir;
@@ -46,9 +48,9 @@ std::string FileHelper::getModuleDir()
 
 std::string FileHelper::getAppDir()
 {
-    char szPath[MAX_PATH];
-    if (SUCCEEDED(SHGetFolderPathA(NULL, CSIDL_APPDATA, NULL, 0, szPath))) {
-        return std::string(szPath);
+    wchar_t szPath[MAX_PATH];
+    if (SUCCEEDED(SHGetFolderPathW(NULL, CSIDL_APPDATA, NULL, 0, szPath))) {
+        return JsonHelper::utf16To8(std::wstring(szPath));
     }
     return std::string();
 }
@@ -95,11 +97,11 @@ std::string FileHelper::getAppDir()
 }
 #endif
 
-//void FileHelper::isExistsAndCreat(const std::wstring& dirPath)
+// void FileHelper::isExistsAndCreat(const std::wstring& dirPath)
 //{
-//    std::string sDir = Common::ws2s(dirPath);
-//    isExistsAndCreat(sDir);
-//}
+//     std::string sDir = Common::ws2s(dirPath);
+//     isExistsAndCreat(sDir);
+// }
 
 void FileHelper::isExistsAndCreat(const std::string& sDir)
 {
@@ -128,18 +130,18 @@ bool FileHelper::dirExists(const std::string& dirName_in)
     return false;
 }
 
-//bool FileHelper::dirExists(const std::wstring& dirName_in)
+// bool FileHelper::dirExists(const std::wstring& dirName_in)
 //{
-//    //如果存在
-//    Poco::File dir(Common::ws2s(dirName_in));
-//    if (dir.exists()) {
-//        if (dir.isDirectory()) {
-//            return true;
-//        }
-//        //它还是存在一种是一个文件的可能
-//    }
-//    return false;
-//}
+//     //如果存在
+//     Poco::File dir(Common::ws2s(dirName_in));
+//     if (dir.exists()) {
+//         if (dir.isDirectory()) {
+//             return true;
+//         }
+//         //它还是存在一种是一个文件的可能
+//     }
+//     return false;
+// }
 
 void FileHelper::makeAbsolute(const Poco::Path& base, Poco::Path& path)
 {
