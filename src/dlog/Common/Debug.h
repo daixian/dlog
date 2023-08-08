@@ -15,15 +15,15 @@
 
 #pragma execution_character_set("utf-8")
 #include "MemoryLog.h"
-//#include "stack_allocator.hpp"
+// #include "stack_allocator.hpp"
 
-//栈分配器的使用(性能提升没感觉,可能也不是瓶颈,所以就不使用了)
-//char buffer[DEBUG_LOG_BUFF_SIZE];
-//typedef stack_allocator<char, DEBUG_LOG_BUFF_SIZE> allocator_type;
-//std::vector<char, allocator_type> buf((allocator_type(buffer)));
-//buf.reserve(DEBUG_LOG_BUFF_SIZE);
+// 栈分配器的使用(性能提升没感觉,可能也不是瓶颈,所以就不使用了)
+// char buffer[DEBUG_LOG_BUFF_SIZE];
+// typedef stack_allocator<char, DEBUG_LOG_BUFF_SIZE> allocator_type;
+// std::vector<char, allocator_type> buf((allocator_type(buffer)));
+// buf.reserve(DEBUG_LOG_BUFF_SIZE);
 
-//一条日志的默认预估长度
+// 一条日志的默认预估长度
 #define DEBUG_LOG_BUFF_SIZE 128
 
 namespace dlog {
@@ -38,10 +38,10 @@ enum class INIT_RELATIVE
 // 日志外部回调
 typedef void (*LoggerCallback)(int level, const char* message);
 
-//加密日志的函数回调
+// 加密日志的函数回调
 typedef const char* (*LoggerEncryptCallback)(const char* message, void*& ptr);
 
-//释放加密文本对象的方法
+// 释放加密文本对象的方法
 typedef void (*LoggerEncrypDeletetCallback)(void* deletePtr);
 
 /**
@@ -180,7 +180,7 @@ class Debug
      * @param  rel     (Optional) 如果是相对目录那么相对位置是.
      * @param  utf8bom (Optional) True to UTF 8bom.
      */
-    void init(const char* logDir, const char* program, INIT_RELATIVE rel);
+    void Init(const char* logDir, const char* program, INIT_RELATIVE rel);
 
     /**
      * 重置设置回默认设置,并且会关掉所有的日志器.
@@ -236,16 +236,16 @@ class Debug
      */
     bool isNeedLog(spdlog::level::level_enum logThr)
     {
-        //这里由我自己来做判断，避免字符串格式化，但是实际上spdlog也是支持这个屏蔽功能的
+        // 这里由我自己来做判断，避免字符串格式化，但是实际上spdlog也是支持这个屏蔽功能的
         if (!isEnable) {
-            return false; //如果控制是不输出日志
+            return false; // 如果控制是不输出日志
         }
         if (exLoggerCallback != nullptr) {
             return true;
         }
-        //if (!isInit && !isInitFail) {
-        //    init(); //如果还没有初始化那么就初始化一次
-        //}
+        // if (!isInit && !isInitFail) {
+        //     init(); //如果还没有初始化那么就初始化一次
+        // }
 
         if ((!isFileEnable || logFileThr > logThr) &&
             (!isConsoleEnable || logConsoleThr > logThr) &&
@@ -266,35 +266,35 @@ class Debug
      */
     void LogMsg(spdlog::level::level_enum logThr, const char* msg)
     {
-        if (isFileEnable && logFileThr <= logThr && filelogger != nullptr) { //满足优先级才输出 - 文件
+        if (isFileEnable && logFileThr <= logThr && filelogger != nullptr) { // 满足优先级才输出 - 文件
             if (isEncryptFile && exLoggerEncryptCallback != nullptr) {
-                //如果设置了加密日志
+                // 如果设置了加密日志
                 void* deletePtr = nullptr;
                 filelogger->log(logThr, exLoggerEncryptCallback(msg, deletePtr));
-                if (exLoggerEncrypDeletetCallback != nullptr) //如果有释放方法则释放
+                if (exLoggerEncrypDeletetCallback != nullptr) // 如果有释放方法则释放
                     exLoggerEncrypDeletetCallback(deletePtr);
             }
             else {
                 filelogger->log(logThr, msg);
             }
         }
-        if (isConsoleEnable && logConsoleThr <= logThr && consolelogger != nullptr) { //满足优先级才输出 - 控制台
+        if (isConsoleEnable && logConsoleThr <= logThr && consolelogger != nullptr) { // 满足优先级才输出 - 控制台
             if (isEncryptConsole && exLoggerEncryptCallback != nullptr) {
-                //如果设置了加密日志
+                // 如果设置了加密日志
                 void* deletePtr = nullptr;
                 consolelogger->log(logThr, exLoggerEncryptCallback(msg, deletePtr));
-                if (exLoggerEncrypDeletetCallback != nullptr) //如果有释放方法则释放
+                if (exLoggerEncrypDeletetCallback != nullptr) // 如果有释放方法则释放
                     exLoggerEncrypDeletetCallback(deletePtr);
             }
             else {
                 consolelogger->log(logThr, msg);
             }
         }
-        if (isMemLogEnable && logMemoryThr <= logThr) { //满足优先级才输出 - 内存队列
+        if (isMemLogEnable && logMemoryThr <= logThr) { // 满足优先级才输出 - 内存队列
             MemoryLog::GetInst()->addLog(msg);
         }
 
-        //如果有外部的回调那么就执行一下
+        // 如果有外部的回调那么就执行一下
         if (exLoggerCallback != nullptr) {
             exLoggerCallback((int)logThr, msg);
         }

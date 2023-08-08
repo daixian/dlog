@@ -36,9 +36,9 @@ class MemoryLog
     ///-------------------------------------------------------------------------------------------------
     void addLog(const std::string& msg)
     {
-        if (_memLogQueue.size_approx() > maxLen) { //如果它实在是太长了
+        if (_memLogQueue.size_approx() > maxLen) { // 如果它实在是太长了
             std::string first;
-            _memLogQueue.try_dequeue(first); //移出最前的
+            _memLogQueue.try_dequeue(first); // 移出最前的
         }
         _memLogQueue.enqueue(msg);
     }
@@ -53,9 +53,9 @@ class MemoryLog
     ///-------------------------------------------------------------------------------------------------
     void addLog(const std::wstring& msg)
     {
-        if (_memLogQueueW.size_approx() > maxLen) { //如果它实在是太长了
+        if (_memLogQueueW.size_approx() > maxLen) { // 如果它实在是太长了
             std::wstring first;
-            _memLogQueueW.try_dequeue(first); //移出最前的
+            _memLogQueueW.try_dequeue(first); // 移出最前的
         }
         _memLogQueueW.enqueue(msg);
     }

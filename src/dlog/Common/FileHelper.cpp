@@ -22,20 +22,20 @@
 ////这个脚本可能会报错 语言->符合模式 "combaseapi.h(229): error C2187: syntax error: 'identifier' was unexpected here" when using /permissive-
 namespace dlog {
 
-//只需要使用api获得一次就行了
+// 只需要使用api获得一次就行了
 std::string moduleDir;
 
 #if defined(_WIN32) || defined(_WIN64)
 
-//得到模块目录末尾不带斜杠"D:\\Work\\F3DSys\\F3DSystem"
+// 得到模块目录末尾不带斜杠"D:\\Work\\F3DSys\\F3DSystem"
 std::string FileHelper::getModuleDir()
 {
     if (!moduleDir.empty()) {
-        return moduleDir; //只要有记录了就直接使用
+        return moduleDir; // 只要有记录了就直接使用
     }
     else {
         wchar_t exeFullPath[MAX_PATH];                   // Full path
-        GetModuleFileNameW(NULL, exeFullPath, MAX_PATH); //如果使用A的函数那么是GBK的路径
+        GetModuleFileNameW(NULL, exeFullPath, MAX_PATH); // 如果使用A的函数那么是GBK的路径
 
         std::string strPath = "";
         strPath = JsonHelper::utf16To8(std::wstring(exeFullPath));
@@ -60,7 +60,7 @@ std::string FileHelper::getAppDir()
 std::string FileHelper::getModuleDir()
 {
     if (!moduleDir.empty()) {
-        return moduleDir; //只要有记录了就直接使用
+        return moduleDir; // 只要有记录了就直接使用
     }
     char arg1[32];
     char exepath[512 + 1] = {0};
@@ -72,7 +72,7 @@ std::string FileHelper::getModuleDir()
         moduleDir = exeStr.substr(0, pos); // Return the directory without the file name
         return moduleDir;
     }
-    //如果len=-1那么就是出错了
+    // 如果len=-1那么就是出错了
     return "";
 }
 
@@ -86,7 +86,7 @@ std::string FileHelper::getAppDir()
 std::string FileHelper::getModuleDir()
 {
     if (!moduleDir.empty()) {
-        return moduleDir; //只要有记录了就直接使用
+        return moduleDir; // 只要有记录了就直接使用
     }
     moduleDir = Poco::Path::current();
     return moduleDir;
@@ -105,7 +105,7 @@ std::string FileHelper::getAppDir()
 
 void FileHelper::isExistsAndCreat(const std::string& sDir)
 {
-    if (!dirExists(sDir)) { //如果文件夹路径不存在
+    if (!dirExists(sDir)) { // 如果文件夹路径不存在
         try {
             Poco::File dir(sDir);
             dir.createDirectories();
@@ -120,12 +120,12 @@ void FileHelper::isExistsAndCreat(const std::string& sDir)
 bool FileHelper::dirExists(const std::string& dirName_in)
 {
     Poco::File dir(dirName_in);
-    //如果存在
+    // 如果存在
     if (dir.exists()) {
         if (dir.isDirectory()) {
             return true;
         }
-        //它还是存在一种是一个文件的可能
+        // 它还是存在一种是一个文件的可能
     }
     return false;
 }
@@ -146,22 +146,22 @@ bool FileHelper::dirExists(const std::string& dirName_in)
 void FileHelper::makeAbsolute(const Poco::Path& base, Poco::Path& path)
 {
 #if defined(_WIN32) || defined(_WIN64)
-    //在windows下如果是相对地址,或者是没有盘符
+    // 在windows下如果是相对地址,或者是没有盘符
     if (path.isRelative() || path.getDevice().empty()) {
         std::string strPath = path.toString();
-        //如果是windows下,没有盘符,那么这个路径应该就是相对地址.
-        //如果开头存在/,\\,那么移除掉这开头的
+        // 如果是windows下,没有盘符,那么这个路径应该就是相对地址.
+        // 如果开头存在/,\\,那么移除掉这开头的
         if (strPath.front() == '/' ||
             strPath.front() == '\\') {
             strPath.erase(0, 1);
             path = Poco::Path(strPath);
         }
-        //这个函数会忽略相对路径的
+        // 这个函数会忽略相对路径的
         path.makeAbsolute(base);
     }
 #else
     if (path.isRelative()) {
-        //这个函数会忽略相对路径的
+        // 这个函数会忽略相对路径的
         path.makeAbsolute(base);
     }
 #endif

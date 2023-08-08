@@ -11,7 +11,7 @@ import shutil
 
 class DlogConan(ConanFile):
     name = "dlog"
-    version = "2.6.12"
+    version = "2.6.13"
     license = "WTFPL???"
     author = "daixian<amano_tooko@qq.com>"
     url = "https://github.com/daixian/dlog"

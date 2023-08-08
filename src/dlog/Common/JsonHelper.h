@@ -14,7 +14,7 @@
 
 namespace rapidjson {
 
-//使用UTF-16的doc
+// 使用UTF-16的doc
 typedef GenericDocument<UTF16<>> DocumentW;
 typedef GenericValue<UTF16<>> ValueW;
 typedef GenericStringStream<UTF16<>> StringStreamW;
@@ -22,7 +22,7 @@ typedef GenericStringBuffer<UTF16<>> StringBufferW;
 
 } // namespace rapidjson
 
-//注.如果定义了#pragma execution_character_set("utf-8"),那么文件内容是UTF-8
+// 注.如果定义了#pragma execution_character_set("utf-8"),那么文件内容是UTF-8
 
 namespace dlog {
 
@@ -94,13 +94,13 @@ class JsonHelper
             doc.Accept(writer);
         }
 
-        //UTFType type = UTFType::kUTF8;
-        //char writeBuffer[256];
-        //FileWriteStream bos(fp, writeBuffer, sizeof(writeBuffer));
-        //typedef AutoUTFOutputStream<unsigned, FileWriteStream> OutputStream;
-        //OutputStream eos(bos, type, putBOM);
-        //Writer<OutputStream, UTF8<>, AutoUTF<unsigned>> writer;
-        //doc.Accept(writer);
+        // UTFType type = UTFType::kUTF8;
+        // char writeBuffer[256];
+        // FileWriteStream bos(fp, writeBuffer, sizeof(writeBuffer));
+        // typedef AutoUTFOutputStream<unsigned, FileWriteStream> OutputStream;
+        // OutputStream eos(bos, type, putBOM);
+        // Writer<OutputStream, UTF8<>, AutoUTF<unsigned>> writer;
+        // doc.Accept(writer);
         if (fp != nullptr)
             fclose(fp);
     }
@@ -122,7 +122,7 @@ class JsonHelper
 #elif defined(__linux__)
         fp = fopen(filePath.c_str(), "r");
 #endif
-        //这里不能使用AutoUTF,因为这里的文件可能不是UTF的编码会导致失败.
+        // 这里不能使用AutoUTF,因为这里的文件可能不是UTF的编码会导致失败.
         char readBuffer[256];
         rapidjson::FileReadStream is(fp, readBuffer, sizeof(readBuffer));
         doc.ParseStream(is);
@@ -336,7 +336,7 @@ class JsonHelper
     static inline rapidjson::DocumentW creatDocW(const std::wstring& text)
     {
         rapidjson::DocumentW document;
-        //从string读取
+        // 从string读取
         rapidjson::StringStreamW s(text.c_str());
         document.ParseStream(s);
         return document;
@@ -354,7 +354,7 @@ class JsonHelper
     static inline rapidjson::DocumentW readJson(const std::wstring& text)
     {
         rapidjson::DocumentW document;
-        //从string读取
+        // 从string读取
         rapidjson::StringStreamW s(text.c_str());
         document.ParseStream(s);
         return document;

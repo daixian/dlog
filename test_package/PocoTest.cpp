@@ -13,7 +13,7 @@ using namespace Poco;
 TEST(Poco, PathTest)
 {
 #if defined(_WIN32) || defined(_WIN64)
-    //反斜杠只有在windows下才是路径
+    // 反斜杠只有在windows下才是路径
     Path inputDir("C:\\ProgramData\\log\\");
     ASSERT_TRUE(inputDir.isAbsolute());
 
@@ -23,7 +23,7 @@ TEST(Poco, PathTest)
     Path inputDir2("\\log");
     ASSERT_TRUE(inputDir2.isAbsolute());
 #endif
-    
+
     Path inputDir4("log");
     ASSERT_TRUE(!inputDir4.isAbsolute());
 }

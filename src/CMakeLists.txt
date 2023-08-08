@@ -43,6 +43,13 @@ message(STATUS "CMAKE_CXX_FLAGS_RELEASE = ${CMAKE_CXX_FLAGS_RELEASE}" )
 
 message(STATUS "DLOG_BUILD_SHARED = ${DLOG_BUILD_SHARED}")
 
+if(WIN32)
+# # 设置编译选项为MT https://stackoverflow.com/questions/14172856/compile-with-mt-instead-of-md-using-cmake
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MP")
+    # 控制一下调试时候Debug的VC编译方式
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MP")
+endif()
+
 # 设置生成一个VS工程里的文件夹
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 

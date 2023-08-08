@@ -7,7 +7,7 @@
 
 using namespace std;
 
-//注意,在微软的CI服务器上,APPDATA目录没有权限创建,同时不支持中文路径
+// 注意,在微软的CI服务器上,APPDATA目录没有权限创建,同时不支持中文路径
 
 TEST(dlog, speed)
 {
@@ -18,7 +18,7 @@ TEST(dlog, speed)
     ASSERT_TRUE(dlog_is_initialized());
 
     dlog_set_file_thr(dlog_level::debug);
-    int count = 100000; //10万条日志
+    int count = 100000; // 10万条日志
     clock_t lastTime = clock();
 
     for (size_t i = 0; i < count; i++) {
@@ -41,7 +41,7 @@ TEST(dlog, speed_format)
     ASSERT_TRUE(dlog_is_initialized());
 
     dlog_set_file_thr(dlog_level::debug);
-    int count = 100000; //10万条日志
+    int count = 100000; // 10万条日志
     clock_t lastTime = clock();
 
     for (size_t i = 0; i < count; i++) {
@@ -65,8 +65,8 @@ TEST(dlog, memorylog)
 
     dlog_memory_log_enable(true);
     dlog_set_console_thr(dlog_level::err);
-    //LogI打印10W条，异步的，只要942毫秒
-    //LogW打印10W条，也只要1秒的样子
+    // LogI打印10W条，异步的，只要942毫秒
+    // LogW打印10W条，也只要1秒的样子
     for (size_t i = 0; i < 4096; i++) {
         LogW("测试日志%d !", i);
     }
@@ -76,11 +76,11 @@ TEST(dlog, memorylog)
     for (int i = 0; i < 4096; i++) {
         if (dlog_get_memlog(msg, 0, 512) > 0) {
 #if defined(_WIN32) || defined(_WIN64)
-            sprintf_s(msgCorr, 512, "测试日志%d !", i); //正确的消息应该是
+            sprintf_s(msgCorr, 512, "测试日志%d !", i); // 正确的消息应该是
 #else
-            snprintf(msgCorr, 512, "测试日志%d !", i); //正确的消息应该是
+            snprintf(msgCorr, 512, "测试日志%d !", i); // 正确的消息应该是
 #endif
-            ASSERT_TRUE(strcmp(msg, msgCorr) == 0) << "msg=" << msg; //比对提取的消息是否正确
+            ASSERT_TRUE(strcmp(msg, msgCorr) == 0) << "msg=" << msg; // 比对提取的消息是否正确
         }
         else {
             FAIL();
@@ -93,30 +93,30 @@ TEST(dlog, init_close)
     for (size_t i = 0; i < 10; i++) {
         dlog_close();
 
-        //第一次创建
+        // 第一次创建
         int res = dlog_init("log", "init_close", dlog_init_relative::MODULE);
         ASSERT_TRUE(dlog_is_initialized());
         EXPECT_TRUE(res == 0);
         LogI("132");
 
-        //复用
+        // 复用
         res = dlog_init("log", "init_close", dlog_init_relative::MODULE, false);
         EXPECT_TRUE(res == 1);
         LogI("132");
 
-        //强制创建,因为重名所以还是复用
+        // 强制创建,因为重名所以还是复用
         res = dlog_init("log", "init_close", dlog_init_relative::MODULE, true);
         EXPECT_TRUE(res == 3);
         LogI("132");
 
-        //强制创建
+        // 强制创建
         res = dlog_init("log", "init_close2", dlog_init_relative::MODULE, true);
         EXPECT_TRUE(res == 2);
         LogI("132");
     }
     dlog_close();
 
-    //文件已经关闭,dlog_get_log_file_path函数返回值为0
+    // 文件已经关闭,dlog_get_log_file_path函数返回值为0
     char path[245];
     EXPECT_EQ(dlog_get_log_file_path(path, 245), 0);
 }
@@ -126,39 +126,57 @@ TEST(dlog, init_close_w)
     for (size_t i = 0; i < 10; i++) {
         dlog_close();
 
-        //第一次创建
+        // 第一次创建
         int res = dlog_init_wchar_filename(L"log", L"试试中文app", dlog_init_relative::MODULE);
         ASSERT_TRUE(dlog_is_initialized());
         EXPECT_TRUE(res == 0);
         LogI("132");
 
-        //复用
+        // 复用
         res = dlog_init_wchar_filename(L"log", L"试试中文app", dlog_init_relative::MODULE, false);
         EXPECT_TRUE(res == 1);
         LogI("132");
 
-        //强制创建,因为重名所以还是复用
+        // 强制创建,因为重名所以还是复用
         res = dlog_init_wchar_filename(L"log", L"试试中文app", dlog_init_relative::MODULE, true);
         EXPECT_TRUE(res == 3);
         LogI("132");
 
-        //强制创建
+        // 强制创建
         res = dlog_init_wchar_filename(L"log", L"试试中文app_2", dlog_init_relative::MODULE, true);
         EXPECT_TRUE(res == 2);
         LogI("132");
     }
     dlog_close();
 
-    //文件已经关闭,dlog_get_log_file_path函数返回值为0
+    // 文件已经关闭,dlog_get_log_file_path函数返回值为0
     char path[245];
     EXPECT_EQ(dlog_get_log_file_path(path, 245), 0);
+}
+
+TEST(dlog, ClearTest)
+{
+    dlog_close();
+
+    // 第一次创建
+    for (size_t i = 0; i < 100; i++) {
+        std::string name = std::string("log") + std::to_string(i);
+        int res = dlog_init("log", name.c_str(), dlog_init_relative::MODULE);
+        ASSERT_TRUE(dlog_is_initialized());
+        EXPECT_TRUE(res == 0);
+        for (size_t i = 0; i < 5; i++) {
+            LogI("输出一个日志 %d", i);
+        }
+
+        dlog_close();
+    }
 }
 
 TEST(dlog, logi)
 {
     dlog_close();
 
-    //第一次创建
+    // 第一次创建
     int res = dlog_init("log", "LogI", dlog_init_relative::MODULE);
     ASSERT_TRUE(dlog_is_initialized());
     EXPECT_TRUE(res == 0);
@@ -194,7 +212,7 @@ TEST(dlog, logD)
 {
     dlog_close();
 
-    //第一次创建
+    // 第一次创建
     int res = dlog_init("log", "LogD", dlog_init_relative::MODULE);
     ASSERT_TRUE(dlog_is_initialized());
     dlog_set_console_thr(dlog_level::debug);
@@ -239,7 +257,7 @@ TEST(dlog, path)
 {
     dlog_close();
 
-    //第一次创建
+    // 第一次创建
     int res = dlog_init("C:\\ProgramData\\log", "LogD", dlog_init_relative::MODULE);
     ASSERT_TRUE(dlog_is_initialized());
     dlog_set_console_thr(dlog_level::debug);
@@ -270,7 +288,7 @@ TEST(dlog, path2)
 {
     dlog_close();
 
-    //第一次创建
+    // 第一次创建
     int res = dlog_init("C:\\ProgramData\\log\\", "LogD", dlog_init_relative::MODULE);
     ASSERT_TRUE(dlog_is_initialized());
     dlog_set_console_thr(dlog_level::debug);
@@ -309,7 +327,7 @@ TEST(dlog, callback)
 {
     dlog_close();
 
-    //第一次创建
+    // 第一次创建
     int res = dlog_init("log", "callback", dlog_init_relative::MODULE);
     ASSERT_TRUE(dlog_is_initialized());
     dlog_set_console_thr(dlog_level::debug);
@@ -382,7 +400,7 @@ TEST(dlog, no_file)
 {
     dlog_close();
 
-    //设置不使用文件
+    // 设置不使用文件
     dlog_file_log_enable(false);
     int res = dlog_init("log", "no_file", dlog_init_relative::MODULE);
     ASSERT_TRUE(dlog_is_initialized());
@@ -391,7 +409,7 @@ TEST(dlog, no_file)
         LogI("no_file log...%d", i);
     }
 
-    //检察确实没有产生日志文件dlog_get_log_file_path函数返回值为0
+    // 检察确实没有产生日志文件dlog_get_log_file_path函数返回值为0
     char path[245];
     EXPECT_EQ(dlog_get_log_file_path(path, 245), 0);
 
@@ -412,7 +430,7 @@ TEST(dlog, encrypt)
 {
     dlog_close();
 
-    //设置不使用文件
+    // 设置不使用文件
     dlog_set_encrypt_function(encrypt_function, nullptr);
     dlog_set_is_encrypt_console(true);
     int res = dlog_init("log", "encrypt", dlog_init_relative::MODULE);
@@ -429,21 +447,21 @@ TEST(dlog, encrypt)
 
 const char* encrypt_function2(const char* msg, void*& ptr)
 {
-    //构建文本内存对象
+    // 构建文本内存对象
     string* pStr = new string();
-    ptr = pStr; //传出去保留,等会传递给释放函数
+    ptr = pStr; // 传出去保留,等会传递给释放函数
 
-    //进行加密算法
+    // 进行加密算法
     for (size_t i = 0; i < 1024 * 1024 * 10; i++) {
         pStr->push_back(i);
     }
-    //返回加密文本
+    // 返回加密文本
     return pStr->c_str();
 }
 
 void encrypt_delete_function2(void* ptr)
 {
-    //释放函数知道这是一个string*对象,所以强转后直接释放
+    // 释放函数知道这是一个string*对象,所以强转后直接释放
     string* pStr = (string*)ptr;
     delete pStr;
 }
@@ -452,7 +470,7 @@ TEST(dlog, encrypt_memory)
 {
     dlog_close();
 
-    //设置不使用文件
+    // 设置不使用文件
     dlog_set_encrypt_function(encrypt_function2, encrypt_delete_function2);
     dlog_set_is_encrypt_console(true);
     int res = dlog_init("log", "encrypt_memory", dlog_init_relative::MODULE);

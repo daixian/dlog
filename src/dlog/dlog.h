@@ -1,5 +1,5 @@
 ﻿#pragma once
-//仓库位置 https://github.com/daixian/dlog
+// 仓库位置 https://github.com/daixian/dlog
 
 #ifndef _DLOG_H_
 #    define _DLOG_H_
@@ -9,7 +9,7 @@
 // 使用该库的其他项目会由这个库的conan文件加入DLOG_STATIC或DLOG_DLL的定义.
 #    if defined(_WIN32) || defined(_WIN64)
 // 如果是库自身构建时
-#        if defined(DLOG_DLL_EXPORTS) //导出库使用dll模式
+#        if defined(DLOG_DLL_EXPORTS) // 导出库使用dll模式
 #            define DLOG_EXPORT __declspec(dllexport)
 #            define DLOG__LOCAL
 #        elif defined(DLOG_STATIC)
@@ -27,15 +27,15 @@
 #        define DLOG_EXPORT __attribute__((visibility("default")))
 #        define DLOG__LOCAL __attribute__((visibility("hidden")))
 #
-#        define __cdecl //默认是，加上了反而有warning __attribute__((__cdecl__))
+#        define __cdecl // 默认是，加上了反而有warning __attribute__((__cdecl__))
 #    endif
 
-//它是定义vs编译器使用utf-8,现在整个dlog统一应该使用utf-8作为输出.注意文件需要保存成UTF8带BOM
+// 它是定义vs编译器使用utf-8,现在整个dlog统一应该使用utf-8作为输出.注意文件需要保存成UTF8带BOM
 #    ifdef DLOG_UTF8
 #        pragma execution_character_set("utf-8")
 #    endif
 
-//给用户使用的LogSeverity定义,目前和spdlog里的定义一致,但是只使用debug,info,warn,err
+// 给用户使用的LogSeverity定义,目前和spdlog里的定义一致,但是只使用debug,info,warn,err
 enum class dlog_level
 {
     trace = 0,
@@ -47,12 +47,12 @@ enum class dlog_level
     off = 6,
 };
 
-//日志库初始化的时候如果使用了相对目录,那么相对目录的选择
+// 日志库初始化的时候如果使用了相对目录,那么相对目录的选择
 enum class dlog_init_relative
 {
-    //相对appdata文件夹
+    // 相对appdata文件夹
     APPDATA = 0,
-    //相对dll自身文件夹
+    // 相对dll自身文件夹
     MODULE = 1,
 };
 
@@ -83,15 +83,15 @@ enum class DLogError
 // 日志回调函数指针类型,message为日志的原始文本
 typedef void (*DlogLoggerCallback)(int level, const char* message);
 
-//加密日志的函数回调,message为日志的原始文本,deletePtr为这个函数执行完毕后需要被dlog模块释放的对象,
-//return加密后的日志文本(加密后的文本会替代message写入日志文件)
+// 加密日志的函数回调,message为日志的原始文本,deletePtr为这个函数执行完毕后需要被dlog模块释放的对象,
+// return加密后的日志文本(加密后的文本会替代message写入日志文件)
 typedef const char* (*DlogLoggerEncryptCallback)(const char* message, void*& deletePtr);
 
-//释放加密文本对象的方法
+// 释放加密文本对象的方法
 typedef void (*DlogLoggerEncrypDeletetCallback)(void* deletePtr);
 
 /**
- * 模块初始化,日志文件夹路径可以使用绝对目录也可以使用相对目录(第三个参数进行相对位置的设置), 
+ * 模块初始化,日志文件夹路径可以使用绝对目录也可以使用相对目录(第三个参数进行相对位置的设置),
  * 如果使用相对目录,那么程序会将它理解为相对模块目录,路径例如 char* logDir = "log",char* program = "dlog".
  * isForceInit如果为false，那么就可以不强制初始化模块，理论上整个程序都共用一个日志. 如果之前未被初始化返回0,
  * 如果成功复用那么就返回1,如果强制重设成功那么返回2, 如果强制重设但是失败还是复用了那么返回3.
@@ -99,7 +99,7 @@ typedef void (*DlogLoggerEncrypDeletetCallback)(void* deletePtr);
  *
  * 如果是在同一秒重复创建关闭日志文件,那么由于文件名一样,会被写入同一个日志文件.
  * 注意只支持UTF8的程序名~~ 如有乱码文件名使用dlog_init_wchar_filename()函数进行初始化.
- * 
+ *
  * @author daixian
  * @date 2018/4/22
  *
@@ -208,8 +208,8 @@ extern "C" DLOG_EXPORT void __cdecl dlog_file_log_enable(bool enable);
 extern "C" DLOG_EXPORT void __cdecl dlog_set_logger_function(DlogLoggerCallback fp);
 
 /**
- * 设置一个加密函数指针,用来加密日志,设置这个函数之后会默认设置加密文件,不加密控制台, 
- * 注意每次close日志系统会清空这个设置,之后需要重新设置一次. 
+ * 设置一个加密函数指针,用来加密日志,设置这个函数之后会默认设置加密文件,不加密控制台,
+ * 注意每次close日志系统会清空这个设置,之后需要重新设置一次.
  * 相关函数:
  *     dlog_set_is_encrypt_file();
  *     dlog_set_is_encrypt_console();
@@ -222,7 +222,7 @@ extern "C" DLOG_EXPORT void __cdecl dlog_set_logger_function(DlogLoggerCallback 
  */
 
 extern "C" DLOG_EXPORT void __cdecl dlog_set_encrypt_function(DlogLoggerEncryptCallback fpEncrypt,
-                                                                DlogLoggerEncrypDeletetCallback fpDelete);
+                                                              DlogLoggerEncrypDeletetCallback fpDelete);
 
 /**
  * 设置Dlog的常规文件日志（非内存日志）门限,大于等于该优先级的日志都会写入.
@@ -356,7 +356,7 @@ extern "C" DLOG_EXPORT void __cdecl LogE(const char* strFormat, ...);
  */
 extern "C" DLOG_EXPORT void __cdecl LogD(const char* strFormat, ...);
 
-//wchar_t转成UTF8的日志
+// wchar_t转成UTF8的日志
 extern "C" DLOG_EXPORT void __cdecl wLogI(const wchar_t* strFormat, ...);
 extern "C" DLOG_EXPORT void __cdecl wLogW(const wchar_t* strFormat, ...);
 extern "C" DLOG_EXPORT void __cdecl wLogE(const wchar_t* strFormat, ...);
