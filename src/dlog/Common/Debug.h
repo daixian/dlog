@@ -36,7 +36,7 @@ enum class INIT_RELATIVE
 };
 
 // 日志外部回调
-typedef void (*LoggerCallback)(int level, const char* message);
+typedef void (*LoggerCallback)(int level, const char* message, int len);
 
 // 加密日志的函数回调
 typedef const char* (*LoggerEncryptCallback)(const char* message, void*& ptr);
@@ -296,7 +296,8 @@ class Debug
 
         // 如果有外部的回调那么就执行一下
         if (exLoggerCallback != nullptr) {
-            exLoggerCallback((int)logThr, msg);
+            int len = strlen(msg);
+            exLoggerCallback((int)logThr, msg, len);
         }
     }
 

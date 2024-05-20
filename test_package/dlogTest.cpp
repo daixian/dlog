@@ -318,7 +318,7 @@ TEST(dlog, path2)
 #endif
 
 bool isCallbackIn = false;
-void LoggerFun(int level, const char* message)
+void LoggerFun(int level, const char* message, int len)
 {
     isCallbackIn = true;
 }

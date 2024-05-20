@@ -121,3 +121,12 @@ DLog.MemoryLogEnable(true);
 //提取一批内存日志,可以见GetMemorylog()函数的实现
 List<string> logs = DLog.GetMemorylogs();
 ```
+
+## 老版本conan的python环境
+``` shell
+python -m venv .venv
+
+.\.venv\Scripts\Activate.ps1
+# 确认环境激活后执行下面的
+pip install -r requirements.txt
+```

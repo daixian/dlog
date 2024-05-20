@@ -81,7 +81,7 @@ enum class DLogError
 };
 
 // 日志回调函数指针类型,message为日志的原始文本
-typedef void (*DlogLoggerCallback)(int level, const char* message);
+typedef void (*DlogLoggerCallback)(int level, const char* message, int len);
 
 // 加密日志的函数回调,message为日志的原始文本,deletePtr为这个函数执行完毕后需要被dlog模块释放的对象,
 // return加密后的日志文本(加密后的文本会替代message写入日志文件)
